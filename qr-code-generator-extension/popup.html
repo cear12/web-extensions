@@ -1,0 +1,120 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QR Code Generator</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <h1>QR Code Generator</h1>
+    </header>
+
+    <section class="tabs">
+      <button class="tab-button active" data-type="text">Текст/URL</button>
+      <button class="tab-button" data-type="wifi">WiFi</button>
+      <button class="tab-button" data-type="vcard">Контакт</button>
+    </section>
+
+    <form id="qr-form">
+      <div class="form-section" data-section="text">
+        <label>
+          Данные
+          <textarea id="text-input" placeholder="Введите текст или URL" rows="3"></textarea>
+        </label>
+      </div>
+
+      <div class="form-section hidden" data-section="wifi">
+        <label>
+          SSID
+          <input id="wifi-ssid" type="text" placeholder="MyWiFi" />
+        </label>
+        <label>
+          Пароль
+          <input id="wifi-password" type="text" placeholder="Пароль" />
+        </label>
+        <label>
+          Тип шифрования
+          <select id="wifi-auth">
+            <option value="WPA">WPA/WPA2/WPA3</option>
+            <option value="WEP">WEP</option>
+            <option value="nopass">Без пароля</option>
+          </select>
+        </label>
+        <label class="checkbox">
+          <input id="wifi-hidden" type="checkbox" /> Скрытая сеть
+        </label>
+      </div>
+
+      <div class="form-section hidden" data-section="vcard">
+        <label>
+          Имя
+          <input id="v-first" type="text" placeholder="Иван" />
+        </label>
+        <label>
+          Фамилия
+          <input id="v-last" type="text" placeholder="Иванов" />
+        </label>
+        <label>
+          Телефон
+          <input id="v-phone" type="text" placeholder="+1 555 123 4567" />
+        </label>
+        <label>
+          Email
+          <input id="v-email" type="email" placeholder="ivan@example.com" />
+        </label>
+        <label>
+          Компания
+          <input id="v-org" type="text" placeholder="Компания" />
+        </label>
+        <label>
+          Должность
+          <input id="v-title" type="text" placeholder="Менеджер" />
+        </label>
+      </div>
+
+      <fieldset class="form-section">
+        <legend>Кастомизация</legend>
+        <div class="grid-2">
+          <label>
+            Размер (px)
+            <input id="size" type="number" min="120" max="1024" step="4" value="256" />
+          </label>
+          <label>
+            Ошибка
+            <select id="ec-level">
+              <option value="L">L (7%)</option>
+              <option value="M" selected>M (15%)</option>
+              <option value="Q">Q (25%)</option>
+              <option value="H">H (30%)</option>
+            </select>
+          </label>
+          <label>
+            Цвет модулей
+            <input id="color-dark" type="color" value="#000000" />
+          </label>
+          <label>
+            Цвет фона
+            <input id="color-light" type="color" value="#ffffff" />
+          </label>
+        </div>
+      </fieldset>
+
+      <div class="actions">
+        <button type="button" id="generate">Сгенерировать</button>
+        <button type="button" id="download" disabled>Скачать PNG</button>
+      </div>
+    </form>
+
+    <section class="preview">
+      <div id="qrcode" class="qrcode"></div>
+    </section>
+  </div>
+
+  <script src="lib/qrcode.min.js"></script>
+  <script src="popup.js"></script>
+</body>
+<!-- QR Code library by davidshimjs (MIT) bundled locally -->
+</html>

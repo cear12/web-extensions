@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Настройки — QR Code Generator Pro</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="wrap">
+    <h1>Настройки по умолчанию</h1>
+    <form id="defaults-form">
+      <label>
+        Размер (px)
+        <input id="d-size" type="number" min="120" max="1024" step="4" />
+      </label>
+      <label>
+        Цвет модулей
+        <input id="d-dark" type="color" />
+      </label>
+      <label>
+        Цвет фона
+        <input id="d-light" type="color" />
+      </label>
+      <label>
+        Ошибка
+        <select id="d-ec">
+          <option value="L">L (7%)</option>
+          <option value="M">M (15%)</option>
+          <option value="Q">Q (25%)</option>
+          <option value="H">H (30%)</option>
+        </select>
+      </label>
+      <div class="actions">
+        <button type="submit">Сохранить</button>
+        <button type="button" id="reset">Сбросить</button>
+      </div>
+    </form>
+    <p class="muted">Настройки сохраняются локально и применяются в всплывающем окне.</p>
+  </main>
+  <script src="options.js"></script>
+</body>
+</html>

@@ -1,0 +1,13 @@
+{
+  "manifest_version": 3,
+  "name": "QR Code Generator",
+  "version": "1.0.0",
+  "description": "Generate QR codes for text, URL, WiFi, and contacts with customization and PNG download.",
+  "action": {
+    "default_title": "QR Code Generator",
+    "default_popup": "popup.html"
+  },
+  "options_page": "options.html",
+  "icons": {},
+  "permissions": []
+}
