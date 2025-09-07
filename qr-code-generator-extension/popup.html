@@ -9,108 +9,194 @@
 <body>
   <div class="container">
     <header class="header">
-      <h1>QR Code Generator</h1>
+      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Меню"></button>
+      <div class="title"><img src="logo.png" alt="Логотип" class="logo" /><h1>QR Code Generator</h1></div>
+      <button type="button" id="close-btn" class="close-btn" aria-label="Закрыть"></button>
     </header>
 
+    <!-- Menu Widget -->
+    <div id="menu-widget" class="menu-widget hidden">
+      <div class="menu-content">
+        <div class="menu-header">
+          <h2 data-i18n="menu">Меню</h2>
+          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Закрыть меню">×</button>
+        </div>
+        <div class="menu-items">
+          <button type="button" class="menu-item" data-section="settings">
+            <span class="menu-icon">⚙</span>
+            <span data-i18n="settings">Настройки</span>
+          </button>
+          <button type="button" class="menu-item" data-section="language">
+            <span class="menu-icon">🌐</span>
+            <span data-i18n="language">Язык</span>
+          </button>
+          <button type="button" class="menu-item" data-section="about">
+            <span class="menu-icon">ℹ</span>
+            <span data-i18n="about">О программе</span>
+          </button>
+        </div>
+        
+        <!-- Language Panel -->
+        <div id="language-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+            <h3 data-i18n="language">Язык</h3>
+          </div>
+          <div class="menu-panel-content">
+            <fieldset class="form-section">
+              <legend data-i18n="select-language">Выберите язык</legend>
+              <label>
+                <select id="language-select">
+                  <option value="en" selected>English</option>
+                  <option value="es">Español</option>
+                  <option value="ru">Русский</option>
+                </select>
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <!-- About Panel -->
+        <div id="about-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+            <h3 data-i18n="about">О программе</h3>
+          </div>
+          <div class="menu-panel-content">
+            <div class="about-content">
+              <h4 data-i18n="app-name">Генератор QR-кодов</h4>
+              <p data-i18n="app-version">Версия 1.0</p>
+              <p data-i18n="app-developer">Разработано Olé</p>
+              <div class="about-logo">
+                <img src="logo.png" alt="Логотип" class="logo" />
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+            <h3 data-i18n="qr-settings">Настройки QR</h3>
+          </div>
+          <div class="menu-panel-content">
+            <fieldset class="form-section">
+              <legend data-i18n="customization">Кастомизация</legend>
+              <div class="grid-2">
+                <label>
+                  <span data-i18n="size">Размер (px)</span>
+                  <input id="size" type="number" min="120" max="1024" step="4" value="256" />
+                </label>
+                <label>
+                  <span data-i18n="error">Ошибка</span>
+                  <select id="ec-level">
+                    <option value="L">L (7%)</option>
+                    <option value="M" selected>M (15%)</option>
+                    <option value="Q">Q (25%)</option>
+                    <option value="H">H (30%)</option>
+                  </select>
+                </label>
+                <div class="color-group">
+                  <label>
+                    <span data-i18n="module-color">Цвет модулей</span>
+                    <input id="color-dark" type="color" value="#000000" />
+                  </label>
+                  <label>
+                    <span data-i18n="background-color">Цвет фона</span>
+                    <input id="color-light" type="color" value="#ffffff" />
+                  </label>
+                </div>
+              </div>
+            </fieldset>
+            
+            <div class="settings-actions">
+              <button type="button" id="reset-settings" class="reset-btn" data-i18n="reset-to-defaults">Сбросить настройки</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="menu-overlay hidden"></div>
+
     <section class="tabs">
-      <button class="tab-button active" data-type="text">Текст/URL</button>
-      <button class="tab-button" data-type="wifi">WiFi</button>
-      <button class="tab-button" data-type="vcard">Контакт</button>
+      <button class="tab-button active" data-type="text" data-i18n="text-url">Текст/URL</button>
+      <button class="tab-button" data-type="wifi" data-i18n="wifi">WiFi</button>
+      <button class="tab-button" data-type="vcard" data-i18n="contact">Контакт</button>
     </section>
 
     <form id="qr-form">
       <div class="form-section" data-section="text">
         <label>
-          Данные
-          <textarea id="text-input" placeholder="Введите текст или URL" rows="3"></textarea>
+          <span data-i18n="data">Данные</span>
+          <textarea id="text-input" data-i18n-placeholder="enter-text-url" placeholder="Введите текст или URL" rows="3"></textarea>
         </label>
       </div>
 
       <div class="form-section hidden" data-section="wifi">
         <label>
-          SSID
-          <input id="wifi-ssid" type="text" placeholder="MyWiFi" />
+          <span data-i18n="ssid">SSID</span>
+          <input id="wifi-ssid" type="text" data-i18n-placeholder="my-wifi" placeholder="MyWiFi" />
         </label>
         <label>
-          Пароль
-          <input id="wifi-password" type="text" placeholder="Пароль" />
+          <span data-i18n="password">Пароль</span>
+          <input id="wifi-password" type="text" data-i18n-placeholder="password" placeholder="Пароль" />
         </label>
         <label>
-          Тип шифрования
+          <span data-i18n="encryption-type">Тип шифрования</span>
           <select id="wifi-auth">
             <option value="WPA">WPA/WPA2/WPA3</option>
             <option value="WEP">WEP</option>
-            <option value="nopass">Без пароля</option>
+            <option value="nopass" data-i18n="no-password">Без пароля</option>
           </select>
         </label>
         <label class="checkbox">
-          <input id="wifi-hidden" type="checkbox" /> Скрытая сеть
+          <input id="wifi-hidden" type="checkbox" /> <span data-i18n="hidden-network">Скрытая сеть</span>
         </label>
       </div>
 
       <div class="form-section hidden" data-section="vcard">
         <label>
-          Имя
-          <input id="v-first" type="text" placeholder="Иван" />
+          <span data-i18n="first-name">Имя</span>
+          <input id="v-first" type="text" data-i18n-placeholder="first-name-placeholder" placeholder="Иван" />
         </label>
         <label>
-          Фамилия
-          <input id="v-last" type="text" placeholder="Иванов" />
+          <span data-i18n="last-name">Фамилия</span>
+          <input id="v-last" type="text" data-i18n-placeholder="last-name-placeholder" placeholder="Иванов" />
         </label>
         <label>
-          Телефон
-          <input id="v-phone" type="text" placeholder="+1 555 123 4567" />
+          <span data-i18n="phone">Телефон</span>
+          <input id="v-phone" type="text" data-i18n-placeholder="phone-placeholder" placeholder="+1 555 123 4567" />
         </label>
         <label>
-          Email
-          <input id="v-email" type="email" placeholder="ivan@example.com" />
+          <span data-i18n="email">Email</span>
+          <input id="v-email" type="email" data-i18n-placeholder="email-placeholder" placeholder="ivan@example.com" />
         </label>
         <label>
-          Компания
-          <input id="v-org" type="text" placeholder="Компания" />
+          <span data-i18n="company">Компания</span>
+          <input id="v-org" type="text" data-i18n-placeholder="company-placeholder" placeholder="Компания" />
         </label>
         <label>
-          Должность
-          <input id="v-title" type="text" placeholder="Менеджер" />
+          <span data-i18n="position">Должность</span>
+          <input id="v-title" type="text" data-i18n-placeholder="position-placeholder" placeholder="Менеджер" />
         </label>
       </div>
 
-      <fieldset class="form-section">
-        <legend>Кастомизация</legend>
-        <div class="grid-2">
-          <label>
-            Размер (px)
-            <input id="size" type="number" min="120" max="1024" step="4" value="256" />
-          </label>
-          <label>
-            Ошибка
-            <select id="ec-level">
-              <option value="L">L (7%)</option>
-              <option value="M" selected>M (15%)</option>
-              <option value="Q">Q (25%)</option>
-              <option value="H">H (30%)</option>
-            </select>
-          </label>
-          <label>
-            Цвет модулей
-            <input id="color-dark" type="color" value="#000000" />
-          </label>
-          <label>
-            Цвет фона
-            <input id="color-light" type="color" value="#ffffff" />
-          </label>
-        </div>
-      </fieldset>
+      <section class="preview">
+        <h3 data-i18n="result">Результат</h3>
+        <div id="qrcode" class="qrcode"></div>
+      </section>
 
       <div class="actions">
-        <button type="button" id="generate">Сгенерировать</button>
-        <button type="button" id="download" disabled>Скачать PNG</button>
+        <button type="button" id="download" disabled data-i18n="download-png">Скачать PNG</button>
       </div>
     </form>
-
-    <section class="preview">
-      <div id="qrcode" class="qrcode"></div>
-    </section>
+    <footer class="footer">
+      <span data-i18n="developed-by">Разработано</span>
+      <img src="logo.png" alt="Логотип" class="logo" />
+    </footer>
   </div>
 
   <script src="lib/qrcode.min.js"></script>
