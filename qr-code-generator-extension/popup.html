@@ -43,7 +43,7 @@
             <h3 data-i18n="language">Язык</h3>
           </div>
           <div class="menu-panel-content">
-            <fieldset class="form-section">
+            <fieldset class="language-section">
               <legend data-i18n="select-language">Выберите язык</legend>
               <label>
                 <select id="language-select">
@@ -64,12 +64,12 @@
           </div>
           <div class="menu-panel-content">
             <div class="about-content">
-              <h4 data-i18n="app-name">Генератор QR-кодов</h4>
-              <p data-i18n="app-version">Версия 1.0</p>
-              <p data-i18n="app-developer">Разработано Olé</p>
-              <div class="about-logo">
+              <div class="about-title">
                 <img src="logo.png" alt="Логотип" class="logo" />
+                <h4 data-i18n="app-name">Генератор QR-кодов</h4>
               </div>
+              <p><span data-i18n="app-version">Версия</span> 1.1.0</p>
+              <p data-i18n="app-developer">Разработано Olé</p>
             </div>
           </div>
         </div>
@@ -81,7 +81,7 @@
             <h3 data-i18n="qr-settings">Настройки QR</h3>
           </div>
           <div class="menu-panel-content">
-            <fieldset class="form-section">
+            <fieldset class="settings-section">
               <legend data-i18n="customization">Кастомизация</legend>
               <div class="grid-2">
                 <label>
@@ -190,6 +190,7 @@
       </section>
 
       <div class="actions">
+        <button type="button" id="clear" disabled data-i18n="clear">Очистить</button>
         <button type="button" id="download" disabled data-i18n="download-png">Скачать PNG</button>
       </div>
     </form>
