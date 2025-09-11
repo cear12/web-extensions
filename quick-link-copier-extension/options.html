@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Settings — QuickLink Copier</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <main class="wrap">
+    <header class="header">
+      <div class="header-content">
+        <img src="logo.png" alt="Logo" class="logo" />
+        <h1>QuickLink Copier Settings</h1>
+      </div>
+    </header>
+
+    <div class="content">
+      <!-- General Settings -->
+      <section class="settings-section">
+        <h2>General Settings</h2>
+        <form id="general-settings">
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="show-notifications" type="checkbox" />
+              <span>Show notifications when copying links</span>
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label class="checkbox">
+              <input id="auto-tags" type="checkbox" />
+              <span>Automatically generate tags for links</span>
+            </label>
+          </div>
+          
+          <div class="form-group">
+            <label>
+              <span>Max history size</span>
+              <input id="max-history" type="number" min="5" max="1000" value="10" />
+              <small>Free users: 10 links, Premium: unlimited</small>
+            </label>
+          </div>
+          
+          <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Save Settings</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Premium Section -->
+      <section class="settings-section">
+        <h2>Premium Features</h2>
+        <div id="premium-status" class="premium-status">
+          <div class="status-free">
+            <div class="status-icon">⭐</div>
+            <div class="status-content">
+              <h3>Free Version</h3>
+              <p>You're currently using the free version with basic features.</p>
+            </div>
+          </div>
+        </div>
+        
+        <div class="premium-features">
+          <h3>Premium Features ($2.99/month)</h3>
+          <ul class="features-list">
+            <li>✓ Unlimited link history</li>
+            <li>✓ Export to TXT/CSV/JSON</li>
+            <li>✓ Advanced search and filtering</li>
+            <li>✓ Bulk link operations</li>
+            <li>✓ Copy all links on page</li>
+            <li>✓ Sync across devices</li>
+            <li>✓ Priority support</li>
+          </ul>
+        </div>
+        
+        <div class="premium-actions">
+          <button id="upgrade-btn" class="btn btn-premium">Upgrade to Premium</button>
+          <button id="trial-btn" class="btn btn-trial">Start 7-day Free Trial</button>
+        </div>
+      </section>
+
+      <!-- History Management -->
+      <section class="settings-section">
+        <h2>Link History</h2>
+        <div class="history-stats">
+          <div class="stat-item">
+            <span class="stat-number" id="total-links">0</span>
+            <span class="stat-label">Total Links</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-number" id="total-copied">0</span>
+            <span class="stat-label">Times Copied</span>
+          </div>
+        </div>
+        
+        <div class="history-actions">
+          <button id="clear-history" class="btn btn-danger">Clear All History</button>
+          <button id="export-history" class="btn btn-success" disabled>Export History (Premium)</button>
+        </div>
+        
+        <div class="history-preview">
+          <h3>Recent Links</h3>
+          <div id="recent-links-preview" class="links-preview">
+            <!-- Recent links will be populated by JavaScript -->
+          </div>
+        </div>
+      </section>
+
+      <!-- Data Management -->
+      <section class="settings-section">
+        <h2>Data Management</h2>
+        <div class="data-actions">
+          <button id="export-data" class="btn btn-secondary" disabled>Export All Data (Premium)</button>
+          <button id="import-data" class="btn btn-secondary" disabled>Import Data (Premium)</button>
+          <button id="reset-data" class="btn btn-danger">Reset All Data</button>
+        </div>
+        <p class="help-text">
+          Export/Import functionality is available for Premium users. 
+          This allows you to backup and restore your link history across devices.
+        </p>
+      </section>
+
+      <!-- About Section -->
+      <section class="settings-section">
+        <h2>About</h2>
+        <div class="about-content">
+          <div class="app-info">
+            <img src="logo.png" alt="Logo" class="app-logo" />
+            <div class="app-details">
+              <h3>QuickLink Copier</h3>
+              <p>Version 1.0.0</p>
+              <p>One-click link copying with history and export features.</p>
+            </div>
+          </div>
+          
+          <div class="developer-info">
+            <p><strong>Developed by:</strong> Olé</p>
+            <p><strong>Support:</strong> <a href="mailto:support@quicklinkcopier.com">support@quicklinkcopier.com</a></p>
+          </div>
+          
+          <div class="links">
+            <a href="#" class="link">Privacy Policy</a>
+            <a href="#" class="link">Terms of Service</a>
+            <a href="#" class="link">Report Issue</a>
+          </div>
+        </div>
+      </section>
+    </div>
+  </main>
+  
+  <script src="options.js"></script>
+</body>
+</html>
