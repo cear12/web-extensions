@@ -12,7 +12,8 @@
   let currentTab = null;
   let linkHistory = [];
   let stats = { totalCopied: 0, dailyCopied: 0 };
-  let settings = { showNotifications: true, autoTags: true, maxHistorySize: 50 };
+  let premium = { active: false };
+  let settings = { showNotifications: true, autoTags: true, maxHistorySize: 5 };
 
   // Translation system
   const translations = {
@@ -21,6 +22,7 @@
       'link-history': 'Link History',
       'settings': 'Settings',
       'language': 'Language',
+      'premium': 'Premium',
       'about': 'About',
       'preferences': 'Preferences',
       'history': 'History',
@@ -36,6 +38,9 @@
       'show-notifications': 'Show notifications',
       'auto-tags': 'Auto-generate tags',
       'max-history-size': 'Max history size',
+      'premium-features': 'Premium Features',
+      'upgrade-to-premium': 'Upgrade to Premium',
+      'start-trial': 'Start 7-day Free Trial',
       'developed-by': 'Developed by',
       'link-copied': 'Link copied!',
       'url-copied': 'URL copied to clipboard!',
@@ -43,13 +48,31 @@
       'failed': 'Failed',
       'history-cleared': 'History cleared',
       'no-links': 'No links copied yet',
-      'no-history': 'No links in history'
+      'no-history': 'No links in history',
+      'just-now': 'Just now',
+      'minutes-ago': 'm ago',
+      'hours-ago': 'h ago',
+      'days-ago': 'd ago',
+      'no-active-tab': 'No active tab found',
+      'failed-to-clear-history': 'Failed to clear history',
+      'export-premium-feature': 'Export is a premium feature',
+      'no-history-to-export': 'No history to export',
+      'export-coming-soon': 'Export functionality coming soon!',
+      'premium-upgrade-coming-soon': 'Premium upgrade coming soon!',
+      'free-trial-coming-soon': 'Free trial coming soon!',
+      'other-products': 'Other Products',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': 'Learn vocabulary while browsing. Expand your word knowledge with interactive flashcards.',
+      'qrCodeGeneratorName': 'QR Code Generator',
+      'qrCodeGeneratorDescription': 'Generate QR codes for any URL instantly. Share links easily with mobile devices.',
+      'viewInStore': 'View in Store'
     },
     es: {
       'menu': 'Menú',
       'link-history': 'Historial de Enlaces',
       'settings': 'Configuración',
       'language': 'Idioma',
+      'premium': 'Premium',
       'about': 'Acerca de',
       'preferences': 'Preferencias',
       'history': 'Historial',
@@ -65,6 +88,9 @@
       'show-notifications': 'Mostrar notificaciones',
       'auto-tags': 'Generar etiquetas automáticamente',
       'max-history-size': 'Tamaño máximo del historial',
+      'premium-features': 'Características Premium',
+      'upgrade-to-premium': 'Actualizar a Premium',
+      'start-trial': 'Iniciar Prueba Gratuita de 7 Días',
       'developed-by': 'Desarrollado por',
       'link-copied': '¡Enlace copiado!',
       'url-copied': '¡URL copiada al portapapeles!',
@@ -72,13 +98,31 @@
       'failed': 'Falló',
       'history-cleared': 'Historial limpiado',
       'no-links': 'Aún no se han copiado enlaces',
-      'no-history': 'No hay enlaces en el historial'
+      'no-history': 'No hay enlaces en el historial',
+      'just-now': 'Ahora mismo',
+      'minutes-ago': 'm atrás',
+      'hours-ago': 'h atrás',
+      'days-ago': 'd atrás',
+      'no-active-tab': 'No se encontró pestaña activa',
+      'failed-to-clear-history': 'Error al limpiar historial',
+      'export-premium-feature': 'La exportación es una función premium',
+      'no-history-to-export': 'No hay historial para exportar',
+      'export-coming-soon': '¡Funcionalidad de exportación próximamente!',
+      'premium-upgrade-coming-soon': '¡Actualización premium próximamente!',
+      'free-trial-coming-soon': '¡Prueba gratuita próximamente!',
+      'other-products': 'Otros Productos',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': 'Aprende vocabulario mientras navegas. Expande tu conocimiento de palabras con tarjetas interactivas.',
+      'qrCodeGeneratorName': 'Generador de Códigos QR',
+      'qrCodeGeneratorDescription': 'Genera códigos QR para cualquier URL al instante. Comparte enlaces fácilmente con dispositivos móviles.',
+      'viewInStore': 'Ver en la Tienda'
     },
     ru: {
       'menu': 'Меню',
       'link-history': 'История Ссылок',
       'settings': 'Настройки',
       'language': 'Язык',
+      'premium': 'Премиум',
       'about': 'О программе',
       'preferences': 'Предпочтения',
       'history': 'История',
@@ -94,6 +138,9 @@
       'show-notifications': 'Показывать уведомления',
       'auto-tags': 'Автоматически создавать теги',
       'max-history-size': 'Максимальный размер истории',
+      'premium-features': 'Премиум функции',
+      'upgrade-to-premium': 'Обновить до Премиум',
+      'start-trial': 'Начать 7-дневную пробную версию',
       'developed-by': 'Разработано',
       'link-copied': 'Ссылка скопирована!',
       'url-copied': 'URL скопирован в буфер обмена!',
@@ -101,7 +148,74 @@
       'failed': 'Ошибка',
       'history-cleared': 'История очищена',
       'no-links': 'Ссылки еще не копировались',
-      'no-history': 'Нет ссылок в истории'
+      'no-history': 'Нет ссылок в истории',
+      'just-now': 'Только что',
+      'minutes-ago': 'м назад',
+      'hours-ago': 'ч назад',
+      'days-ago': 'д назад',
+      'no-active-tab': 'Активная вкладка не найдена',
+      'failed-to-clear-history': 'Ошибка при очистке истории',
+      'export-premium-feature': 'Экспорт - это премиум функция',
+      'no-history-to-export': 'Нет истории для экспорта',
+      'export-coming-soon': 'Функция экспорта скоро появится!',
+      'premium-upgrade-coming-soon': 'Обновление до премиум скоро!',
+      'free-trial-coming-soon': 'Бесплатная пробная версия скоро!',
+      'other-products': 'Другие Продукты',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': 'Изучайте словарный запас во время просмотра. Расширяйте знания слов с помощью интерактивных карточек.',
+      'qrCodeGeneratorName': 'Генератор QR Кодов',
+      'qrCodeGeneratorDescription': 'Генерируйте QR коды для любой ссылки мгновенно. Легко делитесь ссылками с мобильными устройствами.',
+      'viewInStore': 'Посмотреть в Магазине'
+    },
+    zh: {
+      'menu': '菜单',
+      'link-history': '链接历史',
+      'settings': '设置',
+      'language': '语言',
+      'premium': '高级版',
+      'about': '关于',
+      'preferences': '偏好设置',
+      'history': '历史记录',
+      'select-language': '选择语言',
+      'current-page': '当前页面',
+      'copy-current-url': '复制当前URL',
+      'total-copied': '总计复制',
+      'today': '今天',
+      'recent-links': '最近链接',
+      'view-all': '查看全部',
+      'clear-history': '清除历史',
+      'export-history': '导出历史',
+      'show-notifications': '显示通知',
+      'auto-tags': '自动生成标签',
+      'max-history-size': '最大历史记录大小',
+      'premium-features': '高级功能',
+      'upgrade-to-premium': '升级到高级版',
+      'start-trial': '开始7天免费试用',
+      'developed-by': '开发者',
+      'link-copied': '链接已复制！',
+      'url-copied': 'URL已复制到剪贴板！',
+      'copied': '已复制',
+      'failed': '失败',
+      'history-cleared': '历史记录已清除',
+      'no-links': '尚未复制任何链接',
+      'no-history': '历史记录中无链接',
+      'just-now': '刚刚',
+      'minutes-ago': '分钟前',
+      'hours-ago': '小时前',
+      'days-ago': '天前',
+      'no-active-tab': '未找到活动标签页',
+      'failed-to-clear-history': '清除历史记录失败',
+      'export-premium-feature': '导出是高级功能',
+      'no-history-to-export': '没有历史记录可导出',
+      'export-coming-soon': '导出功能即将推出！',
+      'premium-upgrade-coming-soon': '高级版升级即将推出！',
+      'free-trial-coming-soon': '免费试用即将推出！',
+      'other-products': '其他产品',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': '在浏览时学习词汇。通过互动卡片扩展您的词汇知识。',
+      'qrCodeGeneratorName': '二维码生成器',
+      'qrCodeGeneratorDescription': '为任何URL即时生成二维码。轻松与移动设备分享链接。',
+      'viewInStore': '在商店中查看'
     }
   };
   
@@ -158,11 +272,12 @@
   async function loadData() {
     try {
       const data = await chrome.storage.local.get([
-        'linkHistory', 'stats', 'settings'
+        'linkHistory', 'stats', 'premium', 'settings'
       ]);
-
+      
       linkHistory = data.linkHistory || [];
       stats = data.stats || { totalCopied: 0, dailyCopied: 0 };
+      premium = data.premium || { active: false };
       settings = { ...settings, ...data.settings };
       
     } catch (error) {
@@ -189,6 +304,13 @@
     if (closeBtn) {
       closeBtn.addEventListener('click', () => window.close());
     }
+    
+    // Close popup when it loses focus (same as left-click behavior)
+    window.addEventListener('blur', () => {
+      console.log('Popup lost focus, attempting to close');
+      // Try to close popup by sending message to background script
+      chrome.runtime.sendMessage({ action: 'closePopup' });
+    });
     
     // Menu close button
     const menuCloseBtn = $('#menu-close');
@@ -230,6 +352,12 @@
       clearHistoryMainBtn.addEventListener('click', clearHistory);
     }
     
+    // Export history button
+    const exportHistoryBtn = $('#export-history');
+    if (exportHistoryBtn) {
+      exportHistoryBtn.addEventListener('click', exportHistory);
+    }
+    
     // Settings checkboxes
     const showNotificationsCheckbox = $('#show-notifications');
     if (showNotificationsCheckbox) {
@@ -249,13 +377,29 @@
       translatePage(e.target.value);
       });
     }
+    
+    // Premium buttons
+    const upgradeBtn = $('#upgrade-btn');
+    if (upgradeBtn) {
+      upgradeBtn.addEventListener('click', () => {
+        showToast(t('premium-upgrade-coming-soon'), 'info');
+      });
+    }
+    
+    const trialBtn = $('#trial-btn');
+    if (trialBtn) {
+      trialBtn.addEventListener('click', () => {
+        showToast(t('free-trial-coming-soon'), 'info');
+      });
+    }
+    
   }
   
   // Copy current URL
   async function copyCurrentUrl() {
     try {
       if (!currentTab) {
-        showToast('No active tab found', 'error');
+        showToast(t('no-active-tab'), 'error');
         return;
       }
 
@@ -308,7 +452,7 @@
       linkHistory.unshift(linkData);
       
       // Apply size limit
-      const maxSize = settings.maxHistorySize;
+      const maxSize = premium.active ? 1000 : settings.maxHistorySize;
       if (linkHistory.length > maxSize) {
         linkHistory = linkHistory.slice(0, maxSize);
       }
@@ -463,7 +607,10 @@
     
     // Update clear history button state
     updateClearHistoryButton();
-
+    
+    // Update premium banner
+    updatePremiumBanner();
+    
     // Update settings checkboxes
     const showNotificationsCheckbox = $('#show-notifications');
     const autoTagsCheckbox = $('#auto-tags');
@@ -474,6 +621,9 @@
     if (autoTagsCheckbox) {
       autoTagsCheckbox.checked = settings.autoTags;
     }
+    
+    // Update premium status
+    updatePremiumStatus();
   }
   
   // Update recent links
@@ -534,6 +684,40 @@
     });
   }
   
+  // Update premium banner
+  function updatePremiumBanner() {
+    const banner = $('#premium-banner');
+    if (!banner) return;
+    
+    if (premium.active) {
+      banner.classList.add('hidden');
+  } else {
+      banner.classList.remove('hidden');
+    }
+  }
+  
+  // Update premium status
+  function updatePremiumStatus() {
+    const premiumStatus = $('#premium-status');
+    if (!premiumStatus) return;
+    
+    if (premium.active) {
+      premiumStatus.innerHTML = `
+        <div class="status-premium">
+          <h4>Premium Active</h4>
+          <p>You have access to all premium features!</p>
+        </div>
+      `;
+    } else {
+      premiumStatus.innerHTML = `
+        <div class="status-free">
+          <h4>Free Version</h4>
+          <p>You're using the free version with basic features.</p>
+        </div>
+      `;
+    }
+  }
+  
   // Menu functions
   function openMenu() {
     const menuWidget = $('#menu-widget');
@@ -586,7 +770,7 @@
     if (clearHistoryBtn) {
       if (linkHistory.length === 0) {
         clearHistoryBtn.disabled = true;
-      } else {
+    } else {
         clearHistoryBtn.disabled = false;
       }
     }
@@ -603,8 +787,24 @@
         updateUI();
       } catch (error) {
         console.error('Error clearing history:', error);
-        showToast('Failed to clear history', 'error');
+        showToast(t('failed-to-clear-history'), 'error');
       }
+  }
+  
+  // Export history
+  async function exportHistory() {
+    if (!premium.active) {
+      showToast(t('export-premium-feature'), 'error');
+      return;
+    }
+    
+    if (linkHistory.length === 0) {
+      showToast(t('no-history-to-export'), 'error');
+      return;
+    }
+    
+    // TODO: Implement export functionality
+    showToast(t('export-coming-soon'), 'info');
   }
   
   // Update settings
@@ -632,10 +832,10 @@
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
     
-    if (minutes < 1) return 'Just now';
-    if (minutes < 60) return `${minutes}m ago`;
-    if (hours < 24) return `${hours}h ago`;
-    if (days < 7) return `${days}d ago`;
+    if (minutes < 1) return t('just-now');
+    if (minutes < 60) return `${minutes}${t('minutes-ago')}`;
+    if (hours < 24) return `${hours}${t('hours-ago')}`;
+    if (days < 7) return `${days}${t('days-ago')}`;
     
     return new Date(timestamp).toLocaleDateString();
   }

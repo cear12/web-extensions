@@ -30,12 +30,27 @@
             <span class="menu-icon">🌐</span>
             <span data-i18n="language">Language</span>
           </button>
+          <button type="button" class="menu-item" data-section="other-products">
+            <span class="menu-icon">🛍️</span>
+            <span data-i18n="other-products">Other Products</span>
+          </button>
           <button type="button" class="menu-item" data-section="about">
             <span class="menu-icon">ℹ</span>
             <span data-i18n="about">About</span>
           </button>
         </div>
         
+        <!-- Menu Footer with Product Icons -->
+        <div class="menu-footer">
+          <div class="menu-footer-products">
+            <a href="https://chrome.google.com/webstore/detail/ihgjpdiecnlhilmeehhhgngcilamaoll" target="_blank" class="menu-product-link" data-product="word-hero" title="WordHero - Learn vocabulary while browsing">
+              <img src="word-hero.png" alt="WordHero" class="menu-product-icon">
+            </a>
+            <a href="https://chrome.google.com/webstore/detail/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="menu-product-link" data-product="qr-code-generator" title="QR Code Generator - Generate QR codes for any URL instantly">
+              <img src="qr-code-generator.png" alt="QR Code Generator" class="menu-product-icon">
+            </a>
+          </div>
+        </div>
 
         <!-- Settings Panel -->
         <div id="settings-panel" class="menu-panel hidden">
@@ -77,15 +92,48 @@
               <legend data-i18n="select-language">Select Language</legend>
               <label>
                 <select id="language-select">
-                  <option value="en" selected>English</option>
-                  <option value="es">Español</option>
-                  <option value="ru">Русский</option>
+                  <option value="en" selected>🇺🇸 English</option>
+                  <option value="es">🇪🇸 Español</option>
+                  <option value="ru">🇷🇺 Русский</option>
+                  <option value="zh">🇨🇳 中文</option>
                 </select>
               </label>
             </fieldset>
           </div>
         </div>
 
+        <!-- Other Products Panel -->
+        <div id="other-products-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <h3 data-i18n="other-products">Other Products</h3>
+          </div>
+          <div class="menu-panel-content">
+            <div class="products-list">
+              <div class="product-item" data-product="word-hero">
+                <div class="product-icon">
+                  <img src="word-hero.png" alt="WordHero" class="product-icon-img">
+                </div>
+                <div class="product-info">
+                  <h4 data-i18n="wordHeroName">WordHero</h4>
+                  <p data-i18n="wordHeroDescription">Learn vocabulary while browsing. Expand your word knowledge with interactive flashcards.</p>
+                  <a href="https://chrome.google.com/webstore/detail/ihgjpdiecnlhilmeehhhgngcilamaoll" target="_blank" class="product-link" data-i18n="viewInStore">View in Store</a>
+                </div>
+              </div>
+              
+              <div class="product-item" data-product="qr-code-generator">
+                <div class="product-icon">
+                  <img src="qr-code-generator.png" alt="QR Code Generator" class="product-icon-img">
+                </div>
+                <div class="product-info">
+                  <h4 data-i18n="qrCodeGeneratorName">QR Code Generator</h4>
+                  <p data-i18n="qrCodeGeneratorDescription">Generate QR codes for any URL instantly. Share links easily with mobile devices.</p>
+                  <a href="https://chrome.google.com/webstore/detail/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="product-link" data-i18n="viewInStore">View in Store</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
 
         <!-- About Panel -->
         <div id="about-panel" class="menu-panel hidden">
@@ -99,7 +147,7 @@
                 <img src="logo.png" alt="Logo" class="logo" />
                 <h4>QuickLink Copier</h4>
               </div>
-              <p>Version 1.0.0</p>
+              <p>Version 1.1.2</p>
               <p>Developed by Olé</p>
               <p>One-click link copying with history and export features.</p>
               

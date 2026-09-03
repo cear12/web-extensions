@@ -1,35 +1,35 @@
 // Background script for QuickLink Copier Extension
-// Handles context menus, the copy-current-url keyboard command, clipboard
-// operations (via one-shot chrome.scripting injection), and storage.
+// Handles context menus, clipboard operations, and storage management
 
 // Initialize extension on install
 chrome.runtime.onInstalled.addListener(async () => {
+  console.log('QuickLink Copier extension installed');
+  
+  // Create context menu items
   chrome.contextMenus.create({
     id: 'copy-current-url',
     title: 'Copy page URL',
     contexts: ['page']
   });
-
+  
   chrome.contextMenus.create({
     id: 'copy-link-url',
     title: 'Copy this link',
     contexts: ['link']
   });
-
-  chrome.contextMenus.create({
-    id: 'copy-all-links',
-    title: 'Copy all links on page',
-    contexts: ['page']
-  });
-
-  // Initialize storage with default values (only if this is a fresh install --
-  // don't clobber an existing user's history/settings on update).
+  
+  
+  // Initialize storage with default values
   const defaultData = {
     linkHistory: [],
     settings: {
-      maxHistorySize: 50,
+      maxHistorySize: 10, // Free limit
       autoTags: true,
       showNotifications: true
+    },
+    premium: {
+      active: false,
+      expiryDate: null
     },
     stats: {
       totalCopied: 0,
@@ -37,7 +37,8 @@ chrome.runtime.onInstalled.addListener(async () => {
       lastResetDate: new Date().toDateString()
     }
   };
-
+  
+  // Set default data if not exists
   const existingData = await chrome.storage.local.get();
   if (!existingData.linkHistory) {
     await chrome.storage.local.set(defaultData);
@@ -54,31 +55,9 @@ chrome.contextMenus.onClicked.addListener(async (info, tab) => {
       case 'copy-link-url':
         await copyLinkUrl(info.linkUrl, info.linkText, tab);
         break;
-      case 'copy-all-links':
-        await copyAllLinksOnPage(tab);
-        break;
     }
   } catch (error) {
     console.error('Error handling context menu click:', error);
-  }
-});
-
-// Handle the copy-current-url keyboard shortcut (Ctrl/Cmd+Shift+C, see
-// manifest.json "commands"). Using chrome.commands instead of a content
-// script listening for keydown means this works without injecting anything
-// into every page, and without needing <all_urls> host permissions --
-// activeTab (already granted per-invocation by commands/contextMenus) is
-// enough for the one-shot script injection below.
-chrome.commands.onCommand.addListener(async (command) => {
-  if (command !== 'copy-current-url') return;
-
-  try {
-    const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
-    if (tab) {
-      await copyCurrentPageUrl(tab);
-    }
-  } catch (error) {
-    console.error('Error handling copy-current-url command:', error);
   }
 });
 
@@ -88,13 +67,43 @@ async function copyCurrentPageUrl(tab) {
     const url = tab.url;
     const title = tab.title;
     const domain = new URL(url).hostname;
-
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: copyToClipboard,
-      args: [url]
-    });
-
+    
+    // Copy to clipboard
+    if (chrome.scripting && chrome.scripting.executeScript) {
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: copyToClipboard,
+          args: [url]
+        });
+      } catch (scriptError) {
+        console.warn('Scripting failed, trying alternative method:', scriptError);
+        // Alternative: inject inline script
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: (text) => {
+              const textarea = document.createElement('textarea');
+              textarea.value = text;
+              document.body.appendChild(textarea);
+              textarea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textarea);
+            },
+            args: [url]
+          });
+        } catch (finalError) {
+          console.error('All copy methods failed:', finalError);
+          // If copying fails, still save to history
+          await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
+        }
+      }
+    } else {
+      console.warn('chrome.scripting not available, skipping clipboard copy');
+      await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
+    }
+    
+    // Save to history
     await saveToHistory({
       url,
       title,
@@ -102,10 +111,13 @@ async function copyCurrentPageUrl(tab) {
       timestamp: Date.now(),
       tags: []
     });
-
+    
+    // Update stats
     await updateStats();
+    
+    // Show notification
     await showNotification('Link copied!', `Copied: ${title}`);
-
+    
   } catch (error) {
     console.error('Error copying current page URL:', error);
   }
@@ -116,13 +128,43 @@ async function copyLinkUrl(linkUrl, linkText, tab) {
   try {
     const domain = new URL(linkUrl).hostname;
     const title = linkText || linkUrl;
-
-    await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: copyToClipboard,
-      args: [linkUrl]
-    });
-
+    
+    // Copy to clipboard
+    if (chrome.scripting && chrome.scripting.executeScript) {
+      try {
+        await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: copyToClipboard,
+          args: [linkUrl]
+        });
+      } catch (scriptError) {
+        console.warn('Scripting failed, trying alternative method:', scriptError);
+        // Alternative: inject inline script
+        try {
+          await chrome.scripting.executeScript({
+            target: { tabId: tab.id },
+            func: (text) => {
+              const textarea = document.createElement('textarea');
+              textarea.value = text;
+              document.body.appendChild(textarea);
+              textarea.select();
+              document.execCommand('copy');
+              document.body.removeChild(textarea);
+            },
+            args: [linkUrl]
+          });
+        } catch (finalError) {
+          console.error('All copy methods failed:', finalError);
+          // If copying fails, still save to history
+          await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
+        }
+      }
+    } else {
+      console.warn('chrome.scripting not available, skipping clipboard copy');
+      await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
+    }
+    
+    // Save to history
     await saveToHistory({
       url: linkUrl,
       title,
@@ -130,37 +172,74 @@ async function copyLinkUrl(linkUrl, linkText, tab) {
       timestamp: Date.now(),
       tags: []
     });
-
+    
+    // Update stats
     await updateStats();
+    
+    // Show notification
     await showNotification('Link copied!', `Copied: ${title}`);
-
+    
   } catch (error) {
     console.error('Error copying link URL:', error);
   }
 }
 
-// Copy all links on the current page
+// Copy all links on page (Premium feature)
 async function copyAllLinksOnPage(tab) {
   try {
-    const result = await chrome.scripting.executeScript({
-      target: { tabId: tab.id },
-      func: getAllLinksFromPage
-    });
-    const links = result[0].result;
-
+    // Check premium status
+    const data = await chrome.storage.local.get(['premium']);
+    if (!data.premium.active) {
+      await showNotification('Premium Required', 'This feature requires a premium subscription.');
+      return;
+    }
+    
+    // Get all links from page
+    let links = [];
+    try {
+      // Try using chrome.scripting if available
+      if (chrome.scripting && chrome.scripting.executeScript) {
+        const result = await chrome.scripting.executeScript({
+          target: { tabId: tab.id },
+          func: getAllLinksFromPage
+        });
+        links = result[0].result;
+      } else {
+        // Fallback: send message to content script
+        const response = await chrome.tabs.sendMessage(tab.id, {
+          action: 'getAllLinks'
+        });
+        links = response.links || [];
+      }
+    } catch (scriptError) {
+      console.warn('Scripting failed, trying alternative method:', scriptError);
+      // Alternative: use chrome.tabs.sendMessage to content script
+      try {
+        const response = await chrome.tabs.sendMessage(tab.id, {
+          action: 'getAllLinks'
+        });
+        links = response.links || [];
+      } catch (messageError) {
+        console.error('All methods failed:', messageError);
+        throw new Error('Unable to get links from page');
+      }
+    }
     if (links.length === 0) {
       await showNotification('No Links Found', 'No clickable links found on this page.');
       return;
     }
-
+    
+    // Format links for clipboard
     const linkText = links.map(link => `${link.text}: ${link.url}`).join('\n');
-
+    
+    // Copy to clipboard
     await chrome.scripting.executeScript({
       target: { tabId: tab.id },
       func: copyToClipboard,
       args: [linkText]
     });
-
+    
+    // Save each link to history
     for (const link of links) {
       await saveToHistory({
         url: link.url,
@@ -170,10 +249,13 @@ async function copyAllLinksOnPage(tab) {
         tags: ['bulk-copy']
       });
     }
-
+    
+    // Update stats
     await updateStats();
+    
+    // Show notification
     await showNotification('All Links Copied!', `Copied ${links.length} links to clipboard.`);
-
+    
   } catch (error) {
     console.error('Error copying all links:', error);
   }
@@ -182,19 +264,23 @@ async function copyAllLinksOnPage(tab) {
 // Save link to history
 async function saveToHistory(linkData) {
   try {
-    const data = await chrome.storage.local.get(['linkHistory', 'settings']);
+    const data = await chrome.storage.local.get(['linkHistory', 'settings', 'premium']);
     let history = data.linkHistory || [];
-    const settings = data.settings || { maxHistorySize: 50 };
-
+    const settings = data.settings || { maxHistorySize: 10 };
+    const premium = data.premium || { active: false };
+    
+    // Add new link to beginning of history
     history.unshift(linkData);
-
-    const maxSize = settings.maxHistorySize || 50;
+    
+    // Apply history size limit
+    const maxSize = premium.active ? 1000 : settings.maxHistorySize;
     if (history.length > maxSize) {
       history = history.slice(0, maxSize);
     }
-
+    
+    // Save updated history
     await chrome.storage.local.set({ linkHistory: history });
-
+    
   } catch (error) {
     console.error('Error saving to history:', error);
   }
@@ -209,18 +295,21 @@ async function updateStats() {
       dailyCopied: 0,
       lastResetDate: new Date().toDateString()
     };
-
+    
+    // Reset daily counter if new day
     const today = new Date().toDateString();
     if (stats.lastResetDate !== today) {
       stats.dailyCopied = 0;
       stats.lastResetDate = today;
     }
-
+    
+    // Update counters
     stats.totalCopied++;
     stats.dailyCopied++;
-
+    
+    // Save updated stats
     await chrome.storage.local.set({ stats });
-
+    
   } catch (error) {
     console.error('Error updating stats:', error);
   }
@@ -231,26 +320,30 @@ async function showNotification(title, message) {
   try {
     const data = await chrome.storage.local.get(['settings']);
     const settings = data.settings || { showNotifications: true };
-
-    if (settings.showNotifications) {
+    
+    if (settings.showNotifications && chrome.notifications && chrome.notifications.create) {
       chrome.notifications.create({
         type: 'basic',
         iconUrl: 'icon48.png',
         title: title,
         message: message
       });
+    } else {
+      // Fallback: just log to console
+      console.log(`Notification: ${title} - ${message}`);
     }
   } catch (error) {
     console.error('Error showing notification:', error);
+    // Fallback: just log to console
+    console.log(`Notification: ${title} - ${message}`);
   }
 }
 
-// Functions below are injected into the target page via
-// chrome.scripting.executeScript -- they run in the page's own context, not
-// this service worker's, so they can't reference anything defined above.
-
+// Functions to be injected into content scripts
 function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).catch(err => {
+  navigator.clipboard.writeText(text).then(() => {
+    console.log('Text copied to clipboard:', text);
+  }).catch(err => {
     console.error('Failed to copy text: ', err);
   });
 }
@@ -258,11 +351,12 @@ function copyToClipboard(text) {
 function getAllLinksFromPage() {
   const links = [];
   const linkElements = document.querySelectorAll('a[href]');
-
+  
   linkElements.forEach(link => {
     const url = link.href;
     const text = link.textContent.trim() || link.title || url;
-
+    
+    // Filter out invalid URLs
     try {
       new URL(url);
       if (url.startsWith('http://') || url.startsWith('https://')) {
@@ -272,6 +366,53 @@ function getAllLinksFromPage() {
       // Invalid URL, skip
     }
   });
-
+  
   return links;
 }
+
+// Handle messages from popup/content scripts
+chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  switch (request.action) {
+    case 'getHistory':
+      chrome.storage.local.get(['linkHistory']).then(data => {
+        sendResponse({ history: data.linkHistory || [] });
+      });
+      return true; // Keep message channel open for async response
+      
+    case 'clearHistory':
+      chrome.storage.local.set({ linkHistory: [] }).then(() => {
+        sendResponse({ success: true });
+      });
+      return true;
+      
+    case 'getStats':
+      chrome.storage.local.get(['stats']).then(data => {
+        sendResponse({ stats: data.stats || { totalCopied: 0, dailyCopied: 0 } });
+      });
+      return true;
+      
+    case 'getPremiumStatus':
+      chrome.storage.local.get(['premium']).then(data => {
+        sendResponse({ premium: data.premium || { active: false } });
+      });
+      return true;
+      
+    case 'updateSettings':
+      chrome.storage.local.set({ settings: request.settings }).then(() => {
+        sendResponse({ success: true });
+      });
+      return true;
+    case 'closePopup':
+      // Close popup by temporarily disabling and re-enabling it
+      try {
+        chrome.action.setPopup({ popup: '' });
+        setTimeout(() => {
+          chrome.action.setPopup({ popup: 'popup.html' });
+        }, 100);
+      } catch (e) {
+        // Ignore errors if popup is not open
+      }
+      sendResponse({ success: true });
+      return true;
+  }
+});

@@ -1,99 +1,134 @@
 // Options page script for QuickLink Copier Extension
-// Handles settings management and data (export/import/reset) operations
+// Handles settings management, premium features, and data operations
 
 (() => {
   'use strict';
-
+  
   // DOM elements
   const $ = (sel) => document.querySelector(sel);
-
+  const $$ = (sel) => document.querySelectorAll(sel);
+  
   // State
-  let settings = { showNotifications: true, autoTags: true, maxHistorySize: 50 };
+  let settings = { showNotifications: true, autoTags: true, maxHistorySize: 10 };
+  let premium = { active: false };
   let linkHistory = [];
   let stats = { totalCopied: 0, dailyCopied: 0 };
-
+  
   // Initialize options page
   async function init() {
     try {
+      // Load data from storage
       await loadData();
+      
+      // Setup event listeners
       setupEventListeners();
+      
+      // Update UI
       updateUI();
+      
     } catch (error) {
       console.error('Error initializing options page:', error);
     }
   }
-
+  
   // Load data from Chrome storage
   async function loadData() {
     try {
       const data = await chrome.storage.local.get([
-        'settings', 'linkHistory', 'stats'
+        'settings', 'premium', 'linkHistory', 'stats'
       ]);
-
+      
       settings = { ...settings, ...data.settings };
+      premium = data.premium || { active: false };
       linkHistory = data.linkHistory || [];
       stats = data.stats || { totalCopied: 0, dailyCopied: 0 };
-
+      
     } catch (error) {
       console.error('Error loading data:', error);
     }
   }
-
+  
   // Setup event listeners
   function setupEventListeners() {
+    // General settings form
     const generalForm = $('#general-settings');
     if (generalForm) {
       generalForm.addEventListener('submit', handleGeneralSettingsSubmit);
     }
-
+    
+    // Premium buttons
+    const upgradeBtn = $('#upgrade-btn');
+    if (upgradeBtn) {
+      upgradeBtn.addEventListener('click', handleUpgrade);
+    }
+    
+    const trialBtn = $('#trial-btn');
+    if (trialBtn) {
+      trialBtn.addEventListener('click', handleTrial);
+    }
+    
+    // History management
     const clearHistoryBtn = $('#clear-history');
     if (clearHistoryBtn) {
       clearHistoryBtn.addEventListener('click', handleClearHistory);
     }
-
+    
     const exportHistoryBtn = $('#export-history');
     if (exportHistoryBtn) {
       exportHistoryBtn.addEventListener('click', handleExportHistory);
     }
-
+    
+    // Data management
     const exportDataBtn = $('#export-data');
     if (exportDataBtn) {
       exportDataBtn.addEventListener('click', handleExportData);
     }
-
+    
     const importDataBtn = $('#import-data');
     if (importDataBtn) {
       importDataBtn.addEventListener('click', handleImportData);
     }
-
+    
     const resetDataBtn = $('#reset-data');
     if (resetDataBtn) {
       resetDataBtn.addEventListener('click', handleResetData);
     }
   }
-
+  
   // Handle general settings form submission
   async function handleGeneralSettingsSubmit(e) {
     e.preventDefault();
-
+    
     try {
       const showNotifications = $('#show-notifications')?.checked ?? true;
       const autoTags = $('#auto-tags')?.checked ?? true;
-      const maxHistory = parseInt($('#max-history')?.value ?? '50', 10);
-
+      const maxHistory = parseInt($('#max-history')?.value ?? '10', 10);
+      
       settings.showNotifications = showNotifications;
       settings.autoTags = autoTags;
       settings.maxHistorySize = Math.max(5, Math.min(1000, maxHistory));
-
+      
       await chrome.storage.local.set({ settings });
       showMessage('Settings saved successfully!', 'success');
-
+      
     } catch (error) {
       console.error('Error saving settings:', error);
       showMessage('Failed to save settings', 'error');
     }
   }
-
+  
+  // Handle premium upgrade
+  function handleUpgrade() {
+    // TODO: Implement premium upgrade integration
+    showMessage('Premium upgrade integration coming soon!', 'info');
+  }
+  
+  // Handle free trial
+  function handleTrial() {
+    // TODO: Implement free trial
+    showMessage('Free trial integration coming soon!', 'info');
+  }
+  
   // Handle clear history
   async function handleClearHistory() {
     if (confirm('Are you sure you want to clear all link history? This action cannot be undone.')) {
@@ -108,87 +143,126 @@
       }
     }
   }
-
+  
   // Handle export history
   async function handleExportHistory() {
+    if (!premium.active) {
+      showMessage('Export is a premium feature', 'error');
+      return;
+    }
+    
     if (linkHistory.length === 0) {
       showMessage('No history to export', 'error');
       return;
     }
-
+    
     try {
       const data = {
         links: linkHistory,
         exportedAt: new Date().toISOString(),
-        version: '1.1.0'
+        version: '1.0.0'
       };
-
-      downloadJson(data, `quicklink-history-${new Date().toISOString().split('T')[0]}.json`);
+      
+      const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `quicklink-history-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
       showMessage('History exported successfully!', 'success');
-
+      
     } catch (error) {
       console.error('Error exporting history:', error);
       showMessage('Failed to export history', 'error');
     }
   }
-
+  
   // Handle export all data
   async function handleExportData() {
+    if (!premium.active) {
+      showMessage('Export is a premium feature', 'error');
+      return;
+    }
+    
     try {
       const allData = await chrome.storage.local.get();
       const exportData = {
         ...allData,
         exportedAt: new Date().toISOString(),
-        version: '1.1.0'
+        version: '1.0.0'
       };
-
-      downloadJson(exportData, `quicklink-backup-${new Date().toISOString().split('T')[0]}.json`);
+      
+      const blob = new Blob([JSON.stringify(exportData, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `quicklink-backup-${new Date().toISOString().split('T')[0]}.json`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
       showMessage('All data exported successfully!', 'success');
-
+      
     } catch (error) {
       console.error('Error exporting data:', error);
       showMessage('Failed to export data', 'error');
     }
   }
-
+  
   // Handle import data
   async function handleImportData() {
+    if (!premium.active) {
+      showMessage('Import is a premium feature', 'error');
+      return;
+    }
+    
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
-
+    
     input.addEventListener('change', async (e) => {
       const file = e.target.files[0];
       if (!file) return;
-
+      
       try {
         const text = await file.text();
         const data = JSON.parse(text);
-
+        
+        // Validate data structure
         if (!data.version || !data.linkHistory) {
           throw new Error('Invalid backup file format');
         }
-
+        
+        // Import data
         await chrome.storage.local.set({
           linkHistory: data.linkHistory || [],
           settings: data.settings || settings,
-          stats: data.stats || stats
+          stats: data.stats || stats,
+          premium: data.premium || premium
         });
-
+        
+        // Reload data and update UI
         await loadData();
         updateUI();
-
+        
         showMessage('Data imported successfully!', 'success');
-
+        
       } catch (error) {
         console.error('Error importing data:', error);
         showMessage('Failed to import data. Please check the file format.', 'error');
       }
     });
-
+    
     input.click();
   }
-
+  
   // Handle reset all data
   async function handleResetData() {
     if (confirm('Are you sure you want to reset ALL data? This will clear your history, settings, and stats. This action cannot be undone.')) {
@@ -205,27 +279,14 @@
       }
     }
   }
-
-  // Trigger a browser download of a JSON payload
-  function downloadJson(data, filename) {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = filename;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
-
+  
   // Update UI
   function updateUI() {
+    // Update settings checkboxes
     const showNotificationsCheckbox = $('#show-notifications');
     const autoTagsCheckbox = $('#auto-tags');
     const maxHistoryInput = $('#max-history');
-
+    
     if (showNotificationsCheckbox) {
       showNotificationsCheckbox.checked = settings.showNotifications;
     }
@@ -234,17 +295,55 @@
     }
     if (maxHistoryInput) {
       maxHistoryInput.value = settings.maxHistorySize;
+      maxHistoryInput.disabled = !premium.active;
     }
-
+    
+    // Update premium status
+    updatePremiumStatus();
+    
+    // Update stats
     updateStats();
+    
+    // Update recent links preview
     updateRecentLinksPreview();
+    
+    // Update button states
+    updateButtonStates();
   }
-
+  
+  // Update premium status
+  function updatePremiumStatus() {
+    const premiumStatus = $('#premium-status');
+    if (!premiumStatus) return;
+    
+    if (premium.active) {
+      premiumStatus.innerHTML = `
+        <div class="status-premium">
+          <div class="status-icon">⭐</div>
+          <div class="status-content">
+            <h3>Premium Active</h3>
+            <p>You have access to all premium features!</p>
+          </div>
+        </div>
+      `;
+    } else {
+      premiumStatus.innerHTML = `
+        <div class="status-free">
+          <div class="status-icon">⭐</div>
+          <div class="status-content">
+            <h3>Free Version</h3>
+            <p>You're currently using the free version with basic features.</p>
+          </div>
+        </div>
+      `;
+    }
+  }
+  
   // Update statistics
   function updateStats() {
     const totalLinksEl = $('#total-links');
     const totalCopiedEl = $('#total-copied');
-
+    
     if (totalLinksEl) {
       totalLinksEl.textContent = linkHistory.length;
     }
@@ -252,25 +351,25 @@
       totalCopiedEl.textContent = stats.totalCopied;
     }
   }
-
+  
   // Update recent links preview
   function updateRecentLinksPreview() {
     const recentLinksPreview = $('#recent-links-preview');
     if (!recentLinksPreview) return;
-
+    
     const recentLinks = linkHistory.slice(0, 5);
-
+    
     if (recentLinks.length === 0) {
       recentLinksPreview.innerHTML = '<div class="no-links">No links in history</div>';
       return;
     }
-
+    
     recentLinksPreview.innerHTML = recentLinks.map(link => {
       const timeAgo = getTimeAgo(link.timestamp);
-      const title = link.title.length > 40
-        ? link.title.substring(0, 40) + '...'
+      const title = link.title.length > 40 
+        ? link.title.substring(0, 40) + '...' 
         : link.title;
-
+      
       return `
         <div class="link-preview-item">
           <div class="link-info">
@@ -282,40 +381,59 @@
       `;
     }).join('');
   }
-
+  
+  // Update button states
+  function updateButtonStates() {
+    const exportHistoryBtn = $('#export-history');
+    const exportDataBtn = $('#export-data');
+    const importDataBtn = $('#import-data');
+    
+    if (exportHistoryBtn) {
+      exportHistoryBtn.disabled = !premium.active;
+    }
+    if (exportDataBtn) {
+      exportDataBtn.disabled = !premium.active;
+    }
+    if (importDataBtn) {
+      importDataBtn.disabled = !premium.active;
+    }
+  }
+  
   // Utility functions
   function getTimeAgo(timestamp) {
     const now = Date.now();
     const diff = now - timestamp;
-
+    
     const minutes = Math.floor(diff / 60000);
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
-
+    
     if (minutes < 1) return 'Just now';
     if (minutes < 60) return `${minutes}m ago`;
     if (hours < 24) return `${hours}h ago`;
     if (days < 7) return `${days}d ago`;
-
+    
     return new Date(timestamp).toLocaleDateString();
   }
-
+  
   function showMessage(message, type = 'info') {
+    // Remove existing message
     const existingMessage = $('#message');
     if (existingMessage) {
       existingMessage.remove();
     }
-
+    
+    // Create new message
     const messageEl = document.createElement('div');
     messageEl.id = 'message';
     messageEl.textContent = message;
-
+    
     const colors = {
       success: '#34A853',
       error: '#EA4335',
       info: '#4285F4'
     };
-
+    
     messageEl.style.cssText = `
       position: fixed;
       top: 20px;
@@ -330,21 +448,22 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
       max-width: 300px;
     `;
-
+    
     document.body.appendChild(messageEl);
-
+    
+    // Remove after 4 seconds
     setTimeout(() => {
       if (messageEl.parentNode) {
         messageEl.parentNode.removeChild(messageEl);
       }
     }, 4000);
   }
-
+  
   // Initialize when DOM is loaded
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
-
+  
 })();
