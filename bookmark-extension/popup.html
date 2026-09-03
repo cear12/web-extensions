@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>File Bookmarks</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Menu"></button>
+      <div class="title"><img src="logo.png" alt="Logo" class="logo" /><h1>File Bookmarks</h1></div>
+      <button type="button" id="close-btn" class="close-btn" aria-label="Close"></button>
+    </header>
+
+    <!-- Menu Widget -->
+    <div id="menu-widget" class="menu-widget hidden">
+      <div class="menu-content">
+        <div class="menu-header">
+          <h2 data-i18n="menu">Menu</h2>
+          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Close menu">×</button>
+        </div>
+        <div class="menu-items">
+          <button type="button" class="menu-item" data-section="language">
+            <span class="menu-icon">🌐</span>
+            <span data-i18n="language">Language</span>
+          </button>
+          <button type="button" class="menu-item" data-section="other-products">
+            <span class="menu-icon">🛍️</span>
+            <span data-i18n="other-products">Other Products</span>
+          </button>
+          <button type="button" class="menu-item" data-section="about">
+            <span class="menu-icon">ℹ</span>
+            <span data-i18n="about">About</span>
+          </button>
+        </div>
+
+        <!-- Menu Footer with Product Icons -->
+        <div class="menu-footer">
+          <div class="menu-footer-products">
+            <a href="https://chromewebstore.google.com/detail/qr-code-generator/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="menu-product-link" title="QR Code Generator" data-product="qr-code-generator">
+              <img src="qr-code-generator.png" alt="QR Code Generator" class="menu-product-icon">
+            </a>
+            <a href="https://chromewebstore.google.com/detail/quicklink-copier/jmgppejkncfplhcfoppmicanldholpdh" target="_blank" class="menu-product-link" title="QuickLink Copier" data-product="quick-link-copier">
+              <img src="quick-link-copier.png" alt="QuickLink Copier" class="menu-product-icon">
+            </a>
+            <a href="https://chromewebstore.google.com/detail/web-privacy-1-click-clean/ojhebbalcoingiphhokfgnpfjahgbjpc" target="_blank" class="menu-product-link" title="Web Privacy - 1-Click Cleanup" data-product="web-privacy">
+              <img src="web-privacy-extension.png" alt="Web Privacy" class="menu-product-icon">
+            </a>
+          </div>
+        </div>
+
+        <!-- Language Panel -->
+        <div id="language-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <h3 data-i18n="language">Language</h3>
+          </div>
+          <div class="menu-panel-content">
+            <fieldset class="language-section">
+              <legend data-i18n="select-language">Select Language</legend>
+              <label>
+                <select id="language-select">
+                  <option value="en" selected>🇺🇸 English</option>
+                  <option value="es">🇪🇸 Español</option>
+                  <option value="ru">🇷🇺 Русский</option>
+                  <option value="zh">🇨🇳 中文</option>
+                </select>
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <!-- Other Products Panel -->
+        <div id="other-products-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <h3 data-i18n="other-products">Other Products</h3>
+          </div>
+          <div class="menu-panel-content">
+            <div class="products-list">
+              <div class="product-item" data-product="qr-code-generator">
+                <div class="product-icon">
+                  <img src="qr-code-generator.png" alt="QR Code Generator" class="product-icon-img">
+                </div>
+                <div class="product-info">
+                  <h4 data-i18n="qr-code-generator-name">QR Code Generator</h4>
+                  <p data-i18n="qr-code-generator-desc">Generate QR codes for text, URL, WiFi, and contacts with customization and PNG download.</p>
+                  <a href="https://chromewebstore.google.com/detail/qr-code-generator/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="product-link" data-i18n="view-in-store">View in Store</a>
+                </div>
+              </div>
+
+              <div class="product-item" data-product="quick-link-copier">
+                <div class="product-icon">
+                  <img src="quick-link-copier.png" alt="QuickLink Copier" class="product-icon-img">
+                </div>
+                <div class="product-info">
+                  <h4 data-i18n="quick-link-copier-name">QuickLink Copier</h4>
+                  <p data-i18n="quick-link-copier-desc">One-click link copying with history.</p>
+                  <a href="https://chromewebstore.google.com/detail/quicklink-copier/jmgppejkncfplhcfoppmicanldholpdh" target="_blank" class="product-link" data-i18n="view-in-store">View in Store</a>
+                </div>
+              </div>
+
+              <div class="product-item" data-product="web-privacy">
+                <div class="product-icon">
+                  <img src="web-privacy-extension.png" alt="Web Privacy" class="product-icon-img">
+                </div>
+                <div class="product-info">
+                  <h4 data-i18n="web-privacy-name">Web Privacy - 1-Click Cleanup</h4>
+                  <p data-i18n="web-privacy-desc">Professional privacy protection. One-click cleanup of browsing data.</p>
+                  <a href="https://chromewebstore.google.com/detail/web-privacy-1-click-clean/ojhebbalcoingiphhokfgnpfjahgbjpc" target="_blank" class="product-link" data-i18n="view-in-store">View in Store</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- About Panel -->
+        <div id="about-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <h3 data-i18n="about">About</h3>
+          </div>
+          <div class="menu-panel-content">
+            <div class="about-content">
+              <div class="about-title">
+                <img src="logo.png" alt="Logo" class="logo" />
+                <h4 data-i18n="app-name">File Bookmarks</h4>
+              </div>
+              <p><span data-i18n="app-version">Version</span> 1.0.0</p>
+              <p data-i18n="app-developer">Developed by Olé</p>
+              <p data-i18n="app-description">Bookmark your place in a TXT or Markdown file and jump straight back to it.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="menu-overlay hidden"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <section class="current-file-section">
+        <div id="tab-info" class="tab-info"></div>
+        <button type="button" id="add-btn" class="btn primary full-width" data-i18n="add-bookmark">+ Bookmark this tab</button>
+      </section>
+
+      <section class="bookmarks-section">
+        <h3 class="section-title" data-i18n="your-bookmarks">Your Bookmarks</h3>
+        <div id="empty-state" class="no-bookmarks hidden" data-i18n="no-bookmarks">
+          No bookmarks yet. Open a TXT or MD file and add one.
+        </div>
+        <ul id="bookmark-list" class="bookmark-list"></ul>
+      </section>
+    </main>
+
+    <template id="item-template">
+      <li class="bookmark-item">
+        <span class="bookmark-badge"></span>
+        <div class="bookmark-info">
+          <div class="bookmark-title"></div>
+          <div class="bookmark-url"></div>
+        </div>
+        <div class="bookmark-actions">
+          <button type="button" class="icon-btn go-btn" data-i18n-title="go" title="Go">➜</button>
+          <button type="button" class="icon-btn rename-btn" data-i18n-title="rename" title="Rename">✎</button>
+          <button type="button" class="icon-btn delete-btn" data-i18n-title="delete" title="Delete">✕</button>
+        </div>
+      </li>
+    </template>
+
+    <footer class="footer">
+      <span data-i18n="developed-by">Developed by</span>
+      <img src="logo.png" alt="Logo" class="logo" />
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>
