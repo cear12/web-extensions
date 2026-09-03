@@ -57,12 +57,9 @@
       'quick-link-copier-desc': 'One-click link copying with history.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.',
-      'word-hero-name': 'WordHero',
-      'word-hero-desc': 'Become a vocabulary hero, one word at a time. Learn new words with floating notifications.',
       'view-in-store': 'View in Store',
       'quick-link-copier-tooltip': 'QuickLink Copier - One-click link copying with history.',
-      'web-privacy-tooltip': 'Web Privacy - Professional privacy protection. One-click cleanup of browsing data.',
-      'word-hero-tooltip': 'WordHero - Learn vocabulary while browsing'
+      'web-privacy-tooltip': 'Web Privacy - Professional privacy protection. One-click cleanup of browsing data.'
     },
     es: {
       'text-url': 'Texto/URL',
@@ -113,12 +110,9 @@
       'quick-link-copier-desc': 'Copia de enlaces con un clic, con historial.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.',
-      'word-hero-name': 'WordHero',
-      'word-hero-desc': 'Conviértete en un héroe del vocabulario, una palabra a la vez. Aprende nuevas palabras con notificaciones flotantes.',
       'view-in-store': 'Ver en la Tienda',
       'quick-link-copier-tooltip': 'QuickLink Copier - Copia de enlaces con un clic, con historial.',
       'web-privacy-tooltip': 'Web Privacy - Protección de privacidad profesional, limpieza con un clic.',
-      'word-hero-tooltip': 'WordHero - Aprende vocabulario mientras navegas'
     },
     ru: {
       'text-url': 'Текст/URL',
@@ -169,12 +163,9 @@
       'quick-link-copier-desc': 'Копирование ссылок в один клик с историей.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': 'Профессиональная защита конфиденциальности. Очистка данных браузера в один клик.',
-      'word-hero-name': 'WordHero',
-      'word-hero-desc': 'Стань героем словарного запаса, одно слово за раз. Изучайте новые слова с помощью всплывающих уведомлений.',
       'view-in-store': 'Посмотреть в магазине',
       'quick-link-copier-tooltip': 'QuickLink Copier - Копирование ссылок в один клик с историей.',
       'web-privacy-tooltip': 'Web Privacy - Профессиональная защита конфиденциальности в один клик.',
-      'word-hero-tooltip': 'WordHero - Изучайте словарный запас во время просмотра'
     },
     zh: {
       'text-url': '文本/URL',
@@ -225,12 +216,9 @@
       'quick-link-copier-desc': '一键复制链接，附带历史记录。',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': '专业隐私保护。一键清理浏览数据。',
-      'word-hero-name': 'WordHero',
-      'word-hero-desc': '成为词汇英雄，一次一个单词。通过浮动通知学习新单词。',
       'view-in-store': '在商店中查看',
       'quick-link-copier-tooltip': 'QuickLink Copier - 一键复制链接，附带历史记录。',
       'web-privacy-tooltip': 'Web Privacy - 专业隐私保护，一键清理。',
-      'word-hero-tooltip': 'WordHero - 在浏览时学习词汇'
     }
   };
 
@@ -259,16 +247,12 @@
     // Update product tooltips in menu footer
     const quickLinkCopierLink = document.querySelector('.menu-product-link[data-product="quick-link-copier"]');
     const webPrivacyLink = document.querySelector('.menu-product-link[data-product="web-privacy"]');
-    const wordHeroLink = document.querySelector('.menu-product-link[data-product="word-hero"]');
 
     if (quickLinkCopierLink && translations[lang] && translations[lang]['quick-link-copier-tooltip']) {
       quickLinkCopierLink.setAttribute('title', translations[lang]['quick-link-copier-tooltip']);
     }
     if (webPrivacyLink && translations[lang] && translations[lang]['web-privacy-tooltip']) {
       webPrivacyLink.setAttribute('title', translations[lang]['web-privacy-tooltip']);
-    }
-    if (wordHeroLink && translations[lang] && translations[lang]['word-hero-tooltip']) {
-      wordHeroLink.setAttribute('title', translations[lang]['word-hero-tooltip']);
     }
   }
 
