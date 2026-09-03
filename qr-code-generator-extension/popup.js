@@ -260,72 +260,48 @@
   const downloadButton = document.getElementById('download');
   const qrContainer = document.getElementById('qrcode');
   const tabButtons = document.querySelectorAll('.tab-button');
-  
-  console.log('form:', form);
-  console.log('downloadButton:', downloadButton);
-  console.log('qrContainer:', qrContainer);
-  console.log('tabButtons:', tabButtons.length);
-  
+
   if (!qrContainer) {
-    console.info('QR container not found');
     return;
   }
   if (!downloadButton) {
-    console.info('Download button not found');
     return;
   }
   if (!form) {
-    console.info('Form not found');
     return;
   }
   if (tabButtons.length === 0) {
-    console.info('Tab buttons not found');
     return;
   }
 
   const defaults = JSON.parse(localStorage.getItem('qr_defaults') || '{}');
-  console.log('Loading defaults:', defaults);
-  
+
   const sizeElement = document.getElementById('size');
   const colorDarkElement = document.getElementById('color-dark');
   const colorLightElement = document.getElementById('color-light');
   const ecLevelElement = document.getElementById('ec-level');
-  
-  console.log('Settings elements:', {
-    size: sizeElement,
-    colorDark: colorDarkElement,
-    colorLight: colorLightElement,
-    ecLevel: ecLevelElement
-  });
-  
+
   if (defaults.size && sizeElement) {
     sizeElement.value = defaults.size;
-    console.log('Set size to:', defaults.size);
   }
   if (defaults.colorDark && colorDarkElement) {
     colorDarkElement.value = defaults.colorDark;
-    console.log('Set colorDark to:', defaults.colorDark);
   }
   if (defaults.colorLight && colorLightElement) {
     colorLightElement.value = defaults.colorLight;
-    console.log('Set colorLight to:', defaults.colorLight);
   }
   if (defaults.ec && ecLevelElement) {
     ecLevelElement.value = defaults.ec;
-    console.log('Set ec to:', defaults.ec);
   }
 
   // Initialize language
   const languageSelect = document.getElementById('language-select');
-  console.log('languageSelect:', languageSelect);
   if (languageSelect) {
     languageSelect.value = currentLanguage;
     languageSelect.addEventListener('change', (e) => {
       translatePage(e.target.value);
       updateClearButtonState();
     });
-  } else {
-    console.info('Language select not found');
   }
 
   // Translate page on load
@@ -358,32 +334,19 @@
 
   tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
-      console.log('Tab button clicked:', btn.dataset.type);
       tabButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       const type = btn.dataset.type;
       // Only hide form sections in the main form, not in menu panels
       const formSections = document.querySelectorAll('#qr-form .form-section');
-      console.log('Found form sections:', formSections.length);
       formSections.forEach((sec) => {
-        console.log('Hiding section:', sec.dataset.section);
         sec.classList.add('hidden');
       });
       const targetSection = document.querySelector(`#qr-form .form-section[data-section="${type}"]`);
       if (targetSection) {
-        console.log('Showing section:', type);
         targetSection.classList.remove('hidden');
-      } else {
-        console.info('Target section not found:', type);
       }
-      
-      // Ensure menu panels are not affected
-      const menuPanels = document.querySelectorAll('.menu-panel');
-      console.log('Menu panels found:', menuPanels.length);
-      menuPanels.forEach(panel => {
-        console.log('Menu panel classes:', panel.className);
-      });
-      
+
       // Update clear button state when switching tabs
       updateClearButtonState();
     });
@@ -396,11 +359,9 @@
   function buildPayload() {
     const activeButton = document.querySelector('.tab-button.active');
     if (!activeButton) {
-      console.info('No active tab button found');
       return '';
     }
     const activeType = activeButton.dataset.type;
-    console.log('Active tab type:', activeType);
     if (activeType === 'text') {
       const textInput = document.getElementById('text-input');
       const text = sanitizeText(textInput ? textInput.value : '');
@@ -487,11 +448,8 @@
   }
 
   function renderQR() {
-    console.log('renderQR called');
     const text = buildPayload();
-    console.log('Payload text:', text);
     const { size, colorDark, colorLight, correctLevel, ecVal } = getOptions();
-    console.log('Options:', { size, colorDark, colorLight, ecVal });
     if (!text) {
       clearQR();
       downloadButton.disabled = true;
@@ -515,8 +473,6 @@
       downloadButton.disabled = !canvas;
     }, 0);
     } catch (error) {
-      console.info('QR code generation failed:', error.message);
-      
       // Try with higher error correction level
       const higherECLevels = ['M', 'Q', 'H'];
       const currentECIndex = higherECLevels.indexOf(ecVal);
@@ -546,7 +502,6 @@
             downloadButton.disabled = !canvas;
           }, 0);
         } catch (secondError) {
-          console.info('QR code generation failed even with higher error correction:', secondError.message);
           showQRError(translations[currentLanguage]['qr-data-too-long']);
         }
       } else {
@@ -680,32 +635,24 @@
 
   // Add input listeners only to main form fields, not menu fields
   const mainFormInputs = document.querySelectorAll('#qr-form input, #qr-form textarea, #qr-form select');
-  console.log('Main form inputs found:', mainFormInputs.length);
   if (mainFormInputs.length > 0) {
     mainFormInputs.forEach(input => {
       input.addEventListener('input', () => {
-        console.log('Main form input changed:', input.id);
         renderQR();
         updateClearButtonState();
       });
     });
-  } else {
-    console.info('No main form inputs found');
   }
 
   // Add change listeners to QR settings fields in menu
   const qrSettingsInputs = document.querySelectorAll('#settings-panel input, #settings-panel select');
-  console.log('QR settings inputs found:', qrSettingsInputs.length);
   if (qrSettingsInputs.length > 0) {
     qrSettingsInputs.forEach(input => {
       input.addEventListener('change', () => {
-        console.log('QR settings input changed:', input.id);
         renderQR();
         updateClearButtonState();
       });
     });
-  } else {
-    console.info('No QR settings inputs found');
   }
 
   // Wait a bit to ensure all elements are loaded
@@ -718,8 +665,6 @@
   const closeBtn = document.getElementById('close-btn');
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
-      // Clear console before closing
-      console.clear();
       window.close();
     });
   }
@@ -734,43 +679,24 @@
   const languagePanel = document.getElementById('language-panel');
   const aboutPanel = document.getElementById('about-panel');
   const backBtn = document.querySelector('.back-btn');
-  
-  console.log('Menu elements:', {
-    menuBtn,
-    menuWidget,
-    menuOverlay,
-    menuCloseBtn,
-    menuItems: menuItems.length,
-    settingsPanel,
-    languagePanel,
-    aboutPanel,
-    backBtn
-  });
 
   function openMenu() {
-    console.log('openMenu called');
     menuWidget.classList.remove('hidden');
     menuOverlay.classList.remove('hidden');
     // Hide all panels when opening menu
     if (settingsPanel) {
-      console.log('Hiding settings panel');
       settingsPanel.classList.add('hidden');
     }
     if (languagePanel) {
-      console.log('Hiding language panel');
       languagePanel.classList.add('hidden');
     }
     if (aboutPanel) {
-      console.log('Hiding about panel');
       aboutPanel.classList.add('hidden');
     }
     // Show menu items when opening menu
     const menuItemsContainer = document.querySelector('.menu-items');
     if (menuItemsContainer) {
-      console.log('Showing menu items container');
       menuItemsContainer.style.display = 'block';
-    } else {
-      console.info('Menu items container not found');
     }
   }
 
@@ -787,25 +713,16 @@
     if (aboutPanel) {
       aboutPanel.classList.add('hidden');
     }
-    // Clear console when closing menu
-    console.clear();
   }
 
   function showSettingsPanel() {
-    console.log('showSettingsPanel called');
     if (settingsPanel) {
-      console.log('Removing hidden class from settings panel');
       settingsPanel.classList.remove('hidden');
-    } else {
-      console.info('Settings panel not found');
     }
     // Hide menu items when showing settings
     const menuItemsContainer = document.querySelector('.menu-items');
     if (menuItemsContainer) {
-      console.log('Hiding menu items container');
       menuItemsContainer.style.display = 'none';
-    } else {
-      console.info('Menu items container not found');
     }
   }
 
@@ -892,22 +809,16 @@
   // Open menu
   if (menuBtn) {
     menuBtn.addEventListener('click', openMenu);
-  } else {
-    console.info('Menu button not found');
   }
 
   // Close menu
   if (menuCloseBtn) {
     menuCloseBtn.addEventListener('click', closeMenu);
-  } else {
-    console.info('Menu close button not found');
   }
 
   // Close menu on overlay click
   if (menuOverlay) {
     menuOverlay.addEventListener('click', closeMenu);
-  } else {
-    console.info('Menu overlay not found');
   }
 
   // Back button handlers
@@ -926,8 +837,7 @@
     menuItems.forEach(item => {
       item.addEventListener('click', () => {
         const section = item.dataset.section;
-        console.log(`Menu item clicked: ${section}`);
-        
+
         // Handle different menu sections
         switch (section) {
           case 'settings':
@@ -945,7 +855,5 @@
         }
       });
     });
-  } else {
-    console.info('No menu items found');
   }
 })();

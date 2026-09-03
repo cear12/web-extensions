@@ -598,7 +598,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
 .settings-section legend {
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--muted);
   margin-bottom: 12px;
   padding: 0;
 }
@@ -612,7 +612,7 @@ button:disabled{opacity:.6;cursor:not-allowed}
 .language-section legend {
   font-size: 13px;
   font-weight: 500;
-  color: var(--text-color);
+  color: var(--muted);
   margin-bottom: 12px;
   padding: 0;
 }
