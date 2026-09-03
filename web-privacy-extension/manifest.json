@@ -48,11 +48,9 @@
       "browsingData",
       "storage",
       "alarms",
-      "activeTab",
       "notifications"
    ],
    "permissions_justification": {
-      "activeTab": "Required to detect sensitive sites and provide privacy protection indicators on the current tab",
       "alarms": "Used for scheduled privacy cleanup tasks and reminders",
       "browsingData": "Core functionality - allows users to clear browsing history, cache, cookies, and download history",
       "data_usage": "All data processing happens locally. No user data is transmitted to external servers. Extension only accesses browsing data for cleanup purposes as explicitly requested by the user.",
@@ -61,16 +59,5 @@
       "remote_code": "No remote code execution - all functionality runs locally in the browser",
       "storage": "Stores user preferences, cleanup settings, and last cleanup timestamp locally"
    },
-   "privacy_policy": "https://example.com/privacy-policy",
-   "version": "1.0.1",
-   "web_accessible_resources": [
-      {
-         "matches": [
-            "<all_urls>"
-         ],
-         "resources": [
-            "lib/*"
-         ]
-      }
-   ]
+   "version": "1.0.1"
 }
