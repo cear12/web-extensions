@@ -9,6 +9,7 @@ class WebPrivacyBackground {
   init() {
     this.setupMessageListener();
     this.setupAlarmListener();
+    this.setupCommandListener();
     this.setupInstallListener();
   }
 
@@ -31,7 +32,15 @@ class WebPrivacyBackground {
   setupAlarmListener() {
     chrome.alarms.onAlarm.addListener((alarm) => {
       if (alarm.name === 'privacy-cleanup') {
-        this.executeScheduledCleanup();
+        this.runConfiguredCleanup();
+      }
+    });
+  }
+
+  setupCommandListener() {
+    chrome.commands.onCommand.addListener((command) => {
+      if (command === 'cleanup-now') {
+        this.runConfiguredCleanup();
       }
     });
   }
@@ -45,66 +54,57 @@ class WebPrivacyBackground {
   }
 
   handleSensitiveSiteDetection(data) {
-    console.log('Sensitive site detected:', data);
-    
-    // Store the detection for analytics
     this.storeSensitiveSiteVisit(data);
-    
   }
 
   async storeSensitiveSiteVisit(data) {
     try {
       const result = await chrome.storage.local.get(['sensitiveSiteVisits']);
       const visits = result.sensitiveSiteVisits || [];
-      
+
       visits.push({
         ...data,
         timestamp: new Date().toISOString()
       });
-      
+
       // Keep only last 100 visits
       if (visits.length > 100) {
         visits.splice(0, visits.length - 100);
       }
-      
+
       await chrome.storage.local.set({ sensitiveSiteVisits: visits });
     } catch (error) {
       console.error('Failed to store sensitive site visit:', error);
     }
   }
 
-
-
   async scheduleCleanup(data) {
     try {
       // Clear existing alarm
       await chrome.alarms.clear('privacy-cleanup');
-      
-      // Set new alarm based on schedule
-      const alarmTime = this.calculateAlarmTime(data.schedule);
-      
-      if (alarmTime) {
+
+      // Set new recurring alarm based on schedule
+      const periodInMinutes = this.calculateSchedulePeriod(data.schedule);
+
+      if (periodInMinutes) {
         await chrome.alarms.create('privacy-cleanup', {
-          when: alarmTime
+          delayInMinutes: periodInMinutes,
+          periodInMinutes: periodInMinutes
         });
-        
-        console.log('Privacy cleanup scheduled for:', new Date(alarmTime));
       }
     } catch (error) {
       console.error('Failed to schedule cleanup:', error);
     }
   }
 
-  calculateAlarmTime(schedule) {
-    const now = Date.now();
-    
+  calculateSchedulePeriod(schedule) {
     switch (schedule) {
       case 'hourly':
-        return now + (60 * 60 * 1000); // 1 hour
+        return 60;
       case 'daily':
-        return now + (24 * 60 * 60 * 1000); // 24 hours
+        return 24 * 60;
       case 'weekly':
-        return now + (7 * 24 * 60 * 60 * 1000); // 7 days
+        return 7 * 24 * 60;
       default:
         return null;
     }
@@ -113,42 +113,46 @@ class WebPrivacyBackground {
   async cancelSchedule() {
     try {
       await chrome.alarms.clear('privacy-cleanup');
-      console.log('Privacy cleanup schedule cancelled');
     } catch (error) {
       console.error('Failed to cancel schedule:', error);
     }
   }
 
-  async executeScheduledCleanup() {
+  // Shared by the recurring alarm (scheduled auto-cleanup) and the
+  // "cleanup-now" keyboard shortcut (chrome.commands) -- both just run
+  // a cleanup using whatever the user last saved in settings.
+  async runConfiguredCleanup() {
     try {
       // Get cleanup settings
       const result = await chrome.storage.sync.get(['webPrivacySettings']);
       const settings = result.webPrivacySettings || {};
-      
+
       // Prepare cleanup options
       const cleanupOptions = {
         cookies: settings.cookies !== false,
         cache: settings.cache !== false,
         history: settings.history || false,
-        downloads: settings.downloads || false
+        downloads: settings.downloads || false,
+        passwords: settings.passwords || false,
+        formData: settings.formData || false
       };
-      
+
       // Execute cleanup
       await this.performCleanup(cleanupOptions);
-      
+
       // Show notification
       if (settings.notifications) {
         chrome.notifications.create({
           type: 'basic',
           iconUrl: 'icon48.png',
           title: 'Web Privacy',
-          message: 'Scheduled privacy cleanup completed successfully!'
+          message: 'Privacy cleanup completed successfully!'
         });
       }
-      
+
       // Update stats
       await this.updateCleanupStats();
-      
+
     } catch (error) {
       console.error('Scheduled cleanup failed:', error);
     }
@@ -158,12 +162,14 @@ class WebPrivacyBackground {
     return new Promise((resolve, reject) => {
       const dataTypes = {};
       const timeRange = { since: 0 };
-      
+
       if (options.cookies) dataTypes.cookies = true;
       if (options.cache) dataTypes.cache = true;
       if (options.history) dataTypes.history = true;
       if (options.downloads) dataTypes.downloads = true;
-      
+      if (options.passwords) dataTypes.passwords = true;
+      if (options.formData) dataTypes.formData = true;
+
       chrome.browsingData.remove(timeRange, dataTypes, () => {
         if (chrome.runtime.lastError) {
           reject(new Error(chrome.runtime.lastError.message));
@@ -178,7 +184,7 @@ class WebPrivacyBackground {
     try {
       const result = await chrome.storage.local.get(['cleanupCount', 'lastCleanup']);
       const count = (result.cleanupCount || 0) + 1;
-      
+
       await chrome.storage.local.set({
         cleanupCount: count,
         lastCleanup: new Date().toISOString()
@@ -196,12 +202,11 @@ class WebPrivacyBackground {
         cache: true,
         history: false,
         downloads: false,
-        notifications: true,
-        bankingMode: false
+        notifications: true
       };
-      
+
       await chrome.storage.sync.set({ webPrivacySettings: defaultSettings });
-      
+
       // Show welcome notification
       chrome.notifications.create({
         type: 'basic',
@@ -209,7 +214,7 @@ class WebPrivacyBackground {
         title: 'Web Privacy Installed',
         message: 'Your privacy protection is now active. Click the extension icon to get started!'
       });
-      
+
     } catch (error) {
       console.error('Failed to handle first install:', error);
     }

@@ -1,7 +1,6 @@
 // Web Privacy Extension - Options Page Script
 let settings = {
   notifications: true,
-  autoCleanup: false,
   cookies: true,
   cache: true,
   history: false,
@@ -9,9 +8,6 @@ let settings = {
   passwords: false,
   formData: false,
   schedule: 'none',
-  detectSensitiveSites: true,
-  secureDeletion: false,
-  auditLogging: false,
   whitelist: [],
   blacklist: []
 };
@@ -44,10 +40,23 @@ async function loadSettings() {
 async function saveSettings() {
   try {
     await chrome.storage.sync.set({ webPrivacySettings: settings });
+    applySchedule();
     showNotification('Settings saved successfully!', 'success');
   } catch (error) {
     console.error('Failed to save settings:', error);
     showNotification('Failed to save settings', 'error');
+  }
+}
+
+// The alarm-based auto-cleanup schedule lives in the background service
+// worker (chrome.alarms). Tell it about the current choice every time
+// settings are saved -- background.js already knows how to turn this into
+// a recurring alarm (or cancel one) via these two message actions.
+function applySchedule() {
+  if (settings.schedule && settings.schedule !== 'none') {
+    chrome.runtime.sendMessage({ action: 'schedule-cleanup', data: { schedule: settings.schedule } });
+  } else {
+    chrome.runtime.sendMessage({ action: 'cancel-schedule' });
   }
 }
 
@@ -84,12 +93,7 @@ function setupEventListeners() {
   document.getElementById('notifications').addEventListener('change', (e) => {
     settings.notifications = e.target.checked;
   });
-  
-  
-  document.getElementById('auto-cleanup').addEventListener('change', (e) => {
-    settings.autoCleanup = e.target.checked;
-  });
-  
+
   // Cleanup options
   document.getElementById('cookies').addEventListener('change', (e) => {
     settings.cookies = e.target.checked;
@@ -131,7 +135,6 @@ function setupEventListeners() {
 function updateUI() {
   // Update checkboxes
   document.getElementById('notifications').checked = settings.notifications;
-  document.getElementById('auto-cleanup').checked = settings.autoCleanup;
   document.getElementById('cookies').checked = settings.cookies;
   document.getElementById('cache').checked = settings.cache;
   document.getElementById('history').checked = settings.history;
@@ -228,7 +231,6 @@ async function resetSettings() {
   if (confirm('Are you sure you want to reset all settings to defaults?')) {
     settings = {
       notifications: true,
-      autoCleanup: false,
       cookies: true,
       cache: true,
       history: false,
@@ -236,9 +238,6 @@ async function resetSettings() {
       passwords: false,
       formData: false,
       schedule: 'none',
-      detectSensitiveSites: true,
-      secureDeletion: false,
-      auditLogging: false,
       whitelist: [],
       blacklist: []
     };

@@ -9,32 +9,44 @@ class SensitiveSiteDetector {
       /broker/i, /exchange/i, /coinbase/i, /binance/i,
       /ethereum/i, /bitcoin/i, /blockchain/i
     ];
-    
+
     this.init();
   }
 
   init() {
     this.detectSensitiveSite();
-    this.setupMessageListener();
   }
 
   detectSensitiveSite() {
     const url = window.location.href;
     const domain = window.location.hostname;
-    
-    const isSensitive = this.sensitivePatterns.some(pattern => 
+
+    const isSensitive = this.sensitivePatterns.some(pattern =>
       pattern.test(url) || pattern.test(domain)
     );
-    
+
     if (isSensitive) {
       this.notifyBackground('sensitive-site-detected', {
         url: url,
         domain: domain,
         timestamp: new Date().toISOString()
       });
-      
+
       // Add visual indicator for sensitive site
+      this.addSensitiveIndicatorWhenReady();
+    }
+  }
+
+  addSensitiveIndicatorWhenReady() {
+    // manifest.json runs this script at document_start so detection (and
+    // the background notification above) happens as early as possible --
+    // but that also means document.body doesn't exist yet. Wait for it
+    // before touching the DOM, otherwise appendChild throws on every
+    // single sensitive-site page load.
+    if (document.body) {
       this.addSensitiveIndicator();
+    } else {
+      document.addEventListener('DOMContentLoaded', () => this.addSensitiveIndicator(), { once: true });
     }
   }
 
@@ -56,19 +68,15 @@ class SensitiveSiteDetector {
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     `;
     indicator.textContent = '🔒 Sensitive Site';
-    
+
     document.body.appendChild(indicator);
-    
+
     // Auto-hide after 5 seconds
     setTimeout(() => {
       if (indicator.parentNode) {
         indicator.parentNode.removeChild(indicator);
       }
     }, 5000);
-  }
-
-  setupMessageListener() {
-    // No specific message handling needed for sensitive site detection
   }
 
   notifyBackground(action, data) {

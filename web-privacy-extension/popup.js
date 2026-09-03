@@ -69,7 +69,7 @@
       'clean-now': 'Clear',
       'cleanup-options': 'Opciones de Limpieza',
       'version': 'Versión',
-      'app-description': 'Protección profesional de privacidad para profesionales financieros',
+      'app-description': 'Protección profesional de privacidad',
       'developed-by': 'Desarrollado por',
       'language': 'Idioma',
       'select-language': 'Seleccionar Idioma',
@@ -139,7 +139,7 @@
       'clean-now': '清理',
       'cleanup-options': '清理选项',
       'version': '版本',
-      'app-description': '为金融专业人士提供专业隐私保护',
+      'app-description': '专业隐私保护',
       'developed-by': '开发',
       'language': '语言',
       'select-language': '选择语言',
@@ -158,7 +158,9 @@
     cookies: true,
     cache: true,
     history: false,
-    downloads: false
+    downloads: false,
+    passwords: false,
+    formData: false
   };
 
   // Language detection and translation
@@ -430,33 +432,29 @@ async function performCleanup() {
   const originalLabel = btnTextEl ? btnTextEl.textContent : cleanupBtn.textContent;
   
   try {
-    console.groupCollapsed('[WebPrivacy] Cleanup start');
-    console.log('Selected settings:', JSON.stringify(settings, null, 2));
     cleanupBtn.disabled = true;
     if (btnTextEl) { btnTextEl.textContent = 'CLEARING...'; }
-    
+
     const cleanupOptions = {
       cookies: settings.cookies,
       cache: settings.cache,
       history: settings.history,
-      downloads: settings.downloads
+      downloads: settings.downloads,
+      passwords: settings.passwords,
+      formData: settings.formData
     };
 
-    console.log('Cleanup options:', cleanupOptions);
     await executeCleanup(cleanupOptions);
-    
+
     cleanupCount++;
     lastCleanup = new Date().toISOString();
     await saveStats();
-    
+
     updateUI();
     updateCleanupButtonState();
-    console.log('Cleanup completed successfully');
-    console.groupEnd();
-    
+
   } catch (error) {
     console.error('[WebPrivacy] Cleanup failed:', error);
-    try { console.groupEnd(); } catch (e) {}
   } finally {
     cleanupBtn.disabled = false;
     if (btnTextEl) { btnTextEl.textContent = originalLabel; }
@@ -467,23 +465,21 @@ async function performCleanup() {
 async function executeCleanup(options) {
   const dataTypes = {};
   const timeRange = { since: 0 };
-  
+
   if (options.cookies) dataTypes.cookies = true;
   if (options.cache) dataTypes.cache = true;
   if (options.history) dataTypes.history = true;
   if (options.downloads) dataTypes.downloads = true;
+  if (options.passwords) dataTypes.passwords = true;
+  if (options.formData) dataTypes.formData = true;
 
   return new Promise((resolve, reject) => {
-    console.log('Calling chrome.browsingData.remove with:', { timeRange, dataTypes });
-    console.time('[WebPrivacy] remove time');
     chrome.browsingData.remove(timeRange, dataTypes, () => {
-      console.timeEnd('[WebPrivacy] remove time');
       if (chrome.runtime.lastError) {
         const message = chrome.runtime.lastError.message || 'Unknown error';
         console.error('[WebPrivacy] chrome.browsingData.remove error:', message);
         reject(new Error(message));
       } else {
-        console.log('[WebPrivacy] chrome.browsingData.remove success');
         resolve();
       }
     });
