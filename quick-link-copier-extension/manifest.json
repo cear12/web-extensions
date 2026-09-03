@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
   "name": "QuickLink Copier",
-  "version": "1.0.0",
-  "description": "One-click link copying with history and export features. Premium features available.",
+  "version": "1.1.0",
+  "description": "One-click link copying with history, tags and JSON export/import.",
   "action": {
     "default_title": "Copy current page URL",
     "default_popup": "popup.html"
@@ -10,12 +10,15 @@
   "background": {
     "service_worker": "background.js"
   },
-  "content_scripts": [
-    {
-      "matches": ["<all_urls>"],
-      "js": ["content.js"]
+  "commands": {
+    "copy-current-url": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+C",
+        "mac": "Command+Shift+C"
+      },
+      "description": "Copy current page URL"
     }
-  ],
+  },
   "options_page": "options.html",
   "icons": {
     "16": "icon16.png",
@@ -25,11 +28,10 @@
   },
   "permissions": [
     "activeTab",
+    "scripting",
     "contextMenus",
     "storage",
-    "clipboardWrite"
-  ],
-  "host_permissions": [
-    "<all_urls>"
+    "clipboardWrite",
+    "notifications"
   ]
 }
