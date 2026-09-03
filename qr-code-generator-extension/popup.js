@@ -51,7 +51,15 @@
       'phone-placeholder': '+1 555 123 4567',
       'email-placeholder': 'john@example.com',
       'company-placeholder': 'Company',
-      'position-placeholder': 'Manager'
+      'position-placeholder': 'Manager',
+      'other-products': 'Other Products',
+      'quickLinkCopierName': 'Quick Link Copier',
+      'quickLinkCopierDescription': 'Copy page links with one click. Perfect for sharing and organizing bookmarks.',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': 'Become a vocabulary hero, one word at a time. Learn new words with floating notifications.',
+      'viewInStore': 'View in Store',
+      'quickLinkCopierTooltip': 'Quick Link Copier - Copy page links with one click',
+      'wordHeroTooltip': 'WordHero - Learn vocabulary while browsing'
     },
     es: {
       'text-url': 'Texto/URL',
@@ -96,7 +104,15 @@
       'phone-placeholder': '+1 555 123 4567',
       'email-placeholder': 'juan@ejemplo.com',
       'company-placeholder': 'Empresa',
-      'position-placeholder': 'Gerente'
+      'position-placeholder': 'Gerente',
+      'other-products': 'Otros Productos',
+      'quickLinkCopierName': 'Quick Link Copier',
+      'quickLinkCopierDescription': 'Copia enlaces de páginas con un clic. Perfecto para compartir y organizar marcadores.',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': 'Conviértete en un héroe del vocabulario, una palabra a la vez. Aprende nuevas palabras con notificaciones flotantes.',
+      'viewInStore': 'Ver en la Tienda',
+      'quickLinkCopierTooltip': 'Quick Link Copier - Copia enlaces de páginas con un clic',
+      'wordHeroTooltip': 'WordHero - Aprende vocabulario mientras navegas'
     },
     ru: {
       'text-url': 'Текст/URL',
@@ -141,7 +157,68 @@
       'phone-placeholder': '+1 555 123 4567',
       'email-placeholder': 'ivan@example.com',
       'company-placeholder': 'Компания',
-      'position-placeholder': 'Менеджер'
+      'position-placeholder': 'Менеджер',
+      'other-products': 'Другие продукты',
+      'quickLinkCopierName': 'Quick Link Copier',
+      'quickLinkCopierDescription': 'Копирование ссылок на страницы одним кликом. Идеально для обмена и организации закладок.',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': 'Стань героем словарного запаса, одно слово за раз. Изучайте новые слова с помощью всплывающих уведомлений.',
+      'viewInStore': 'Посмотреть в магазине',
+      'quickLinkCopierTooltip': 'Quick Link Copier - Копирование ссылок на страницы одним кликом',
+      'wordHeroTooltip': 'WordHero - Изучайте словарный запас во время просмотра'
+    },
+    zh: {
+      'text-url': '文本/URL',
+      'wifi': 'WiFi',
+      'contact': '联系人',
+      'data': '数据',
+      'enter-text-url': '输入文本或URL',
+      'result': '结果',
+      'download-png': '下载PNG',
+      'language': '语言',
+      'customization': '自定义',
+      'size': '大小 (px)',
+      'error': '错误',
+      'module-color': '模块颜色',
+      'background-color': '背景颜色',
+      'settings': '设置',
+      'about': '关于',
+      'developed-by': '开发',
+      'menu': '菜单',
+      'qr-settings': '设置',
+      'select-language': '选择语言',
+      'app-name': '二维码生成器',
+      'app-version': '版本',
+      'app-developer': '由Olé开发',
+      'reset-to-defaults': '重置为默认值',
+      'qr-data-too-long': '数据太长，无法生成二维码。请缩短文本。',
+      'clear': '清除',
+      'ssid': 'SSID',
+      'password': '密码',
+      'encryption-type': '加密类型',
+      'hidden-network': '隐藏网络',
+      'no-password': '无密码',
+      'my-wifi': '我的WiFi',
+      'first-name': '名字',
+      'last-name': '姓氏',
+      'phone': '电话',
+      'email': '邮箱',
+      'company': '公司',
+      'position': '职位',
+      'first-name-placeholder': '张',
+      'last-name-placeholder': '三',
+      'phone-placeholder': '+86 138 0013 8000',
+      'email-placeholder': 'zhang@example.com',
+      'company-placeholder': '公司',
+      'position-placeholder': '经理',
+      'other-products': '其他产品',
+      'quickLinkCopierName': 'Quick Link Copier',
+      'quickLinkCopierDescription': '一键复制页面链接。非常适合分享和组织书签。',
+      'wordHeroName': 'WordHero',
+      'wordHeroDescription': '成为词汇英雄，一次一个单词。通过浮动通知学习新单词。',
+      'viewInStore': '在商店中查看',
+      'quickLinkCopierTooltip': 'Quick Link Copier - 一键复制页面链接',
+      'wordHeroTooltip': 'WordHero - 在浏览时学习词汇'
     }
   };
 
@@ -166,6 +243,17 @@
         el.placeholder = translations[lang][key];
       }
     });
+
+    // Update product tooltips in menu footer
+    const quickLinkCopierLink = document.querySelector('.menu-product-link[data-product="quick-link-copier"]');
+    const wordHeroLink = document.querySelector('.menu-product-link[data-product="word-hero"]');
+    
+    if (quickLinkCopierLink && translations[lang] && translations[lang]['quickLinkCopierTooltip']) {
+      quickLinkCopierLink.setAttribute('title', translations[lang]['quickLinkCopierTooltip']);
+    }
+    if (wordHeroLink && translations[lang] && translations[lang]['wordHeroTooltip']) {
+      wordHeroLink.setAttribute('title', translations[lang]['wordHeroTooltip']);
+    }
   }
 
   const form = document.getElementById('qr-form');
@@ -173,48 +261,71 @@
   const qrContainer = document.getElementById('qrcode');
   const tabButtons = document.querySelectorAll('.tab-button');
   
+  console.log('form:', form);
+  console.log('downloadButton:', downloadButton);
+  console.log('qrContainer:', qrContainer);
+  console.log('tabButtons:', tabButtons.length);
   
   if (!qrContainer) {
+    console.info('QR container not found');
     return;
   }
   if (!downloadButton) {
+    console.info('Download button not found');
     return;
   }
   if (!form) {
+    console.info('Form not found');
     return;
   }
   if (tabButtons.length === 0) {
+    console.info('Tab buttons not found');
     return;
   }
 
   const defaults = JSON.parse(localStorage.getItem('qr_defaults') || '{}');
+  console.log('Loading defaults:', defaults);
   
   const sizeElement = document.getElementById('size');
   const colorDarkElement = document.getElementById('color-dark');
   const colorLightElement = document.getElementById('color-light');
   const ecLevelElement = document.getElementById('ec-level');
-
+  
+  console.log('Settings elements:', {
+    size: sizeElement,
+    colorDark: colorDarkElement,
+    colorLight: colorLightElement,
+    ecLevel: ecLevelElement
+  });
+  
   if (defaults.size && sizeElement) {
     sizeElement.value = defaults.size;
+    console.log('Set size to:', defaults.size);
   }
   if (defaults.colorDark && colorDarkElement) {
     colorDarkElement.value = defaults.colorDark;
+    console.log('Set colorDark to:', defaults.colorDark);
   }
   if (defaults.colorLight && colorLightElement) {
     colorLightElement.value = defaults.colorLight;
+    console.log('Set colorLight to:', defaults.colorLight);
   }
   if (defaults.ec && ecLevelElement) {
     ecLevelElement.value = defaults.ec;
+    console.log('Set ec to:', defaults.ec);
   }
 
   // Initialize language
   const languageSelect = document.getElementById('language-select');
+  console.log('languageSelect:', languageSelect);
   if (languageSelect) {
     languageSelect.value = currentLanguage;
     languageSelect.addEventListener('change', (e) => {
       translatePage(e.target.value);
       updateClearButtonState();
     });
+  } else {
+    console.info('Language select not found');
   }
 
   // Translate page on load
@@ -244,24 +355,33 @@
     });
   }
 
+
   tabButtons.forEach((btn) => {
     btn.addEventListener('click', () => {
+      console.log('Tab button clicked:', btn.dataset.type);
       tabButtons.forEach((b) => b.classList.remove('active'));
       btn.classList.add('active');
       const type = btn.dataset.type;
       // Only hide form sections in the main form, not in menu panels
       const formSections = document.querySelectorAll('#qr-form .form-section');
+      console.log('Found form sections:', formSections.length);
       formSections.forEach((sec) => {
+        console.log('Hiding section:', sec.dataset.section);
         sec.classList.add('hidden');
       });
       const targetSection = document.querySelector(`#qr-form .form-section[data-section="${type}"]`);
       if (targetSection) {
+        console.log('Showing section:', type);
         targetSection.classList.remove('hidden');
+      } else {
+        console.info('Target section not found:', type);
       }
       
       // Ensure menu panels are not affected
       const menuPanels = document.querySelectorAll('.menu-panel');
+      console.log('Menu panels found:', menuPanels.length);
       menuPanels.forEach(panel => {
+        console.log('Menu panel classes:', panel.className);
       });
       
       // Update clear button state when switching tabs
@@ -276,9 +396,11 @@
   function buildPayload() {
     const activeButton = document.querySelector('.tab-button.active');
     if (!activeButton) {
+      console.info('No active tab button found');
       return '';
     }
     const activeType = activeButton.dataset.type;
+    console.log('Active tab type:', activeType);
     if (activeType === 'text') {
       const textInput = document.getElementById('text-input');
       const text = sanitizeText(textInput ? textInput.value : '');
@@ -365,8 +487,11 @@
   }
 
   function renderQR() {
+    console.log('renderQR called');
     const text = buildPayload();
+    console.log('Payload text:', text);
     const { size, colorDark, colorLight, correctLevel, ecVal } = getOptions();
+    console.log('Options:', { size, colorDark, colorLight, ecVal });
     if (!text) {
       clearQR();
       downloadButton.disabled = true;
@@ -390,6 +515,7 @@
       downloadButton.disabled = !canvas;
     }, 0);
     } catch (error) {
+      console.info('QR code generation failed:', error.message);
       
       // Try with higher error correction level
       const higherECLevels = ['M', 'Q', 'H'];
@@ -420,6 +546,7 @@
             downloadButton.disabled = !canvas;
           }, 0);
         } catch (secondError) {
+          console.info('QR code generation failed even with higher error correction:', secondError.message);
           showQRError(translations[currentLanguage]['qr-data-too-long']);
         }
       } else {
@@ -553,24 +680,32 @@
 
   // Add input listeners only to main form fields, not menu fields
   const mainFormInputs = document.querySelectorAll('#qr-form input, #qr-form textarea, #qr-form select');
+  console.log('Main form inputs found:', mainFormInputs.length);
   if (mainFormInputs.length > 0) {
     mainFormInputs.forEach(input => {
       input.addEventListener('input', () => {
+        console.log('Main form input changed:', input.id);
         renderQR();
         updateClearButtonState();
       });
     });
+  } else {
+    console.info('No main form inputs found');
   }
 
   // Add change listeners to QR settings fields in menu
   const qrSettingsInputs = document.querySelectorAll('#settings-panel input, #settings-panel select');
+  console.log('QR settings inputs found:', qrSettingsInputs.length);
   if (qrSettingsInputs.length > 0) {
     qrSettingsInputs.forEach(input => {
       input.addEventListener('change', () => {
+        console.log('QR settings input changed:', input.id);
         renderQR();
         updateClearButtonState();
       });
     });
+  } else {
+    console.info('No QR settings inputs found');
   }
 
   // Wait a bit to ensure all elements are loaded
@@ -584,6 +719,7 @@
   if (closeBtn) {
     closeBtn.addEventListener('click', () => {
       // Clear console before closing
+      console.clear();
       window.close();
     });
   }
@@ -598,24 +734,43 @@
   const languagePanel = document.getElementById('language-panel');
   const aboutPanel = document.getElementById('about-panel');
   const backBtn = document.querySelector('.back-btn');
+  
+  console.log('Menu elements:', {
+    menuBtn,
+    menuWidget,
+    menuOverlay,
+    menuCloseBtn,
+    menuItems: menuItems.length,
+    settingsPanel,
+    languagePanel,
+    aboutPanel,
+    backBtn
+  });
 
   function openMenu() {
+    console.log('openMenu called');
     menuWidget.classList.remove('hidden');
     menuOverlay.classList.remove('hidden');
     // Hide all panels when opening menu
     if (settingsPanel) {
+      console.log('Hiding settings panel');
       settingsPanel.classList.add('hidden');
     }
     if (languagePanel) {
+      console.log('Hiding language panel');
       languagePanel.classList.add('hidden');
     }
     if (aboutPanel) {
+      console.log('Hiding about panel');
       aboutPanel.classList.add('hidden');
     }
     // Show menu items when opening menu
     const menuItemsContainer = document.querySelector('.menu-items');
     if (menuItemsContainer) {
+      console.log('Showing menu items container');
       menuItemsContainer.style.display = 'block';
+    } else {
+      console.info('Menu items container not found');
     }
   }
 
@@ -633,16 +788,24 @@
       aboutPanel.classList.add('hidden');
     }
     // Clear console when closing menu
+    console.clear();
   }
 
   function showSettingsPanel() {
+    console.log('showSettingsPanel called');
     if (settingsPanel) {
+      console.log('Removing hidden class from settings panel');
       settingsPanel.classList.remove('hidden');
+    } else {
+      console.info('Settings panel not found');
     }
     // Hide menu items when showing settings
     const menuItemsContainer = document.querySelector('.menu-items');
     if (menuItemsContainer) {
+      console.log('Hiding menu items container');
       menuItemsContainer.style.display = 'none';
+    } else {
+      console.info('Menu items container not found');
     }
   }
 
@@ -668,6 +831,18 @@
     }
   }
 
+  function showOtherProductsPanel() {
+    const otherProductsPanel = document.getElementById('other-products-panel');
+    if (otherProductsPanel) {
+      otherProductsPanel.classList.remove('hidden');
+    }
+    // Hide menu items when showing other products panel
+    const menuItemsContainer = document.querySelector('.menu-items');
+    if (menuItemsContainer) {
+      menuItemsContainer.style.display = 'none';
+    }
+  }
+
   function showAboutPanel() {
     if (aboutPanel) {
       aboutPanel.classList.remove('hidden');
@@ -690,6 +865,19 @@
     }
   }
 
+
+  function hideOtherProductsPanel() {
+    const otherProductsPanel = document.getElementById('other-products-panel');
+    if (otherProductsPanel) {
+      otherProductsPanel.classList.add('hidden');
+    }
+    // Show menu items when hiding other products panel
+    const menuItemsContainer = document.querySelector('.menu-items');
+    if (menuItemsContainer) {
+      menuItemsContainer.style.display = 'block';
+    }
+  }
+
   function hideAboutPanel() {
     if (aboutPanel) {
       aboutPanel.classList.add('hidden');
@@ -704,16 +892,22 @@
   // Open menu
   if (menuBtn) {
     menuBtn.addEventListener('click', openMenu);
+  } else {
+    console.info('Menu button not found');
   }
 
   // Close menu
   if (menuCloseBtn) {
     menuCloseBtn.addEventListener('click', closeMenu);
+  } else {
+    console.info('Menu close button not found');
   }
 
   // Close menu on overlay click
   if (menuOverlay) {
     menuOverlay.addEventListener('click', closeMenu);
+  } else {
+    console.info('Menu overlay not found');
   }
 
   // Back button handlers
@@ -722,6 +916,7 @@
     btn.addEventListener('click', () => {
       hideSettingsPanel();
       hideLanguagePanel();
+      hideOtherProductsPanel();
       hideAboutPanel();
     });
   });
@@ -731,6 +926,7 @@
     menuItems.forEach(item => {
       item.addEventListener('click', () => {
         const section = item.dataset.section;
+        console.log(`Menu item clicked: ${section}`);
         
         // Handle different menu sections
         switch (section) {
@@ -740,11 +936,16 @@
           case 'language':
             showLanguagePanel();
             break;
+          case 'other-products':
+            showOtherProductsPanel();
+            break;
           case 'about':
             showAboutPanel();
             break;
         }
       });
     });
+  } else {
+    console.info('No menu items found');
   }
 })();
