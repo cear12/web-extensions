@@ -1,21 +1,34 @@
-# QR Code Generator (Chrome & Safari)
+# QuickLink Copier (Chrome)
+
+One-click link copying with local history, tags and JSON export/import.
 
 Функции:
-- Генерация QR для текста/URL, WiFi, vCard
-- Кастомизация: размер, цвет, уровень коррекции ошибок
-- Предпросмотр и скачивание PNG
-- Сохранение настроек в localStorage (страница настроек)
+- Копирование текущего URL: по клику на иконку расширения, по контекстному меню ("Copy page URL"), или по горячей клавише Ctrl+Shift+C (Cmd+Shift+C на macOS)
+- Копирование любой ссылки на странице через контекстное меню ("Copy this link")
+- Копирование всех ссылок на странице одним пунктом меню ("Copy all links on page")
+- История последних скопированных ссылок (настраиваемый размер, автоматические теги по домену/заголовку)
+- Экспорт истории и полный бэкап данных в JSON, импорт бэкапа обратно
+- Тёмная/светлая тема (auto-detect), интерфейс на английском/испанском/русском
 
 ## Установка в Chrome
-1. Откройте chrome://extensions
+1. Откройте `chrome://extensions`
 2. Включите Developer mode
-3. Нажмите "Load unpacked" и выберите папку `~/qr-code-generator-pro-extension`
+3. Нажмите "Load unpacked" и выберите папку `quick-link-copier-extension`
 
-## Safari (macOS)
-1. Установите Xcode (последняя версия)
-2. В Xcode: File > New > Project > Safari Web Extension (или используйте `xcrun safari-web-extension-converter ~/qr-code-generator-pro-extension`)
-3. Следуйте указаниям Xcode для подписи и сборки. Расширение будет доступно в Safari > Extensions.
+## Права доступа (почему их немного)
+Расширение использует `activeTab` вместо постоянного `host_permissions: ["<all_urls>"]`
+и не внедряет content script ни на одну страницу. Копирование ссылок происходит
+через `chrome.scripting.executeScript` по одному разовому вызову — только когда
+пользователь сам инициирует действие (клик по иконке, пункт контекстного меню,
+горячая клавиша через `chrome.commands`). Это даёт минимальный отпечаток
+разрешений для того, что расширение реально делает.
 
-## Замечания
-- Библиотека QR: qrcodejs (MIT) хранится локально в `lib/qrcode.min.js`.
-- Все данные остаются на устройстве пользователя.
+## Хранение данных
+Вся история, настройки и статистика хранятся локально в `chrome.storage.local`.
+Ничего не отправляется на сторонние серверы.
+
+## Where this came from
+
+Форкнуто из `qr-code-generator-extension` (см. соседнюю папку в этом репозитории) —
+переиспользована структура popup/options/меню, вся QR-специфичная логика заменена
+на копирование ссылок.
