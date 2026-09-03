@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web Privacy - 1-Click Cleanup</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Меню"></button>
+      <div class="title">
+        <img src="logo.png" alt="Логотип" class="logo" />
+        <h1 data-i18n="app-name">Web Privacy</h1>
+      </div>
+      <button type="button" id="close-btn" class="close-btn" aria-label="Закрыть"></button>
+    </header>
+
+    <!-- Menu Widget -->
+    <div id="menu-widget" class="menu-widget hidden">
+      <div class="menu-content">
+        <div class="menu-header">
+          <h2>Menu</h2>
+          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Close menu">×</button>
+        </div>
+        <div class="menu-items">
+          <button type="button" class="menu-item" data-section="language">
+            <span class="menu-icon">🌐</span>
+            <span data-i18n="language">Язык</span>
+          </button>
+          <button type="button" class="menu-item" data-section="products">
+            <span class="menu-icon">🛍</span>
+            <span data-i18n="other-products">Другие продукты</span>
+          </button>
+          <button type="button" class="menu-item" data-section="about">
+            <span class="menu-icon">ℹ</span>
+            <span data-i18n="about">О программе</span>
+          </button>
+        </div>
+        <div class="menu-footer">
+          <div class="menu-footer-products" aria-label="Other products">
+            <a href="https://chrome.google.com/webstore/detail/qr-code-generator" target="_blank" rel="noopener noreferrer" class="menu-footer-product-link" aria-label="QR Code Generator">
+              <img src="qr-code-generator.png" alt="QR Code Generator" class="menu-footer-product-icon" />
+            </a>
+            <a href="https://chrome.google.com/webstore/detail/quicklink-copier/hgijhpfigdcjebfhkinbphhccadbafgg" target="_blank" rel="noopener noreferrer" class="menu-footer-product-link" aria-label="Quick Link Copier">
+              <img src="quick-link-copier.png" alt="Quick Link Copier" class="menu-footer-product-icon" />
+            </a>
+            <a href="https://chrome.google.com/webstore/detail/word-hero" target="_blank" rel="noopener noreferrer" class="menu-footer-product-link" aria-label="Word Hero">
+              <img src="word-hero.png" alt="Word Hero" class="menu-footer-product-icon" />
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="menu-overlay hidden"></div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      
+
+      <!-- Quick Settings -->
+      <div class="quick-settings">
+        <div class="settings-grid">
+          <label class="setting-item">
+            <input type="checkbox" id="clean-history">
+            <span class="setting-label" data-i18n="browsing-history">Browsing history</span>
+            <span class="setting-help" data-i18n="browsing-history-help">Deletes history, including in the search box</span>
+          </label>
+          <label class="setting-item">
+            <input type="checkbox" id="clean-downloads">
+            <span class="setting-label" data-i18n="download-history">Download history</span>
+            <span class="setting-help" data-i18n="download-history-help">Clears your download list, not the actual files</span>
+          </label>
+          <label class="setting-item">
+            <input type="checkbox" id="clean-cookies" checked>
+            <span class="setting-label" data-i18n="cookies-and-site-data">Cookies and other site data</span>
+            <span class="setting-help" data-i18n="cookies-and-site-data-help">Signs you out of most sites. You'll stay signed in to your Google Account.</span>
+          </label>
+          <label class="setting-item">
+            <input type="checkbox" id="clean-cache" checked>
+            <span class="setting-label" data-i18n="cached-images-files">Cached images and files</span>
+            <span class="setting-help" data-i18n="cached-images-files-help">Frees up storage. Some sites may load more slowly on your next visit.</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Main Action Button -->
+      <div class="action-section">
+        <button type="button" id="cleanup-btn" class="cleanup-btn" disabled>
+          <span class="btn-row">
+            <img src="icon.png" alt="Иконка" class="btn-logo" />
+            <span class="btn-text" data-i18n="clean-now">Очистить</span>
+          </span>
+          <span class="btn-meta" id="last-cleanup" data-i18n="last-cleanup">Последняя очистка: Никогда</span>
+        </button>
+      </div>
+    </div>
+
+
+    <!-- Language Panel -->
+    <div id="language-panel" class="menu-panel hidden">
+      <div class="menu-panel-header">
+        <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+        <h3 data-i18n="language">Язык</h3>
+      </div>
+      <div class="menu-panel-content">
+        <fieldset class="language-section">
+          <legend data-i18n="select-language">Выберите язык</legend>
+          <label>
+            <select id="language-select">
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="ru" selected>🇷🇺 Русский</option>
+              <option value="zh">🇨🇳 中文</option>
+            </select>
+          </label>
+        </fieldset>
+      </div>
+    </div>
+
+    <!-- Products Panel -->
+    <div id="products-panel" class="menu-panel hidden">
+      <div class="menu-panel-header">
+        <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+        <h3 data-i18n="other-products">Другие продукты</h3>
+      </div>
+      <div class="menu-panel-content">
+        <div class="products-grid">
+          <div class="product-item">
+            <img src="qr-code-generator.png" alt="QR Code Generator" class="product-icon" />
+            <div class="product-info">
+              <h4>QR Code Generator</h4>
+              <p data-i18n="qr-code-generator-desc">Generate QR codes for any text or URL</p>
+              <a href="https://chrome.google.com/webstore/detail/qr-code-generator" target="_blank" class="product-link" data-i18n="view-in-store">View in Store</a>
+            </div>
+          </div>
+          <div class="product-item">
+            <img src="quick-link-copier.png" alt="Quick Link Copier" class="product-icon" />
+            <div class="product-info">
+              <h4>Quick Link Copier</h4>
+              <p data-i18n="quick-link-copier-desc">One-click link copying with history</p>
+              <a href="https://chrome.google.com/webstore/detail/quicklink-copier/hgijhpfigdcjebfhkinbphhccadbafgg" target="_blank" class="product-link" data-i18n="view-in-store">View in Store</a>
+            </div>
+          </div>
+          <div class="product-item">
+            <img src="word-hero.png" alt="Word Hero" class="product-icon" />
+            <div class="product-info">
+              <h4>Word Hero</h4>
+              <p data-i18n="word-hero-desc">Vocabulary building and word games</p>
+              <a href="https://chrome.google.com/webstore/detail/word-hero" target="_blank" class="product-link" data-i18n="view-in-store">View in Store</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- About Panel -->
+    <div id="about-panel" class="menu-panel hidden">
+      <div class="menu-panel-header">
+        <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+        <h3 data-i18n="about">О программе</h3>
+      </div>
+      <div class="menu-panel-content">
+        <div class="about-content">
+          <div class="about-title">
+            <img src="logo.png" alt="Логотип" class="logo" />
+            <h4 data-i18n="app-name">Web Privacy</h4>
+          </div>
+          <p><span data-i18n="version">Версия</span> 1.0.1</p>
+          <p data-i18n="app-description">Профессиональная защита приватности</p>
+          <p><span data-i18n="developed-by">Разработано</span> Olé</p>
+        </div>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p><span data-i18n="developed-by">Разработано</span> Olé</p>
+    </footer>
+  </div>
+
+  <script src="lib/extpay.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

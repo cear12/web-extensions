@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Web Privacy - Settings</title>
+  <link rel="stylesheet" href="options.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="title">
+        <img src="logo.png" alt="Logo" class="logo" />
+        <h1>Web Privacy Settings</h1>
+      </div>
+    </header>
+
+    <main class="main-content">
+      <!-- General Settings -->
+      <section class="settings-section">
+        <h2>General Settings</h2>
+        <div class="settings-grid">
+          <label class="setting-item">
+            <input type="checkbox" id="notifications" checked>
+            <span class="setting-label">Show Notifications</span>
+            <span class="setting-description">Get notified when cleanup is completed</span>
+          </label>
+          
+          
+          <label class="setting-item">
+            <input type="checkbox" id="auto-cleanup">
+            <span class="setting-label">Auto Cleanup</span>
+            <span class="setting-description">Automatically clean data at scheduled intervals</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Cleanup Options -->
+      <section class="settings-section">
+        <h2>Cleanup Options</h2>
+        <div class="settings-grid">
+          <label class="setting-item">
+            <input type="checkbox" id="cookies" checked>
+            <span class="setting-label">Cookies</span>
+            <span class="setting-description">Remove all cookies and site data</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="checkbox" id="cache" checked>
+            <span class="setting-label">Cache</span>
+            <span class="setting-description">Clear browser cache and temporary files</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="checkbox" id="history">
+            <span class="setting-label">History</span>
+            <span class="setting-description">Remove browsing history</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="checkbox" id="downloads">
+            <span class="setting-label">Downloads</span>
+            <span class="setting-description">Clear download history</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="checkbox" id="passwords">
+            <span class="setting-label">Saved Passwords</span>
+            <span class="setting-description">Remove saved passwords (use with caution)</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="checkbox" id="form-data">
+            <span class="setting-label">Form Data</span>
+            <span class="setting-description">Clear saved form data and autofill</span>
+          </label>
+        </div>
+      </section>
+
+      <!-- Schedule Settings -->
+      <section class="settings-section">
+        <h2>Auto Schedule</h2>
+        <div class="schedule-options">
+          <label class="setting-item">
+            <input type="radio" name="schedule" value="none" checked>
+            <span class="setting-label">No Auto Schedule</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="radio" name="schedule" value="hourly">
+            <span class="setting-label">Every Hour</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="radio" name="schedule" value="daily">
+            <span class="setting-label">Daily</span>
+          </label>
+          
+          <label class="setting-item">
+            <input type="radio" name="schedule" value="weekly">
+            <span class="setting-label">Weekly</span>
+          </label>
+        </div>
+      </section>
+
+
+      <!-- Whitelist/Blacklist -->
+      <section class="settings-section">
+        <h2>Site Management</h2>
+        <div class="site-management">
+          <div class="whitelist-section">
+            <h3>Whitelist (Never Clean)</h3>
+            <div class="site-list" id="whitelist">
+              <div class="site-item">
+                <input type="text" placeholder="Enter domain (e.g., example.com)" id="whitelist-input">
+                <button type="button" id="add-whitelist">Add</button>
+              </div>
+            </div>
+          </div>
+          
+          <div class="blacklist-section">
+            <h3>Blacklist (Always Clean)</h3>
+            <div class="site-list" id="blacklist">
+              <div class="site-item">
+                <input type="text" placeholder="Enter domain (e.g., tracking.com)" id="blacklist-input">
+                <button type="button" id="add-blacklist">Add</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Statistics -->
+      <section class="settings-section">
+        <h2>Statistics</h2>
+        <div class="stats-grid">
+          <div class="stat-item">
+            <span class="stat-number" id="total-cleanups">0</span>
+            <span class="stat-label">Total Cleanups</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-number" id="last-cleanup">Never</span>
+            <span class="stat-label">Last Cleanup</span>
+          </div>
+          
+          <div class="stat-item">
+            <span class="stat-number" id="financial-sites">0</span>
+            <span class="stat-label">Sensitive Sites Visited</span>
+          </div>
+        </div>
+      </section>
+
+      <!-- Actions -->
+      <section class="actions-section">
+        <button type="button" id="save-settings" class="save-btn">Save Settings</button>
+        <button type="button" id="reset-settings" class="reset-btn">Reset to Defaults</button>
+        <button type="button" id="export-settings" class="export-btn">Export Settings</button>
+        <button type="button" id="import-settings" class="import-btn">Import Settings</button>
+      </section>
+    </main>
+
+    <footer class="footer">
+      <p>Web Privacy Extension v1.0.0 - Professional privacy protection</p>
+    </footer>
+  </div>
+
+  <input type="file" id="import-file" accept=".json" style="display: none;">
+  <script src="options.js"></script>
+</body>
+</html>
