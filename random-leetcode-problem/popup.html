@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Random LeetCode Problem</title>
+  <link rel="stylesheet" href="popup.css" />
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Menu"></button>
+      <div class="title"><img src="logo.png" alt="Logo" class="logo" /><h1>Random LeetCode</h1></div>
+      <button type="button" id="close-btn" class="close-btn" aria-label="Close"></button>
+    </header>
+
+    <!-- Menu Widget -->
+    <div id="menu-widget" class="menu-widget hidden">
+      <div class="menu-content">
+        <div class="menu-header">
+          <h2 data-i18n="menu">Menu</h2>
+          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Close menu">×</button>
+        </div>
+        <div class="menu-items">
+          <button type="button" class="menu-item" data-section="settings">
+            <span class="menu-icon">⚙</span>
+            <span data-i18n="settings">Settings</span>
+          </button>
+          <button type="button" class="menu-item" data-section="language">
+            <span class="menu-icon">🌐</span>
+            <span data-i18n="language">Language</span>
+          </button>
+          <button type="button" class="menu-item" data-section="about">
+            <span class="menu-icon">ℹ</span>
+            <span data-i18n="about">About</span>
+          </button>
+        </div>
+
+        <!-- Settings Panel -->
+        <div id="settings-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <h3 data-i18n="settings">Settings</h3>
+          </div>
+          <div class="menu-panel-content">
+            <fieldset class="settings-section">
+              <legend data-i18n="difficulty-filter">Difficulty</legend>
+              <label>
+                <span data-i18n="show-problems">Show problems</span>
+                <select id="difficulty-filter">
+                  <option value="all" selected data-i18n="difficulty-all">All difficulties</option>
+                  <option value="easy" data-i18n="difficulty-easy">Easy</option>
+                  <option value="medium" data-i18n="difficulty-medium">Medium</option>
+                  <option value="hard" data-i18n="difficulty-hard">Hard</option>
+                </select>
+              </label>
+            </fieldset>
+
+            <fieldset class="settings-section">
+              <legend data-i18n="problem-database">Problem database</legend>
+              <p id="cache-info" class="cache-info"></p>
+              <button type="button" id="refresh-list" class="refresh-btn" data-i18n="refresh-list">Refresh list</button>
+            </fieldset>
+
+            <div class="settings-actions">
+              <button type="button" id="reset-settings" class="reset-btn" data-i18n="reset-to-defaults">Reset settings</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Language Panel -->
+        <div id="language-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <h3 data-i18n="language">Language</h3>
+          </div>
+          <div class="menu-panel-content">
+            <fieldset class="language-section">
+              <legend data-i18n="select-language">Select Language</legend>
+              <label>
+                <select id="language-select">
+                  <option value="en" selected>English</option>
+                  <option value="es">Español</option>
+                  <option value="ru">Русский</option>
+                </select>
+              </label>
+            </fieldset>
+          </div>
+        </div>
+
+        <!-- About Panel -->
+        <div id="about-panel" class="menu-panel hidden">
+          <div class="menu-panel-header">
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <h3 data-i18n="about">About</h3>
+          </div>
+          <div class="menu-panel-content">
+            <div class="about-content">
+              <div class="about-title">
+                <img src="logo.png" alt="Logo" class="logo" />
+                <h4 data-i18n="app-name">Random LeetCode Problem</h4>
+              </div>
+              <p><span data-i18n="app-version">Version</span> 1.0.0</p>
+              <p data-i18n="app-developer">Developed by Olé</p>
+              <p data-i18n="app-description">Picks a random free LeetCode problem so you can practice without endless scrolling.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Menu Overlay -->
+    <div id="menu-overlay" class="menu-overlay hidden"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+      <section id="problem-card" class="problem-card" aria-live="polite">
+        <div id="problem-state" class="problem-state" data-i18n="loading">Loading problems…</div>
+      </section>
+
+      <div class="actions">
+        <button type="button" id="next-btn" class="btn primary" data-i18n="next-problem">Next problem</button>
+        <button type="button" id="copy-btn" class="btn secondary" disabled data-i18n="copy">Copy</button>
+      </div>
+    </main>
+
+    <footer class="footer">
+      <span data-i18n="developed-by">Developed by</span>
+      <img src="logo.png" alt="Logo" class="logo" />
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

@@ -1,0 +1,17 @@
+{
+  "manifest_version": 3,
+  "name": "Random LeetCode Problem",
+  "version": "1.0.0",
+  "description": "Get a random free LeetCode problem to practice, with difficulty filtering and local caching.",
+  "action": {
+    "default_title": "Random LeetCode Problem",
+    "default_popup": "popup.html"
+  },
+  "host_permissions": [
+    "https://leetcode.com/*"
+  ],
+  "permissions": [
+    "storage",
+    "clipboardWrite"
+  ]
+}
