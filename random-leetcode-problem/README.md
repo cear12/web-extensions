@@ -29,16 +29,5 @@ No `activeTab`, no content scripts, no access to the page you're browsing.
 ## Data
 Everything (cached problem list, difficulty filter) stays in `chrome.storage.local` on your machine. Nothing is sent anywhere except the read-only request to LeetCode's own public API.
 
-## Icons
-Toolbar icons aren't included yet. Add `icon16.png` / `icon32.png` / `icon48.png` / `icon128.png` and reference them in `manifest.json`:
-```json
-"icons": {
-  "16": "icon16.png",
-  "32": "icon32.png",
-  "48": "icon48.png",
-  "128": "icon128.png"
-}
-```
-
 ## Where this came from
 Based on a small personal script that did a live fetch + random pick with no caching, filtering, or error handling. Restyled to match `qr-code-generator-extension` / `quick-link-copier-extension` in this repo — same popup/menu structure, i18n, and local-storage approach — and reuses their shared logo.
