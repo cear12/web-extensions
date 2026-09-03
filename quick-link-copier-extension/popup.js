@@ -12,8 +12,7 @@
   let currentTab = null;
   let linkHistory = [];
   let stats = { totalCopied: 0, dailyCopied: 0 };
-  let premium = { active: false };
-  let settings = { showNotifications: true, autoTags: true, maxHistorySize: 5 };
+  let settings = { showNotifications: true, autoTags: true, maxHistorySize: 50 };
 
   // Translation system
   const translations = {
@@ -22,7 +21,6 @@
       'link-history': 'Link History',
       'settings': 'Settings',
       'language': 'Language',
-      'premium': 'Premium',
       'about': 'About',
       'preferences': 'Preferences',
       'history': 'History',
@@ -38,9 +36,6 @@
       'show-notifications': 'Show notifications',
       'auto-tags': 'Auto-generate tags',
       'max-history-size': 'Max history size',
-      'premium-features': 'Premium Features',
-      'upgrade-to-premium': 'Upgrade to Premium',
-      'start-trial': 'Start 7-day Free Trial',
       'developed-by': 'Developed by',
       'link-copied': 'Link copied!',
       'url-copied': 'URL copied to clipboard!',
@@ -55,7 +50,6 @@
       'link-history': 'Historial de Enlaces',
       'settings': 'Configuración',
       'language': 'Idioma',
-      'premium': 'Premium',
       'about': 'Acerca de',
       'preferences': 'Preferencias',
       'history': 'Historial',
@@ -71,9 +65,6 @@
       'show-notifications': 'Mostrar notificaciones',
       'auto-tags': 'Generar etiquetas automáticamente',
       'max-history-size': 'Tamaño máximo del historial',
-      'premium-features': 'Características Premium',
-      'upgrade-to-premium': 'Actualizar a Premium',
-      'start-trial': 'Iniciar Prueba Gratuita de 7 Días',
       'developed-by': 'Desarrollado por',
       'link-copied': '¡Enlace copiado!',
       'url-copied': '¡URL copiada al portapapeles!',
@@ -88,7 +79,6 @@
       'link-history': 'История Ссылок',
       'settings': 'Настройки',
       'language': 'Язык',
-      'premium': 'Премиум',
       'about': 'О программе',
       'preferences': 'Предпочтения',
       'history': 'История',
@@ -104,9 +94,6 @@
       'show-notifications': 'Показывать уведомления',
       'auto-tags': 'Автоматически создавать теги',
       'max-history-size': 'Максимальный размер истории',
-      'premium-features': 'Премиум функции',
-      'upgrade-to-premium': 'Обновить до Премиум',
-      'start-trial': 'Начать 7-дневную пробную версию',
       'developed-by': 'Разработано',
       'link-copied': 'Ссылка скопирована!',
       'url-copied': 'URL скопирован в буфер обмена!',
@@ -171,12 +158,11 @@
   async function loadData() {
     try {
       const data = await chrome.storage.local.get([
-        'linkHistory', 'stats', 'premium', 'settings'
+        'linkHistory', 'stats', 'settings'
       ]);
-      
+
       linkHistory = data.linkHistory || [];
       stats = data.stats || { totalCopied: 0, dailyCopied: 0 };
-      premium = data.premium || { active: false };
       settings = { ...settings, ...data.settings };
       
     } catch (error) {
@@ -244,12 +230,6 @@
       clearHistoryMainBtn.addEventListener('click', clearHistory);
     }
     
-    // Export history button
-    const exportHistoryBtn = $('#export-history');
-    if (exportHistoryBtn) {
-      exportHistoryBtn.addEventListener('click', exportHistory);
-    }
-    
     // Settings checkboxes
     const showNotificationsCheckbox = $('#show-notifications');
     if (showNotificationsCheckbox) {
@@ -269,22 +249,6 @@
       translatePage(e.target.value);
       });
     }
-    
-    // Premium buttons
-    const upgradeBtn = $('#upgrade-btn');
-    if (upgradeBtn) {
-      upgradeBtn.addEventListener('click', () => {
-        showToast('Premium upgrade coming soon!', 'info');
-      });
-    }
-    
-    const trialBtn = $('#trial-btn');
-    if (trialBtn) {
-      trialBtn.addEventListener('click', () => {
-        showToast('Free trial coming soon!', 'info');
-      });
-    }
-    
   }
   
   // Copy current URL
@@ -344,7 +308,7 @@
       linkHistory.unshift(linkData);
       
       // Apply size limit
-      const maxSize = premium.active ? 1000 : settings.maxHistorySize;
+      const maxSize = settings.maxHistorySize;
       if (linkHistory.length > maxSize) {
         linkHistory = linkHistory.slice(0, maxSize);
       }
@@ -499,10 +463,7 @@
     
     // Update clear history button state
     updateClearHistoryButton();
-    
-    // Update premium banner
-    updatePremiumBanner();
-    
+
     // Update settings checkboxes
     const showNotificationsCheckbox = $('#show-notifications');
     const autoTagsCheckbox = $('#auto-tags');
@@ -513,9 +474,6 @@
     if (autoTagsCheckbox) {
       autoTagsCheckbox.checked = settings.autoTags;
     }
-    
-    // Update premium status
-    updatePremiumStatus();
   }
   
   // Update recent links
@@ -574,40 +532,6 @@
         });
       });
     });
-  }
-  
-  // Update premium banner
-  function updatePremiumBanner() {
-    const banner = $('#premium-banner');
-    if (!banner) return;
-    
-    if (premium.active) {
-      banner.classList.add('hidden');
-  } else {
-      banner.classList.remove('hidden');
-    }
-  }
-  
-  // Update premium status
-  function updatePremiumStatus() {
-    const premiumStatus = $('#premium-status');
-    if (!premiumStatus) return;
-    
-    if (premium.active) {
-      premiumStatus.innerHTML = `
-        <div class="status-premium">
-          <h4>Premium Active</h4>
-          <p>You have access to all premium features!</p>
-        </div>
-      `;
-    } else {
-      premiumStatus.innerHTML = `
-        <div class="status-free">
-          <h4>Free Version</h4>
-          <p>You're using the free version with basic features.</p>
-        </div>
-      `;
-    }
   }
   
   // Menu functions
@@ -681,22 +605,6 @@
         console.error('Error clearing history:', error);
         showToast('Failed to clear history', 'error');
       }
-  }
-  
-  // Export history
-  async function exportHistory() {
-    if (!premium.active) {
-      showToast('Export is a premium feature', 'error');
-      return;
-    }
-    
-    if (linkHistory.length === 0) {
-      showToast('No history to export', 'error');
-      return;
-    }
-    
-    // TODO: Implement export functionality
-    showToast('Export functionality coming soon!', 'info');
   }
   
   // Update settings
