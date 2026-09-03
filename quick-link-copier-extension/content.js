@@ -4,24 +4,7 @@
 // Initialize content script
 (function() {
   'use strict';
-  
-  console.log('QuickLink Copier content script loaded');
-  
 
-  // Add visual feedback for copied links
-  function addCopyFeedback(element) {
-    const originalText = element.textContent;
-    element.textContent = '✓ Copied!';
-    element.style.color = '#34A853';
-    element.style.fontWeight = 'bold';
-    
-    setTimeout(() => {
-      element.textContent = originalText;
-      element.style.color = '';
-      element.style.fontWeight = '';
-    }, 2000);
-  }
-  
   // Handle keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     // Ctrl/Cmd + Shift + C to copy current page URL
@@ -115,92 +98,85 @@
     }, 3000);
   }
   
-  // Add copy button to links on hover (Premium feature)
+  // Add copy button to links on hover
   function addCopyButtonsToLinks() {
-    // Check if premium is active
-    chrome.storage.local.get(['premium'], (data) => {
-      if (!data.premium || !data.premium.active) {
-        return;
+    const links = document.querySelectorAll('a[href]');
+    links.forEach(link => {
+      if (link.querySelector('.quicklink-copy-btn')) {
+        return; // Already has button
       }
-      
-      const links = document.querySelectorAll('a[href]');
-      links.forEach(link => {
-        if (link.querySelector('.quicklink-copy-btn')) {
-          return; // Already has button
-        }
-        
-        let copyBtn = null;
-        
-        link.addEventListener('mouseenter', () => {
-          if (copyBtn) return;
-          
-          copyBtn = document.createElement('button');
-          copyBtn.className = 'quicklink-copy-btn';
-          copyBtn.innerHTML = '📋';
-          copyBtn.title = 'Copy link';
-          
-          copyBtn.style.cssText = `
-            position: absolute;
-            background: #4285F4;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            padding: 4px 6px;
-            font-size: 12px;
-            cursor: pointer;
-            z-index: 1000;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            transition: all 0.2s ease;
-          `;
-          
-          // Position button
-          const rect = link.getBoundingClientRect();
-          copyBtn.style.left = `${rect.right - 30}px`;
-          copyBtn.style.top = `${rect.top}px`;
-          
-          document.body.appendChild(copyBtn);
-          
-          copyBtn.addEventListener('click', async (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            
-            try {
-              await navigator.clipboard.writeText(link.href);
-              
-              // Send message to background script
-              chrome.runtime.sendMessage({
-                action: 'copyLink',
-                data: {
-                  url: link.href,
-                  title: link.textContent.trim() || link.title || link.href,
-                  domain: new URL(link.href).hostname,
-                  timestamp: Date.now()
-                }
-              });
-              
-              // Visual feedback
-              copyBtn.innerHTML = '✓';
-              copyBtn.style.background = '#34A853';
-              
-              setTimeout(() => {
-                if (copyBtn && copyBtn.parentNode) {
-                  copyBtn.parentNode.removeChild(copyBtn);
-                }
-                copyBtn = null;
-              }, 1000);
-              
-            } catch (error) {
-              console.error('Error copying link:', error);
-            }
-          });
-        });
-        
-        link.addEventListener('mouseleave', () => {
-          if (copyBtn && copyBtn.parentNode) {
-            copyBtn.parentNode.removeChild(copyBtn);
-            copyBtn = null;
+
+      let copyBtn = null;
+
+      link.addEventListener('mouseenter', () => {
+        if (copyBtn) return;
+
+        copyBtn = document.createElement('button');
+        copyBtn.className = 'quicklink-copy-btn';
+        copyBtn.innerHTML = '📋';
+        copyBtn.title = 'Copy link';
+
+        copyBtn.style.cssText = `
+          position: absolute;
+          background: #4285F4;
+          color: white;
+          border: none;
+          border-radius: 4px;
+          padding: 4px 6px;
+          font-size: 12px;
+          cursor: pointer;
+          z-index: 1000;
+          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s ease;
+        `;
+
+        // Position button
+        const rect = link.getBoundingClientRect();
+        copyBtn.style.left = `${rect.right - 30}px`;
+        copyBtn.style.top = `${rect.top}px`;
+
+        document.body.appendChild(copyBtn);
+
+        copyBtn.addEventListener('click', async (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+
+          try {
+            await navigator.clipboard.writeText(link.href);
+
+            // Send message to background script
+            chrome.runtime.sendMessage({
+              action: 'copyLink',
+              data: {
+                url: link.href,
+                title: link.textContent.trim() || link.title || link.href,
+                domain: new URL(link.href).hostname,
+                timestamp: Date.now()
+              }
+            });
+
+            // Visual feedback
+            copyBtn.innerHTML = '✓';
+            copyBtn.style.background = '#34A853';
+
+            setTimeout(() => {
+              if (copyBtn && copyBtn.parentNode) {
+                copyBtn.parentNode.removeChild(copyBtn);
+              }
+              copyBtn = null;
+            }, 1000);
+
+          } catch (error) {
+            console.error('Error copying link:', error);
           }
         });
+      });
+
+      link.addEventListener('mouseleave', () => {
+        if (copyBtn && copyBtn.parentNode) {
+          copyBtn.parentNode.removeChild(copyBtn);
+          copyBtn = null;
+        }
       });
     });
   }
@@ -226,17 +202,5 @@
     childList: true,
     subtree: true
   });
-  
-  // Listen for messages from background script
-  chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
-    switch (request.action) {
-      case 'showToast':
-        showToast(request.message, request.type);
-        break;
-      case 'copyPageUrl':
-        copyCurrentPageUrl();
-        break;
-    }
-  });
-  
+
 })();

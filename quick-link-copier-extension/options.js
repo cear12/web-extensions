@@ -1,16 +1,15 @@
 // Options page script for QuickLink Copier Extension
-// Handles settings management, premium features, and data operations
+// Handles settings management and data operations
 
 (() => {
   'use strict';
-  
+
   // DOM elements
   const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
-  
+
   // State
   let settings = { showNotifications: true, autoTags: true, maxHistorySize: 10 };
-  let premium = { active: false };
   let linkHistory = [];
   let stats = { totalCopied: 0, dailyCopied: 0 };
   
@@ -35,11 +34,10 @@
   async function loadData() {
     try {
       const data = await chrome.storage.local.get([
-        'settings', 'premium', 'linkHistory', 'stats'
+        'settings', 'linkHistory', 'stats'
       ]);
-      
+
       settings = { ...settings, ...data.settings };
-      premium = data.premium || { active: false };
       linkHistory = data.linkHistory || [];
       stats = data.stats || { totalCopied: 0, dailyCopied: 0 };
       
@@ -54,17 +52,6 @@
     const generalForm = $('#general-settings');
     if (generalForm) {
       generalForm.addEventListener('submit', handleGeneralSettingsSubmit);
-    }
-    
-    // Premium buttons
-    const upgradeBtn = $('#upgrade-btn');
-    if (upgradeBtn) {
-      upgradeBtn.addEventListener('click', handleUpgrade);
-    }
-    
-    const trialBtn = $('#trial-btn');
-    if (trialBtn) {
-      trialBtn.addEventListener('click', handleTrial);
     }
     
     // History management
@@ -117,18 +104,6 @@
     }
   }
   
-  // Handle premium upgrade
-  function handleUpgrade() {
-    // TODO: Implement premium upgrade integration
-    showMessage('Premium upgrade integration coming soon!', 'info');
-  }
-  
-  // Handle free trial
-  function handleTrial() {
-    // TODO: Implement free trial
-    showMessage('Free trial integration coming soon!', 'info');
-  }
-  
   // Handle clear history
   async function handleClearHistory() {
     if (confirm('Are you sure you want to clear all link history? This action cannot be undone.')) {
@@ -146,11 +121,6 @@
   
   // Handle export history
   async function handleExportHistory() {
-    if (!premium.active) {
-      showMessage('Export is a premium feature', 'error');
-      return;
-    }
-    
     if (linkHistory.length === 0) {
       showMessage('No history to export', 'error');
       return;
@@ -184,11 +154,6 @@
   
   // Handle export all data
   async function handleExportData() {
-    if (!premium.active) {
-      showMessage('Export is a premium feature', 'error');
-      return;
-    }
-    
     try {
       const allData = await chrome.storage.local.get();
       const exportData = {
@@ -218,11 +183,6 @@
   
   // Handle import data
   async function handleImportData() {
-    if (!premium.active) {
-      showMessage('Import is a premium feature', 'error');
-      return;
-    }
-    
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.json';
@@ -244,8 +204,7 @@
         await chrome.storage.local.set({
           linkHistory: data.linkHistory || [],
           settings: data.settings || settings,
-          stats: data.stats || stats,
-          premium: data.premium || premium
+          stats: data.stats || stats
         });
         
         // Reload data and update UI
@@ -295,50 +254,15 @@
     }
     if (maxHistoryInput) {
       maxHistoryInput.value = settings.maxHistorySize;
-      maxHistoryInput.disabled = !premium.active;
     }
-    
-    // Update premium status
-    updatePremiumStatus();
-    
+
     // Update stats
     updateStats();
-    
+
     // Update recent links preview
     updateRecentLinksPreview();
-    
-    // Update button states
-    updateButtonStates();
   }
-  
-  // Update premium status
-  function updatePremiumStatus() {
-    const premiumStatus = $('#premium-status');
-    if (!premiumStatus) return;
-    
-    if (premium.active) {
-      premiumStatus.innerHTML = `
-        <div class="status-premium">
-          <div class="status-icon">⭐</div>
-          <div class="status-content">
-            <h3>Premium Active</h3>
-            <p>You have access to all premium features!</p>
-          </div>
-        </div>
-      `;
-    } else {
-      premiumStatus.innerHTML = `
-        <div class="status-free">
-          <div class="status-icon">⭐</div>
-          <div class="status-content">
-            <h3>Free Version</h3>
-            <p>You're currently using the free version with basic features.</p>
-          </div>
-        </div>
-      `;
-    }
-  }
-  
+
   // Update statistics
   function updateStats() {
     const totalLinksEl = $('#total-links');
@@ -380,23 +304,6 @@
         </div>
       `;
     }).join('');
-  }
-  
-  // Update button states
-  function updateButtonStates() {
-    const exportHistoryBtn = $('#export-history');
-    const exportDataBtn = $('#export-data');
-    const importDataBtn = $('#import-data');
-    
-    if (exportHistoryBtn) {
-      exportHistoryBtn.disabled = !premium.active;
-    }
-    if (exportDataBtn) {
-      exportDataBtn.disabled = !premium.active;
-    }
-    if (importDataBtn) {
-      importDataBtn.disabled = !premium.active;
-    }
   }
   
   // Utility functions

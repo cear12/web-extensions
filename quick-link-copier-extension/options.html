@@ -38,46 +38,14 @@
             <label>
               <span>Max history size</span>
               <input id="max-history" type="number" min="5" max="1000" value="10" />
-              <small>Free users: 10 links, Premium: unlimited</small>
+              <small>Between 5 and 1000 links</small>
             </label>
           </div>
-          
+
           <div class="form-actions">
             <button type="submit" class="btn btn-primary">Save Settings</button>
           </div>
         </form>
-      </section>
-
-      <!-- Premium Section -->
-      <section class="settings-section">
-        <h2>Premium Features</h2>
-        <div id="premium-status" class="premium-status">
-          <div class="status-free">
-            <div class="status-icon">⭐</div>
-            <div class="status-content">
-              <h3>Free Version</h3>
-              <p>You're currently using the free version with basic features.</p>
-            </div>
-          </div>
-        </div>
-        
-        <div class="premium-features">
-          <h3>Premium Features ($2.99/month)</h3>
-          <ul class="features-list">
-            <li>✓ Unlimited link history</li>
-            <li>✓ Export to TXT/CSV/JSON</li>
-            <li>✓ Advanced search and filtering</li>
-            <li>✓ Bulk link operations</li>
-            <li>✓ Copy all links on page</li>
-            <li>✓ Sync across devices</li>
-            <li>✓ Priority support</li>
-          </ul>
-        </div>
-        
-        <div class="premium-actions">
-          <button id="upgrade-btn" class="btn btn-premium">Upgrade to Premium</button>
-          <button id="trial-btn" class="btn btn-trial">Start 7-day Free Trial</button>
-        </div>
       </section>
 
       <!-- History Management -->
@@ -96,7 +64,7 @@
         
         <div class="history-actions">
           <button id="clear-history" class="btn btn-danger">Clear All History</button>
-          <button id="export-history" class="btn btn-success" disabled>Export History (Premium)</button>
+          <button id="export-history" class="btn btn-success">Export History</button>
         </div>
         
         <div class="history-preview">
@@ -111,13 +79,13 @@
       <section class="settings-section">
         <h2>Data Management</h2>
         <div class="data-actions">
-          <button id="export-data" class="btn btn-secondary" disabled>Export All Data (Premium)</button>
-          <button id="import-data" class="btn btn-secondary" disabled>Import Data (Premium)</button>
+          <button id="export-data" class="btn btn-secondary">Export All Data</button>
+          <button id="import-data" class="btn btn-secondary">Import Data</button>
           <button id="reset-data" class="btn btn-danger">Reset All Data</button>
         </div>
         <p class="help-text">
-          Export/Import functionality is available for Premium users. 
-          This allows you to backup and restore your link history across devices.
+          Export a full backup of your link history and settings as a JSON file,
+          or import a previously-exported backup to restore it.
         </p>
       </section>
 
@@ -129,7 +97,7 @@
             <img src="logo.png" alt="Logo" class="app-logo" />
             <div class="app-details">
               <h3>QuickLink Copier</h3>
-              <p>Version 1.0.0</p>
+              <p>Version 1.1.2</p>
               <p>One-click link copying with history and export features.</p>
             </div>
           </div>
