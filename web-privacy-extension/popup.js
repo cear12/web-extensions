@@ -43,8 +43,6 @@
       'qr-code-generator-desc': 'Generate QR codes for text, URL, WiFi, and contacts with customization and PNG download.',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': 'One-click link copying with history',
-      'word-hero-name': 'Word Hero',
-      'word-hero-desc': 'Vocabulary building and word games',
       'view-in-store': 'View in Store'
     },
     es: {
@@ -81,8 +79,6 @@
       'qr-code-generator-desc': 'Genera códigos QR para texto, URL, WiFi y contactos con personalización y descarga en PNG.',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': 'Copia de enlaces con un clic con historial',
-      'word-hero-name': 'Word Hero',
-      'word-hero-desc': 'Construcción de vocabulario y juegos de palabras',
       'view-in-store': 'Ver en la Tienda'
     },
     ru: {
@@ -119,8 +115,6 @@
       'qr-code-generator-desc': 'Генерация QR-кодов для текста, URL, WiFi и контактов с настройкой и загрузкой в PNG.',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': 'Копирование ссылок одним кликом с историей',
-      'word-hero-name': 'Word Hero',
-      'word-hero-desc': 'Изучение словарного запаса и словесные игры',
       'view-in-store': 'Посмотреть в магазине'
     },
     zh: {
@@ -157,8 +151,6 @@
       'qr-code-generator-desc': '为文本、URL、WiFi 和联系人生成二维码，支持自定义样式和 PNG 下载。',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': '一键复制链接并保存历史',
-      'word-hero-name': 'Word Hero',
-      'word-hero-desc': '词汇构建和单词游戏',
       'view-in-store': '在商店中查看'
     }
   };
