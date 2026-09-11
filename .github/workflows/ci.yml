@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 24
+
+      - name: Validate manifests and referenced files
+        run: python3 tools/check_extensions.py
+
+      - name: JavaScript syntax check
+        run: |
+          find . -name '*.js' -not -path './.git/*' -not -name '*.min.js' -print0 |
+            xargs -0 -n1 node --check
+
+      - name: Package every extension
+        run: python3 tools/check_extensions.py --pack dist
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: extensions
+          path: dist/*.zip
+          retention-days: 14

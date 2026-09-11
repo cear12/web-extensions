@@ -1,0 +1,52 @@
+# Tag format: <extension-dir>-v<version>, e.g. qr-code-generator-extension-v1.2.0
+# The version in the tag must equal "version" in that extension's manifest.json.
+name: Release
+
+on:
+  push:
+    tags: ["*-v*"]
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Resolve extension and version from tag
+        id: meta
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          ext="${tag%-v*}"
+          ver="${tag##*-v}"
+          test -f "$ext/manifest.json" || { echo "::error::No $ext/manifest.json"; exit 1; }
+          mver=$(python3 -c "import json,sys; print(json.load(open(sys.argv[1]))['version'])" "$ext/manifest.json")
+          [ "$mver" = "$ver" ] || { echo "::error::Tag $ver != manifest $mver"; exit 1; }
+          echo "ext=$ext" >> "$GITHUB_OUTPUT"
+          echo "ver=$ver" >> "$GITHUB_OUTPUT"
+
+      - name: Package
+        run: python3 tools/check_extensions.py --pack dist --only "${{ steps.meta.outputs.ext }}"
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+
+      # Optional: publish to the Chrome Web Store via chrome-webstore-upload-cli.
+      # Needs secrets CWS_CLIENT_ID, CWS_CLIENT_SECRET, CWS_REFRESH_TOKEN, CWS_PUBLISHER_ID
+      # and a repository variable CWS_IDS = {"<extension-dir>": "<store id>", ...}.
+      - name: Upload and publish to Chrome Web Store
+        if: vars.CWS_IDS != ''
+        env:
+          EXTENSION_ID: ${{ fromJSON(vars.CWS_IDS)[steps.meta.outputs.ext] }}
+          CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
+          CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
+          REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
+          PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
+        run: |
+          [ -n "$EXTENSION_ID" ] || { echo "::notice::${{ steps.meta.outputs.ext }} is not in CWS_IDS, skipping"; exit 0; }
+          npx --yes chrome-webstore-upload-cli@4 --source dist/*.zip
