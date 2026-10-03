@@ -6,7 +6,6 @@
 
   // DOM elements
   const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => document.querySelectorAll(sel);
 
   // State
   let settings = { showNotifications: true, autoTags: true, maxHistorySize: 10 };
@@ -284,10 +283,6 @@
     return String(value ?? '').replace(/[&<>"']/g, (ch) => (
       { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
     ));
-  }
-
-  function safeImageUrl(value) {
-    return /^https?:\/\//i.test(value || '') ? escapeHtml(value) : '';
   }
 
   // Update UI

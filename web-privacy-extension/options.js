@@ -198,7 +198,7 @@ function createSiteItem(domain, type) {
 // store the bare hostname. Returns '' for anything that isn't a hostname.
 function normalizeDomain(raw) {
   const host = String(raw).trim().toLowerCase()
-    .replace(/^[a-z]+:\/\//, '').replace(/[\/?#].*$/, '').replace(/^\*\./, '');
+    .replace(/^[a-z]+:\/\//, '').replace(/[/?#].*$/, '').replace(/^\*\./, '');
   return /^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(host) ? host : '';
 }
 

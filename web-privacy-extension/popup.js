@@ -4,7 +4,6 @@
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isChromium = /Chrome|Chromium|CriOS/.test(ua) && !/Edg/.test(ua);
   document.documentElement.setAttribute('data-browser', isSafari ? 'safari' : (isChromium ? 'chrome' : 'chrome'));
-  const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
 
   // Translation system
@@ -275,16 +274,6 @@ async function loadStats() {
   }
 }
 
-async function saveStats() {
-  try {
-    await chrome.storage.local.set({
-      cleanupCount: cleanupCount,
-      lastCleanup: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('Failed to save stats:', error);
-  }
-}
 
 function setupEventListeners() {
   // Menu toggle
