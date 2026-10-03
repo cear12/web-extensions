@@ -251,12 +251,6 @@
       closeBtn.addEventListener('click', () => window.close());
     }
     
-    // Close popup when it loses focus (same as left-click behavior)
-    window.addEventListener('blur', () => {
-      // Try to close popup by sending message to background script
-      chrome.runtime.sendMessage({ action: 'closePopup' });
-    });
-    
     // Menu close button
     const menuCloseBtn = $('#menu-close');
     if (menuCloseBtn) {
@@ -343,10 +337,7 @@
         tags: settings.autoTags ? generateTags(url, title) : []
       };
 
-      await saveToHistory(linkData);
-
-      // Update stats
-      await updateStats();
+      await recordCopy(linkData);
 
       // Show success feedback on button
       const copyBtn = $('#copy-current-url');
@@ -369,43 +360,13 @@
   }
   
   // Save link to history
-  async function saveToHistory(linkData) {
-    try {
-      // Add to beginning of history
-      linkHistory.unshift(linkData);
-
-      // Apply size limit
-      const maxSize = settings.maxHistorySize;
-      if (linkHistory.length > maxSize) {
-        linkHistory = linkHistory.slice(0, maxSize);
-      }
-      
-      // Save to storage
-      await chrome.storage.local.set({ linkHistory });
-      
-    } catch (error) {
-      console.error('Error saving to history:', error);
-    }
-  }
-  
-  // Update statistics
-  async function updateStats() {
-    try {
-      stats.totalCopied++;
-      stats.dailyCopied++;
-      
-      // Reset daily counter if new day
-      const today = new Date().toDateString();
-      if (stats.lastResetDate !== today) {
-        stats.dailyCopied = 1;
-        stats.lastResetDate = today;
-      }
-      
-      await chrome.storage.local.set({ stats });
-      
-    } catch (error) {
-      console.error('Error updating stats:', error);
-    }
+  // History and stats are owned by the background service worker, which
+  // serialises all writes; the popup only asks it to record a copy and then
+  // re-reads storage, so it can never overwrite newer data with a stale copy.
+  async function recordCopy(linkData) {
+    const res = await chrome.runtime.sendMessage({ action: 'recordCopy', data: linkData });
+    if (!res || !res.success) throw new Error('Failed to record copy');
+    await loadData();
   }
   
   // Generate automatic tags
@@ -661,9 +622,8 @@
   async function clearHistory() {
     // Clear history immediately without confirmation
       try {
-        linkHistory = [];
-        stats = { totalCopied: 0, dailyCopied: 0 };
-        await chrome.storage.local.set({ linkHistory, stats });
+        await chrome.runtime.sendMessage({ action: 'clearHistory' });
+        await loadData();
         updateRecentLinks();
         updateUI();
       } catch (error) {
