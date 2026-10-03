@@ -54,14 +54,35 @@ def check(ext: pathlib.Path) -> list[str]:
     return errors
 
 
+CODE_SUFFIXES = {".html", ".css", ".js", ".json"}
+ASSET_SUFFIXES = {".png", ".jpg", ".jpeg", ".svg", ".gif", ".webp", ".ico"}
+
+
+def packable_files(ext: pathlib.Path) -> list[pathlib.Path]:
+    """Files to ship: all code/data, plus only the images that something
+    in the extension actually references (several folders carry copies of
+    sibling-product artwork that they never use)."""
+    files = [
+        f for f in sorted(ext.rglob("*"))
+        if f.is_file() and f.suffix not in SKIP_IN_ZIP and f.name not in SKIP_NAMES
+    ]
+    sources = "\n".join(
+        f.read_text(encoding="utf-8", errors="ignore")
+        for f in files if f.suffix in CODE_SUFFIXES
+    )
+    return [
+        f for f in files
+        if f.suffix not in ASSET_SUFFIXES or f.name in sources
+    ]
+
+
 def pack(ext: pathlib.Path, out: pathlib.Path) -> pathlib.Path:
     version = json.loads((ext / "manifest.json").read_text(encoding="utf-8"))["version"]
     out.mkdir(parents=True, exist_ok=True)
     target = out / f"{ext.name}-{version}.zip"
     with zipfile.ZipFile(target, "w", zipfile.ZIP_DEFLATED) as zf:
-        for f in sorted(ext.rglob("*")):
-            if f.is_file() and f.suffix not in SKIP_IN_ZIP and f.name not in SKIP_NAMES:
-                zf.write(f, f.relative_to(ext))
+        for f in packable_files(ext):
+            zf.write(f, f.relative_to(ext))
     return target
 
 
