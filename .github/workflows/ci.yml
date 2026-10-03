@@ -24,6 +24,15 @@ jobs:
         with:
           node-version: 24
 
+      - name: Install dev tooling
+        run: npm ci
+
+      - name: Lint
+        run: npx eslint . --max-warnings 20
+
+      - name: Unit tests
+        run: npm test
+
       - name: Validate manifests and referenced files
         run: python3 tools/check_extensions.py
 
