@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "File Bookmarks (TXT / MD)",
-  "version": "1.0.0",
+  "version": "1.0.5",
   "description": "Bookmark your place in a TXT or Markdown file opened in Chrome and jump straight back to it next time you open the same file.",
   "action": {
     "default_popup": "popup.html",
