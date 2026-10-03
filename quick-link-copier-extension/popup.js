@@ -176,6 +176,18 @@
       : key;
   }
   
+  // Escape text for safe interpolation into innerHTML templates (history
+  // entries come from web pages and from imported backup files).
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (ch) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
+    ));
+  }
+
+  function safeImageUrl(value) {
+    return /^https?:\/\//i.test(value || '') ? escapeHtml(value) : '';
+  }
+
   // Initialize popup
   async function init() {
     try {
@@ -454,9 +466,8 @@
     if (!pageInfo || !currentTab) return;
     
     const domain = new URL(currentTab.url).hostname;
-    const title = currentTab.title.length > 50 
-      ? currentTab.title.substring(0, 50) + '...' 
-      : currentTab.title;
+    const rawTitle = currentTab.title || currentTab.url;
+    const title = rawTitle.length > 50 ? rawTitle.substring(0, 50) + '...' : rawTitle;
     
     // Truncate URL if too long
     const fullUrl = currentTab.url.length > 60 
@@ -465,17 +476,17 @@
     
     // Get favicon if available
     let faviconHtml = '';
-    if (currentTab.favIconUrl && !currentTab.favIconUrl.startsWith('chrome://') && !currentTab.favIconUrl.startsWith('chrome-extension://')) {
-      faviconHtml = `<img src="${currentTab.favIconUrl}" alt="Favicon" class="page-favicon" />`;
+    if (safeImageUrl(currentTab.favIconUrl)) {
+      faviconHtml = `<img src="${safeImageUrl(currentTab.favIconUrl)}" alt="Favicon" class="page-favicon" />`;
     }
     
     pageInfo.innerHTML = `
       <div class="page-header">
         ${faviconHtml}
-        <div class="page-title">${title}</div>
+        <div class="page-title">${escapeHtml(title)}</div>
       </div>
-      <div class="page-domain">${domain}</div>
-      <div class="page-url">${fullUrl}</div>
+      <div class="page-domain">${escapeHtml(domain)}</div>
+      <div class="page-url">${escapeHtml(fullUrl)}</div>
     `;
     
     // Add click handler to copy URL
@@ -545,24 +556,23 @@
     
     recentLinksEl.innerHTML = recentLinks.map(link => {
       const timeAgo = getTimeAgo(link.timestamp);
-      const title = link.title.length > 30 
-        ? link.title.substring(0, 30) + '...' 
-        : link.title;
+      const rawTitle = String(link.title ?? link.url ?? '');
+      const title = rawTitle.length > 30 ? rawTitle.substring(0, 30) + '...' : rawTitle;
       
       // Get favicon if available
       let faviconHtml = '';
-      if (link.favicon && !link.favicon.startsWith('chrome://') && !link.favicon.startsWith('chrome-extension://')) {
-        faviconHtml = `<img src="${link.favicon}" alt="Favicon" class="link-favicon" />`;
+      if (safeImageUrl(link.favicon)) {
+        faviconHtml = `<img src="${safeImageUrl(link.favicon)}" alt="Favicon" class="link-favicon" />`;
       }
       
       return `
-        <div class="recent-link-item" data-url="${link.url}">
+        <div class="recent-link-item" data-url="${escapeHtml(link.url)}">
           <div class="link-header">
             ${faviconHtml}
-            <div class="link-title">${title}</div>
+            <div class="link-title">${escapeHtml(title)}</div>
           </div>
-          <div class="link-domain">${link.domain}</div>
-          <div class="link-url">${link.url}</div>
+          <div class="link-domain">${escapeHtml(link.domain)}</div>
+          <div class="link-url">${escapeHtml(link.url)}</div>
           <div class="link-time">${timeAgo}</div>
         </div>
       `;

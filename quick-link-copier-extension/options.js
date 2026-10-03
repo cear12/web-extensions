@@ -239,6 +239,18 @@
     }
   }
   
+  // Escape text for safe interpolation into innerHTML templates (history
+  // entries come from web pages and from imported backup files).
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, (ch) => (
+      { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[ch]
+    ));
+  }
+
+  function safeImageUrl(value) {
+    return /^https?:\/\//i.test(value || '') ? escapeHtml(value) : '';
+  }
+
   // Update UI
   function updateUI() {
     // Update settings checkboxes
@@ -290,15 +302,14 @@
     
     recentLinksPreview.innerHTML = recentLinks.map(link => {
       const timeAgo = getTimeAgo(link.timestamp);
-      const title = link.title.length > 40 
-        ? link.title.substring(0, 40) + '...' 
-        : link.title;
+      const rawTitle = String(link.title ?? link.url ?? '');
+      const title = rawTitle.length > 40 ? rawTitle.substring(0, 40) + '...' : rawTitle;
       
       return `
         <div class="link-preview-item">
           <div class="link-info">
-            <div class="link-title">${title}</div>
-            <div class="link-domain">${link.domain}</div>
+            <div class="link-title">${escapeHtml(title)}</div>
+            <div class="link-domain">${escapeHtml(link.domain)}</div>
             <div class="link-time">${timeAgo}</div>
           </div>
         </div>
