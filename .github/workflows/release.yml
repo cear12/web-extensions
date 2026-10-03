@@ -45,7 +45,7 @@ jobs:
         if: vars.CWS_IDS != ''
         env:
           EXT: ${{ steps.meta.outputs.ext }}
-          EXTENSION_ID: ${{ fromJSON(vars.CWS_IDS)[steps.meta.outputs.ext] }}
+          EXTENSION_ID: ${{ fromJSON(vars.CWS_IDS || '{}')[steps.meta.outputs.ext] }}
           CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
