@@ -28,7 +28,7 @@
          "matches": [
             "<all_urls>"
          ],
-         "run_at": "document_start"
+         "run_at": "document_idle"
       }
    ],
    "description": "Professional privacy protection. One-click cleanup of browsing data.",
