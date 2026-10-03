@@ -426,7 +426,12 @@
     const pageInfo = $('#current-page-info');
     if (!pageInfo || !currentTab) return;
     
-    const domain = new URL(currentTab.url).hostname;
+    let domain = '';
+    try {
+      domain = new URL(currentTab.url).hostname;
+    } catch (e) {
+      return; // about:blank, extension pages, etc. - nothing useful to show
+    }
     const rawTitle = currentTab.title || currentTab.url;
     const title = rawTitle.length > 50 ? rawTitle.substring(0, 50) + '...' : rawTitle;
     
