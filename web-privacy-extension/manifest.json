@@ -14,9 +14,9 @@
    },
    "commands": {
       "cleanup-now": {
-         "description": "Emergency privacy cleanup",
+         "description": "Run privacy cleanup with your saved settings",
          "suggested_key": {
-            "default": "Ctrl+Shift+Delete"
+            "default": "Alt+Shift+K"
          }
       }
    },

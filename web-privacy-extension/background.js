@@ -1,6 +1,8 @@
 // Web Privacy Extension - Background Service Worker
 // Handles alarms, notifications, and background tasks
 
+importScripts('cleanup.js');
+
 class WebPrivacyBackground {
   constructor() {
     this.init();
@@ -14,11 +16,10 @@ class WebPrivacyBackground {
   }
 
   setupMessageListener() {
-    chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+    chrome.runtime.onMessage.addListener((request, sender) => {
+      // Only our own extension pages may change the schedule.
+      if (sender.id !== chrome.runtime.id || !(sender.url || '').startsWith(chrome.runtime.getURL(''))) return;
       switch (request.action) {
-        case 'sensitive-site-detected':
-          this.handleSensitiveSiteDetection(request.data);
-          break;
         case 'schedule-cleanup':
           this.scheduleCleanup(request.data);
           break;
@@ -51,31 +52,6 @@ class WebPrivacyBackground {
         this.handleFirstInstall();
       }
     });
-  }
-
-  handleSensitiveSiteDetection(data) {
-    this.storeSensitiveSiteVisit(data);
-  }
-
-  async storeSensitiveSiteVisit(data) {
-    try {
-      const result = await chrome.storage.local.get(['sensitiveSiteVisits']);
-      const visits = result.sensitiveSiteVisits || [];
-
-      visits.push({
-        ...data,
-        timestamp: new Date().toISOString()
-      });
-
-      // Keep only last 100 visits
-      if (visits.length > 100) {
-        visits.splice(0, visits.length - 100);
-      }
-
-      await chrome.storage.local.set({ sensitiveSiteVisits: visits });
-    } catch (error) {
-      console.error('Failed to store sensitive site visit:', error);
-    }
   }
 
   async scheduleCleanup(data) {
@@ -138,9 +114,10 @@ class WebPrivacyBackground {
       };
 
       // Execute cleanup
-      await this.performCleanup(cleanupOptions);
+      await WebPrivacyCleanup.run(cleanupOptions, settings.whitelist);
 
-      // Show notification
+      await WebPrivacyCleanup.recordCleanup();
+
       if (settings.notifications) {
         chrome.notifications.create({
           type: 'basic',
@@ -150,47 +127,14 @@ class WebPrivacyBackground {
         });
       }
 
-      // Update stats
-      await this.updateCleanupStats();
-
     } catch (error) {
       console.error('Scheduled cleanup failed:', error);
-    }
-  }
-
-  async performCleanup(options) {
-    return new Promise((resolve, reject) => {
-      const dataTypes = {};
-      const timeRange = { since: 0 };
-
-      if (options.cookies) dataTypes.cookies = true;
-      if (options.cache) dataTypes.cache = true;
-      if (options.history) dataTypes.history = true;
-      if (options.downloads) dataTypes.downloads = true;
-      if (options.passwords) dataTypes.passwords = true;
-      if (options.formData) dataTypes.formData = true;
-
-      chrome.browsingData.remove(timeRange, dataTypes, () => {
-        if (chrome.runtime.lastError) {
-          reject(new Error(chrome.runtime.lastError.message));
-        } else {
-          resolve();
-        }
+      chrome.notifications.create({
+        type: 'basic',
+        iconUrl: 'icon48.png',
+        title: 'Web Privacy',
+        message: 'Privacy cleanup failed: ' + error.message
       });
-    });
-  }
-
-  async updateCleanupStats() {
-    try {
-      const result = await chrome.storage.local.get(['cleanupCount', 'lastCleanup']);
-      const count = (result.cleanupCount || 0) + 1;
-
-      await chrome.storage.local.set({
-        cleanupCount: count,
-        lastCleanup: new Date().toISOString()
-      });
-    } catch (error) {
-      console.error('Failed to update cleanup stats:', error);
     }
   }
 
