@@ -3,8 +3,6 @@
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isChromium = /Chrome|Chromium|CriOS/.test(ua) && !/Edg/.test(ua);
   document.documentElement.setAttribute('data-browser', isSafari ? 'safari' : (isChromium ? 'chrome' : 'chrome'));
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => document.querySelectorAll(sel);
 
   // Translation system
   const translations = {
@@ -404,7 +402,7 @@
       const title = sanitizeText(titleInput ? titleInput.value : '');
       // vCard 3.0 text escaping: backslash, ; , and newlines must not leak
       // into the structure of the card.
-      const v = (x) => x.replace(/\\/g, '\\\\').replace(/;/g, '\;').replace(/,/g, '\\,').replace(/\r?\n/g, '\\n');
+      const v = QRPayload.escapeVCard;
       const lines = [
         'BEGIN:VCARD',
         'VERSION:3.0',
@@ -421,9 +419,7 @@
     return '';
   }
 
-  function escapeWiFi(text) {
-    return text.replace(/([\;,":])/g, '\\$1');
-  }
+  const escapeWiFi = QRPayload.escapeWiFi;
 
   function getOptions() {
     // Get values with fallbacks in case elements are hidden
@@ -680,7 +676,6 @@
   const settingsPanel = document.getElementById('settings-panel');
   const languagePanel = document.getElementById('language-panel');
   const aboutPanel = document.getElementById('about-panel');
-  const backBtn = document.querySelector('.back-btn');
 
   function openMenu() {
     menuWidget.classList.remove('hidden');
