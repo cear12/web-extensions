@@ -22,7 +22,7 @@ Features:
 3. Follow Xcode's signing/build steps. The extension will show up under Safari > Extensions.
 
 ## Permissions (why each one)
-- `activeTab` — read the current tab's URL/title when you invoke the extension (popup click or context-menu item)
+- `offscreen` — a hidden helper page used to write to the clipboard on pages where scripts cannot be injected (e.g. chrome:// pages).
 - `contextMenus` — the "Copy page URL" / "Copy this link" right-click menu items
 - `storage` — `chrome.storage.local` holds your history, settings, and stats
 - `clipboardWrite` — writing the copied URL to the clipboard
