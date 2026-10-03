@@ -3,7 +3,7 @@
 One-click link copying with local history.
 
 Features:
-- Copy the current page's URL from the popup ("Copy Current URL"), the right-click context menu ("Copy page URL"), or the keyboard shortcut Ctrl+Shift+C (Cmd+Shift+C on macOS) — the shortcut is handled in-page by the content script, not a browser-level `chrome.commands` binding
+- Copy the current page's URL from the popup ("Copy Current URL"), the right-click context menu ("Copy page URL"), or the keyboard shortcut Alt+Shift+C — the shortcut is handled in-page by the content script, not a browser-level `chrome.commands` binding
 - Copy any link via the right-click context menu ("Copy this link"), or by hovering over a link on the page and clicking the small copy button the content script adds
 - Local history of recently-copied links (shown in the popup and on the Options page), with a configurable max size (5-1000 links) and automatic tags based on the link's domain (GitHub, StackOverflow, YouTube, etc.) and title keywords (tutorial, docs, api, blog)
 - Export History, Export All Data (full JSON backup), and Import Data, all on the Options page
@@ -28,7 +28,7 @@ Features:
 - `clipboardWrite` — writing the copied URL to the clipboard
 - `scripting` — `chrome.scripting.executeScript` runs the actual clipboard write inside the page when a context-menu action fires
 - `notifications` — the optional "Link copied!" OS notification
-- `host_permissions: ["<all_urls>"]` plus a content script matching `<all_urls>` — the hover-to-copy button on links and the in-page Ctrl+Shift+C shortcut both need to run on any page you're browsing; this is the one permission that's broader than "only when you click something," and it exists solely for that feature
+- `host_permissions: ["<all_urls>"]` plus a content script matching `<all_urls>` — the hover-to-copy button on links and the in-page Alt+Shift+C shortcut both need to run on any page you're browsing; this is the one permission that's broader than "only when you click something," and it exists solely for that feature
 
 ## Data
 Your link history, settings, and stats stay local in `chrome.storage.local`. The extension makes no network requests and sends nothing to any server.

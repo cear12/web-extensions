@@ -7,8 +7,9 @@
 
   // Handle keyboard shortcuts
   document.addEventListener('keydown', (e) => {
-    // Ctrl/Cmd + Shift + C to copy current page URL
-    if ((e.ctrlKey || e.metaKey) && e.shiftKey && e.key === 'C') {
+    // Alt + Shift + C to copy current page URL (Ctrl+Shift+C opens DevTools'
+    // element picker in Chrome, so it cannot be used reliably).
+    if (e.altKey && e.shiftKey && !e.ctrlKey && !e.metaKey && e.code === 'KeyC') {
       e.preventDefault();
       copyCurrentPageUrl();
     }
@@ -98,109 +99,97 @@
     }, 3000);
   }
   
-  // Add copy button to links on hover
-  function addCopyButtonsToLinks() {
-    const links = document.querySelectorAll('a[href]');
-    links.forEach(link => {
-      if (link.querySelector('.quicklink-copy-btn')) {
-        return; // Already has button
-      }
+  // One floating copy button shared by all links (event delegation), so the
+  // cost does not grow with the number of links and nothing needs to be
+  // re-attached when a dynamic page adds content.
+  let copyBtn = null;
+  let activeLink = null;
+  let hideTimer = null;
 
-      let copyBtn = null;
+  function removeButton() {
+    clearTimeout(hideTimer);
+    if (copyBtn) {
+      copyBtn.remove();
+      copyBtn = null;
+    }
+    activeLink = null;
+  }
 
-      link.addEventListener('mouseenter', () => {
-        if (copyBtn) return;
+  function showButtonFor(link) {
+    if (activeLink === link && copyBtn) return;
+    removeButton();
+    activeLink = link;
 
-        copyBtn = document.createElement('button');
-        copyBtn.className = 'quicklink-copy-btn';
-        copyBtn.innerHTML = '📋';
-        copyBtn.title = 'Copy link';
+    copyBtn = document.createElement('button');
+    copyBtn.className = 'quicklink-copy-btn';
+    copyBtn.textContent = '\u{1F4CB}';
+    copyBtn.title = 'Copy link';
+    copyBtn.style.cssText = `
+      position: fixed;
+      background: #4285F4;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 4px 6px;
+      font-size: 12px;
+      cursor: pointer;
+      z-index: 2147483647;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    `;
+    const rect = link.getBoundingClientRect();
+    // position: fixed -> viewport coordinates, correct while scrolled.
+    copyBtn.style.left = `${Math.max(0, Math.min(rect.right - 30, window.innerWidth - 40))}px`;
+    copyBtn.style.top = `${Math.max(0, rect.top)}px`;
 
-        copyBtn.style.cssText = `
-          position: absolute;
-          background: #4285F4;
-          color: white;
-          border: none;
-          border-radius: 4px;
-          padding: 4px 6px;
-          font-size: 12px;
-          cursor: pointer;
-          z-index: 1000;
-          box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-          transition: all 0.2s ease;
-        `;
-
-        // Position button
-        const rect = link.getBoundingClientRect();
-        copyBtn.style.left = `${rect.right - 30}px`;
-        copyBtn.style.top = `${rect.top}px`;
-
-        document.body.appendChild(copyBtn);
-
-        copyBtn.addEventListener('click', async (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-
-          try {
-            await navigator.clipboard.writeText(link.href);
-
-            // Send message to background script
-            chrome.runtime.sendMessage({
-              action: 'copyLink',
-              data: {
-                url: link.href,
-                title: link.textContent.trim() || link.title || link.href,
-                domain: new URL(link.href).hostname,
-                timestamp: Date.now()
-              }
-            });
-
-            // Visual feedback
-            copyBtn.innerHTML = '✓';
-            copyBtn.style.background = '#34A853';
-
-            setTimeout(() => {
-              if (copyBtn && copyBtn.parentNode) {
-                copyBtn.parentNode.removeChild(copyBtn);
-              }
-              copyBtn = null;
-            }, 1000);
-
-          } catch (error) {
-            console.error('Error copying link:', error);
+    const btn = copyBtn;
+    btn.addEventListener('mouseenter', () => clearTimeout(hideTimer));
+    btn.addEventListener('mouseleave', () => { hideTimer = setTimeout(removeButton, 150); });
+    btn.addEventListener('click', async (e) => {
+      e.preventDefault();
+      e.stopPropagation();
+      const href = link.href;
+      try {
+        await navigator.clipboard.writeText(href);
+        let domain = '';
+        try { domain = new URL(href).hostname; } catch (_) { /* non-http(s) href */ }
+        chrome.runtime.sendMessage({
+          action: 'copyLink',
+          data: {
+            url: href,
+            title: link.textContent.trim() || link.title || href,
+            domain,
+            timestamp: Date.now()
           }
         });
-      });
-
-      link.addEventListener('mouseleave', () => {
-        if (copyBtn && copyBtn.parentNode) {
-          copyBtn.parentNode.removeChild(copyBtn);
-          copyBtn = null;
-        }
-      });
-    });
-  }
-  
-  // Initialize link copy buttons
-  addCopyButtonsToLinks();
-  
-  // Re-initialize when new content is added (for dynamic pages)
-  const observer = new MutationObserver((mutations) => {
-    let shouldReinit = false;
-    mutations.forEach((mutation) => {
-      if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
-        shouldReinit = true;
+        btn.textContent = '\u2713';
+        btn.style.background = '#34A853';
+        setTimeout(() => { if (copyBtn === btn) removeButton(); }, 1000);
+      } catch (error) {
+        console.error('Error copying link:', error);
+        showToast('Failed to copy link', 'error');
       }
     });
-    
-    if (shouldReinit) {
-      setTimeout(addCopyButtonsToLinks, 500);
+
+    document.body.appendChild(btn);
+  }
+
+  document.addEventListener('mouseover', (e) => {
+    if (!(e.target instanceof Element)) return;
+    if (copyBtn && copyBtn.contains(e.target)) return;
+    const link = e.target.closest('a[href]');
+    if (link) {
+      clearTimeout(hideTimer);
+      showButtonFor(link);
     }
-  });
-  
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
+  }, true);
+
+  document.addEventListener('mouseout', (e) => {
+    if (!activeLink || !(e.target instanceof Element)) return;
+    if (e.target.closest('a[href]') !== activeLink) return;
+    if (e.relatedTarget instanceof Node && (activeLink.contains(e.relatedTarget) || (copyBtn && copyBtn.contains(e.relatedTarget)))) return;
+    hideTimer = setTimeout(removeButton, 150);
+  }, true);
+
+  window.addEventListener('scroll', removeButton, { passive: true, capture: true });
 
 })();
