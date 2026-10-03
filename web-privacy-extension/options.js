@@ -181,23 +181,30 @@ function updateBlacklist() {
 function createSiteItem(domain, type) {
   const item = document.createElement('div');
   item.className = 'site-item';
-  item.innerHTML = `
-    <span class="domain">${domain}</span>
-    <button type="button" class="remove-btn" data-domain="${domain}" data-type="${type}">Remove</button>
-  `;
-  
-  item.querySelector('.remove-btn').addEventListener('click', (e) => {
-    const domain = e.target.dataset.domain;
-    const listType = e.target.dataset.type;
-    removeFromList(domain, listType);
-  });
+  const label = document.createElement('span');
+  label.className = 'domain';
+  label.textContent = domain;
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.className = 'remove-btn';
+  removeBtn.textContent = 'Remove';
+  removeBtn.addEventListener('click', () => removeFromList(domain, type));
+  item.append(label, removeBtn);
   
   return item;
 }
 
+// Accept "example.com", "https://example.com/path" or "*.example.com";
+// store the bare hostname. Returns '' for anything that isn't a hostname.
+function normalizeDomain(raw) {
+  const host = String(raw).trim().toLowerCase()
+    .replace(/^[a-z]+:\/\//, '').replace(/[/?#].*$/, '').replace(/^\*\./, '');
+  return /^[a-z0-9]([a-z0-9.-]*[a-z0-9])?$/.test(host) ? host : '';
+}
+
 function addToWhitelist() {
   const input = document.getElementById('whitelist-input');
-  const domain = input.value.trim();
+  const domain = normalizeDomain(input.value);
   
   if (domain && !settings.whitelist.includes(domain)) {
     settings.whitelist.push(domain);
@@ -208,7 +215,7 @@ function addToWhitelist() {
 
 function addToBlacklist() {
   const input = document.getElementById('blacklist-input');
-  const domain = input.value.trim();
+  const domain = normalizeDomain(input.value);
   
   if (domain && !settings.blacklist.includes(domain)) {
     settings.blacklist.push(domain);
@@ -268,8 +275,21 @@ function importSettings(event) {
   const reader = new FileReader();
   reader.onload = (e) => {
     try {
-      const importedSettings = JSON.parse(e.target.result);
-      settings = { ...settings, ...importedSettings };
+      const imported = JSON.parse(e.target.result);
+      if (!imported || typeof imported !== 'object' || Array.isArray(imported)) {
+        throw new Error('Not a settings object');
+      }
+      const clean = {};
+      for (const key of ['notifications', 'cookies', 'cache', 'history', 'downloads', 'passwords', 'formData']) {
+        if (typeof imported[key] === 'boolean') clean[key] = imported[key];
+      }
+      if (['none', 'hourly', 'daily', 'weekly'].includes(imported.schedule)) clean.schedule = imported.schedule;
+      for (const key of ['whitelist', 'blacklist']) {
+        if (Array.isArray(imported[key])) {
+          clean[key] = [...new Set(imported[key].map(normalizeDomain).filter(Boolean))];
+        }
+      }
+      settings = { ...settings, ...clean };
       saveSettings();
       updateUI();
       showNotification('Settings imported successfully!', 'success');

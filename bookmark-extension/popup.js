@@ -17,7 +17,6 @@
   const $$ = (sel) => document.querySelectorAll(sel);
 
   // State
-  let currentTabInfo = null;
 
   // Translation system
   const translations = {
@@ -253,7 +252,6 @@
     const tabInfoEl = $('#tab-info');
     const addBtn = $('#add-btn');
     const info = await sendMessage({ type: 'GET_ACTIVE_TAB_INFO' });
-    currentTabInfo = info || null;
     if (!tabInfoEl || !addBtn) return;
 
     if (info && info.supported) {

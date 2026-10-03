@@ -68,6 +68,29 @@
     window.scrollTo(0, ratio * scrollable);
   }
 
+  function scrollToTextOffset(offset) {
+    try {
+      const walker = document.createTreeWalker(document.body, NodeFilter.SHOW_TEXT);
+      let seen = 0;
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        const len = node.nodeValue.length;
+        if (offset < seen + len) {
+          const range = document.createRange();
+          range.setStart(node, offset - seen);
+          range.setEnd(node, Math.min(offset - seen + 1, len));
+          const rect = range.getBoundingClientRect();
+          if (!rect || (rect.top === 0 && rect.height === 0)) return false;
+          window.scrollTo(0, Math.max(0, rect.top + window.scrollY - 20));
+          return true;
+        }
+        seen += len;
+      }
+    } catch (e) {
+      /* fall through to ratio-based scroll */
+    }
+    return false;
+  }
+
   function restorePosition({ scrollRatio, anchorText }) {
     const text = getFullText();
     let anchorFound = false;
@@ -75,8 +98,11 @@
     if (anchorText && anchorText.length > 0) {
       const idx = text.indexOf(anchorText);
       if (idx !== -1) {
-        const newRatio = text.length ? idx / text.length : 0;
-        scrollToRatio(newRatio);
+        // Scroll to the real position of the matched text (wrapped lines make
+        // a character-offset ratio inaccurate); fall back to the ratio.
+        if (!scrollToTextOffset(idx)) {
+          scrollToRatio(text.length ? idx / text.length : 0);
+        }
         anchorFound = true;
       }
     }

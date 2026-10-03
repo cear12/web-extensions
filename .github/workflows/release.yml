@@ -29,7 +29,9 @@ jobs:
           echo "ver=$ver" >> "$GITHUB_OUTPUT"
 
       - name: Package
-        run: python3 tools/check_extensions.py --pack dist --only "${{ steps.meta.outputs.ext }}"
+        env:
+          EXT: ${{ steps.meta.outputs.ext }}
+        run: python3 tools/check_extensions.py --pack dist --only "$EXT"
 
       - uses: softprops/action-gh-release@v3
         with:
@@ -42,11 +44,12 @@ jobs:
       - name: Upload and publish to Chrome Web Store
         if: vars.CWS_IDS != ''
         env:
+          EXT: ${{ steps.meta.outputs.ext }}
           EXTENSION_ID: ${{ fromJSON(vars.CWS_IDS)[steps.meta.outputs.ext] }}
           CLIENT_ID: ${{ secrets.CWS_CLIENT_ID }}
           CLIENT_SECRET: ${{ secrets.CWS_CLIENT_SECRET }}
           REFRESH_TOKEN: ${{ secrets.CWS_REFRESH_TOKEN }}
           PUBLISHER_ID: ${{ secrets.CWS_PUBLISHER_ID }}
         run: |
-          [ -n "$EXTENSION_ID" ] || { echo "::notice::${{ steps.meta.outputs.ext }} is not in CWS_IDS, skipping"; exit 0; }
+          [ -n "$EXTENSION_ID" ] || { echo "::notice::$EXT is not in CWS_IDS, skipping"; exit 0; }
           npx --yes chrome-webstore-upload-cli@4 --source dist/*.zip

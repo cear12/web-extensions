@@ -4,12 +4,13 @@
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isChromium = /Chrome|Chromium|CriOS/.test(ua) && !/Edg/.test(ua);
   document.documentElement.setAttribute('data-browser', isSafari ? 'safari' : (isChromium ? 'chrome' : 'chrome'));
-  const $ = (sel) => document.querySelector(sel);
   const $$ = (sel) => document.querySelectorAll(sel);
 
   // Translation system
   const translations = {
     en: {
+      'clearing': 'CLEARING...',
+      'cleanup-failed': 'Cleanup failed',
       'app-name': 'Web Privacy',
       'about': 'About',
       'privacy-status': 'Privacy Status',
@@ -46,6 +47,8 @@
       'view-in-store': 'View in Store'
     },
     es: {
+      'clearing': 'LIMPIANDO...',
+      'cleanup-failed': 'Error al limpiar',
       'app-name': 'Web Privacy',
       'about': 'Acerca de',
       'privacy-status': 'Estado de Privacidad',
@@ -82,6 +85,8 @@
       'view-in-store': 'Ver en la Tienda'
     },
     ru: {
+      'clearing': 'ОЧИСТКА...',
+      'cleanup-failed': 'Не удалось очистить',
       'app-name': 'Web Privacy',
       'about': 'О программе',
       'privacy-status': 'Статус приватности',
@@ -118,6 +123,8 @@
       'view-in-store': 'Посмотреть в магазине'
     },
     zh: {
+      'clearing': '清理中...',
+      'cleanup-failed': '清理失败',
       'app-name': 'Web Privacy',
       'about': '关于',
       'privacy-status': '隐私状态',
@@ -267,16 +274,6 @@ async function loadStats() {
   }
 }
 
-async function saveStats() {
-  try {
-    await chrome.storage.local.set({
-      cleanupCount: cleanupCount,
-      lastCleanup: new Date().toISOString()
-    });
-  } catch (error) {
-    console.error('Failed to save stats:', error);
-  }
-}
 
 function setupEventListeners() {
   // Menu toggle
@@ -437,7 +434,7 @@ async function performCleanup() {
   
   try {
     cleanupBtn.disabled = true;
-    if (btnTextEl) { btnTextEl.textContent = 'CLEARING...'; }
+    if (btnTextEl) { btnTextEl.textContent = translate('clearing'); }
 
     const cleanupOptions = {
       cookies: settings.cookies,
@@ -448,47 +445,21 @@ async function performCleanup() {
       formData: settings.formData
     };
 
-    await executeCleanup(cleanupOptions);
+    await WebPrivacyCleanup.run(cleanupOptions, settings.whitelist);
 
-    cleanupCount++;
-    lastCleanup = new Date().toISOString();
-    await saveStats();
+    ({ cleanupCount, lastCleanup } = await WebPrivacyCleanup.recordCleanup());
 
     updateUI();
     updateCleanupButtonState();
 
   } catch (error) {
     console.error('[WebPrivacy] Cleanup failed:', error);
+    if (btnTextEl) { btnTextEl.textContent = translate('cleanup-failed'); await new Promise(r => setTimeout(r, 1500)); }
   } finally {
     cleanupBtn.disabled = false;
     if (btnTextEl) { btnTextEl.textContent = originalLabel; }
     isCleaning = false;
   }
 }
-
-async function executeCleanup(options) {
-  const dataTypes = {};
-  const timeRange = { since: 0 };
-
-  if (options.cookies) dataTypes.cookies = true;
-  if (options.cache) dataTypes.cache = true;
-  if (options.history) dataTypes.history = true;
-  if (options.downloads) dataTypes.downloads = true;
-  if (options.passwords) dataTypes.passwords = true;
-  if (options.formData) dataTypes.formData = true;
-
-  return new Promise((resolve, reject) => {
-    chrome.browsingData.remove(timeRange, dataTypes, () => {
-      if (chrome.runtime.lastError) {
-        const message = chrome.runtime.lastError.message || 'Unknown error';
-        console.error('[WebPrivacy] chrome.browsingData.remove error:', message);
-        reject(new Error(message));
-      } else {
-        resolve();
-      }
-    });
-  });
-}
-
 
 })();

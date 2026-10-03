@@ -1,311 +1,203 @@
-// Background script for QuickLink Copier Extension
-// Handles context menus, clipboard operations, and storage management
+// Background service worker for QuickLink Copier.
+// Handles context menus, clipboard operations and - as the single writer -
+// the link history and statistics.
 
-// Initialize extension on install
-chrome.runtime.onInstalled.addListener(async () => {
-  // Create context menu items
-  chrome.contextMenus.create({
-    id: 'copy-current-url',
-    title: 'Copy page URL',
-    contexts: ['page']
-  });
-  
-  chrome.contextMenus.create({
-    id: 'copy-link-url',
-    title: 'Copy this link',
-    contexts: ['link']
-  });
-  
-  
-  // Initialize storage with default values
-  const defaultData = {
-    linkHistory: [],
-    settings: {
-      maxHistorySize: 10,
-      autoTags: true,
-      showNotifications: true
-    },
-    stats: {
-      totalCopied: 0,
-      dailyCopied: 0,
-      lastResetDate: new Date().toDateString()
+const DEFAULT_SETTINGS = { maxHistorySize: 10, autoTags: true, showNotifications: true };
+
+// ---- Storage helpers ----
+
+// All read-modify-write operations on history/stats/settings go through this
+// queue so concurrent copies (context menu + popup + content script) cannot
+// overwrite each other with stale data.
+let writeQueue = Promise.resolve();
+function serialized(task) {
+  const run = writeQueue.then(task, task);
+  writeQueue = run.catch(() => {});
+  return run;
+}
+
+function normalizedMaxSize(settings) {
+  const n = Number.parseInt(settings && settings.maxHistorySize, 10);
+  return Number.isFinite(n) && n > 0 ? n : DEFAULT_SETTINGS.maxHistorySize;
+}
+
+function saveToHistory(linkData) {
+  return serialized(async () => {
+    const data = await chrome.storage.local.get(['linkHistory', 'settings', 'stats']);
+    const history = Array.isArray(data.linkHistory) ? data.linkHistory : [];
+    history.unshift(linkData);
+    const trimmed = history.slice(0, normalizedMaxSize(data.settings));
+
+    const today = new Date().toDateString();
+    const stats = { totalCopied: 0, dailyCopied: 0, lastResetDate: today, ...data.stats };
+    if (stats.lastResetDate !== today) {
+      stats.dailyCopied = 0;
+      stats.lastResetDate = today;
     }
-  };
-  
-  // Set default data if not exists
-  const existingData = await chrome.storage.local.get();
-  if (!existingData.linkHistory) {
-    await chrome.storage.local.set(defaultData);
+    stats.totalCopied++;
+    stats.dailyCopied++;
+
+    await chrome.storage.local.set({ linkHistory: trimmed, stats });
+  });
+}
+
+function clearHistory() {
+  return serialized(() => chrome.storage.local.set({
+    linkHistory: [],
+    stats: { totalCopied: 0, dailyCopied: 0, lastResetDate: new Date().toDateString() }
+  }));
+}
+
+function updateSettings(settings) {
+  return serialized(() => chrome.storage.local.set({ settings }));
+}
+
+// ---- Install ----
+
+chrome.runtime.onInstalled.addListener(async () => {
+  // Avoid "duplicate id" errors when the extension is updated/reloaded.
+  await chrome.contextMenus.removeAll();
+  chrome.contextMenus.create({ id: 'copy-current-url', title: 'Copy page URL', contexts: ['page'] });
+  chrome.contextMenus.create({ id: 'copy-link-url', title: 'Copy this link', contexts: ['link'] });
+
+  const existing = await chrome.storage.local.get(['linkHistory', 'settings', 'stats']);
+  const defaults = {};
+  if (!existing.linkHistory) defaults.linkHistory = [];
+  if (!existing.settings) defaults.settings = DEFAULT_SETTINGS;
+  if (!existing.stats) {
+    defaults.stats = { totalCopied: 0, dailyCopied: 0, lastResetDate: new Date().toDateString() };
   }
+  if (Object.keys(defaults).length) await chrome.storage.local.set(defaults);
 });
 
-// Handle context menu clicks
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
   try {
-    switch (info.menuItemId) {
-      case 'copy-current-url':
-        await copyCurrentPageUrl(tab);
-        break;
-      case 'copy-link-url':
-        await copyLinkUrl(info.linkUrl, info.linkText, tab);
-        break;
+    if (info.menuItemId === 'copy-current-url') {
+      await copyUrl({ url: tab.url, title: tab.title, tab });
+    } else if (info.menuItemId === 'copy-link-url') {
+      await copyUrl({ url: info.linkUrl, title: info.linkText || info.linkUrl, tab });
     }
   } catch (error) {
     console.error('Error handling context menu click:', error);
   }
 });
 
-// Copy current page URL
-async function copyCurrentPageUrl(tab) {
+// ---- Clipboard ----
+
+// Runs inside the page. Must be self-contained (it is serialised).
+function copyInPage(text) {
+  return navigator.clipboard.writeText(text).then(() => true, () => {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;opacity:0;';
+    document.body.appendChild(ta);
+    ta.select();
+    let ok = false;
+    try { ok = document.execCommand('copy'); } catch (_) { /* ok stays false */ }
+    ta.remove();
+    return ok;
+  });
+}
+
+async function copyViaPage(tabId, text) {
   try {
-    const url = tab.url;
-    const title = tab.title;
-    const domain = new URL(url).hostname;
-    
-    // Copy to clipboard
-    if (chrome.scripting && chrome.scripting.executeScript) {
-      try {
-        await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: copyToClipboard,
-          args: [url]
-        });
-      } catch (scriptError) {
-        console.warn('Scripting failed, trying alternative method:', scriptError);
-        // Alternative: inject inline script
-        try {
-          await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: (text) => {
-              const textarea = document.createElement('textarea');
-              textarea.value = text;
-              document.body.appendChild(textarea);
-              textarea.select();
-              document.execCommand('copy');
-              document.body.removeChild(textarea);
-            },
-            args: [url]
-          });
-        } catch (finalError) {
-          console.error('All copy methods failed:', finalError);
-          // If copying fails, still save to history
-          await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
-        }
-      }
-    } else {
-      console.warn('chrome.scripting not available, skipping clipboard copy');
-      await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
-    }
-    
-    // Save to history
-    await saveToHistory({
-      url,
-      title,
-      domain,
-      timestamp: Date.now(),
-      tags: []
+    const [result] = await chrome.scripting.executeScript({
+      target: { tabId },
+      func: copyInPage,
+      args: [text]
     });
-    
-    // Update stats
-    await updateStats();
-    
-    // Show notification
-    await showNotification('Link copied!', `Copied: ${title}`);
-    
-  } catch (error) {
-    console.error('Error copying current page URL:', error);
+    return !!(result && result.result);
+  } catch (_) {
+    return false; // restricted page (chrome://, Web Store, PDF viewer, ...)
   }
 }
 
-// Copy specific link URL
-async function copyLinkUrl(linkUrl, linkText, tab) {
+async function copyViaOffscreen(text) {
+  if (!chrome.offscreen) return false;
   try {
-    const domain = new URL(linkUrl).hostname;
-    const title = linkText || linkUrl;
-    
-    // Copy to clipboard
-    if (chrome.scripting && chrome.scripting.executeScript) {
-      try {
-        await chrome.scripting.executeScript({
-          target: { tabId: tab.id },
-          func: copyToClipboard,
-          args: [linkUrl]
-        });
-      } catch (scriptError) {
-        console.warn('Scripting failed, trying alternative method:', scriptError);
-        // Alternative: inject inline script
-        try {
-          await chrome.scripting.executeScript({
-            target: { tabId: tab.id },
-            func: (text) => {
-              const textarea = document.createElement('textarea');
-              textarea.value = text;
-              document.body.appendChild(textarea);
-              textarea.select();
-              document.execCommand('copy');
-              document.body.removeChild(textarea);
-            },
-            args: [linkUrl]
-          });
-        } catch (finalError) {
-          console.error('All copy methods failed:', finalError);
-          // If copying fails, still save to history
-          await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
-        }
-      }
-    } else {
-      console.warn('chrome.scripting not available, skipping clipboard copy');
-      await showNotification('Copy Failed', 'Unable to copy to clipboard, but link saved to history.');
+    const existing = await chrome.runtime.getContexts({ contextTypes: ['OFFSCREEN_DOCUMENT'] });
+    if (!existing.length) {
+      await chrome.offscreen.createDocument({
+        url: 'offscreen.html',
+        reasons: ['CLIPBOARD'],
+        justification: 'Write copied links to the clipboard'
+      });
     }
-    
-    // Save to history
-    await saveToHistory({
-      url: linkUrl,
-      title,
-      domain,
-      timestamp: Date.now(),
-      tags: []
-    });
-    
-    // Update stats
-    await updateStats();
-    
-    // Show notification
-    await showNotification('Link copied!', `Copied: ${title}`);
-    
+    const res = await chrome.runtime.sendMessage({ target: 'offscreen', action: 'copy', text });
+    return !!(res && res.ok);
   } catch (error) {
-    console.error('Error copying link URL:', error);
+    console.warn('Offscreen copy failed:', error);
+    return false;
+  } finally {
+    try { await chrome.offscreen.closeDocument(); } catch (_) { /* already closed */ }
   }
 }
 
-// Save link to history
-async function saveToHistory(linkData) {
-  try {
-    const data = await chrome.storage.local.get(['linkHistory', 'settings']);
-    let history = data.linkHistory || [];
-    const settings = data.settings || { maxHistorySize: 10 };
-
-    // Add new link to beginning of history
-    history.unshift(linkData);
-
-    // Apply history size limit
-    const maxSize = settings.maxHistorySize;
-    if (history.length > maxSize) {
-      history = history.slice(0, maxSize);
-    }
-    
-    // Save updated history
-    await chrome.storage.local.set({ linkHistory: history });
-    
-  } catch (error) {
-    console.error('Error saving to history:', error);
-  }
+async function copyToClipboard(tab, text) {
+  if (tab && tab.id != null && await copyViaPage(tab.id, text)) return true;
+  return copyViaOffscreen(text);
 }
 
-// Update statistics
-async function updateStats() {
-  try {
-    const data = await chrome.storage.local.get(['stats']);
-    const stats = data.stats || {
-      totalCopied: 0,
-      dailyCopied: 0,
-      lastResetDate: new Date().toDateString()
-    };
-    
-    // Reset daily counter if new day
-    const today = new Date().toDateString();
-    if (stats.lastResetDate !== today) {
-      stats.dailyCopied = 0;
-      stats.lastResetDate = today;
-    }
-    
-    // Update counters
-    stats.totalCopied++;
-    stats.dailyCopied++;
-    
-    // Save updated stats
-    await chrome.storage.local.set({ stats });
-    
-  } catch (error) {
-    console.error('Error updating stats:', error);
+async function copyUrl({ url, title, tab }) {
+  let domain = '';
+  try { domain = new URL(url).hostname; } catch (_) { /* keep empty */ }
+
+  const ok = await copyToClipboard(tab, url);
+  if (!ok) {
+    await showNotification('Copy Failed', 'Unable to copy this link to the clipboard.');
+    return false;
   }
+
+  await saveToHistory({
+    url,
+    title: title || url,
+    domain,
+    favicon: tab && tab.favIconUrl,
+    timestamp: Date.now(),
+    tags: []
+  });
+  await showNotification('Link copied!', `Copied: ${title || url}`);
+  return true;
 }
 
-// Show notification
 async function showNotification(title, message) {
   try {
-    const data = await chrome.storage.local.get(['settings']);
-    const settings = data.settings || { showNotifications: true };
-    
-    if (settings.showNotifications && chrome.notifications && chrome.notifications.create) {
-      chrome.notifications.create({
-        type: 'basic',
-        iconUrl: 'icon48.png',
-        title: title,
-        message: message
-      });
+    const { settings } = await chrome.storage.local.get(['settings']);
+    const enabled = settings ? settings.showNotifications !== false : true;
+    if (enabled && chrome.notifications) {
+      chrome.notifications.create({ type: 'basic', iconUrl: 'icon48.png', title, message });
     }
   } catch (error) {
     console.error('Error showing notification:', error);
   }
 }
 
-// Functions to be injected into content scripts
-function copyToClipboard(text) {
-  navigator.clipboard.writeText(text).catch(err => {
-    console.error('Failed to copy text: ', err);
-  });
-}
+// ---- Messages from popup / content scripts ----
 
-// Handle messages from popup/content scripts
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
+  if (sender.id !== chrome.runtime.id || !request || request.target === 'offscreen') return;
+
+  const respond = (promise, build) => {
+    promise.then((value) => sendResponse(build(value)), (error) => {
+      console.error(`Error handling ${request.action}:`, error);
+      sendResponse({ success: false });
+    });
+    return true; // keep the channel open for the async response
+  };
+
   switch (request.action) {
     case 'getHistory':
-      chrome.storage.local.get(['linkHistory']).then(data => {
-        sendResponse({ history: data.linkHistory || [] });
-      });
-      return true; // Keep message channel open for async response
-      
-    case 'clearHistory':
-      chrome.storage.local.set({ linkHistory: [] }).then(() => {
-        sendResponse({ success: true });
-      });
-      return true;
-      
+      return respond(chrome.storage.local.get(['linkHistory']), (d) => ({ history: d.linkHistory || [] }));
     case 'getStats':
-      chrome.storage.local.get(['stats']).then(data => {
-        sendResponse({ stats: data.stats || { totalCopied: 0, dailyCopied: 0 } });
-      });
-      return true;
-      
+      return respond(chrome.storage.local.get(['stats']), (d) => ({ stats: d.stats || { totalCopied: 0, dailyCopied: 0 } }));
+    case 'clearHistory':
+      return respond(clearHistory(), () => ({ success: true }));
     case 'updateSettings':
-      chrome.storage.local.set({ settings: request.settings }).then(() => {
-        sendResponse({ success: true });
-      });
-      return true;
-
+      return respond(updateSettings(request.settings), () => ({ success: true }));
+    case 'recordCopy':
     case 'copyCurrentPage':
     case 'copyLink':
-      // Sent by content.js after it copies a URL to the clipboard directly
-      // (keyboard shortcut / hover copy button) -- record it the same way
-      // the context-menu copy actions do.
-      (async () => {
-        await saveToHistory(request.data);
-        await updateStats();
-        sendResponse({ success: true });
-      })();
-      return true;
-    case 'closePopup':
-      // Close popup by temporarily disabling and re-enabling it
-      try {
-        chrome.action.setPopup({ popup: '' });
-        setTimeout(() => {
-          chrome.action.setPopup({ popup: 'popup.html' });
-        }, 100);
-      } catch (e) {
-        // Ignore errors if popup is not open
-      }
-      sendResponse({ success: true });
-      return true;
+      // Sent by the popup or content script after it copied a URL itself.
+      return respond(saveToHistory(request.data), () => ({ success: true }));
   }
 });

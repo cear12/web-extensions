@@ -14,9 +14,9 @@
    },
    "commands": {
       "cleanup-now": {
-         "description": "Emergency privacy cleanup",
+         "description": "Run privacy cleanup with your saved settings",
          "suggested_key": {
-            "default": "Ctrl+Shift+Delete"
+            "default": "Alt+Shift+K"
          }
       }
    },
@@ -28,7 +28,7 @@
          "matches": [
             "<all_urls>"
          ],
-         "run_at": "document_start"
+         "run_at": "document_idle"
       }
    ],
    "description": "Professional privacy protection. One-click cleanup of browsing data.",
@@ -50,14 +50,5 @@
       "alarms",
       "notifications"
    ],
-   "permissions_justification": {
-      "alarms": "Used for scheduled privacy cleanup tasks and reminders",
-      "browsingData": "Core functionality - allows users to clear browsing history, cache, cookies, and download history",
-      "data_usage": "All data processing happens locally. No user data is transmitted to external servers. Extension only accesses browsing data for cleanup purposes as explicitly requested by the user.",
-      "host_permissions": "Needed to inject content scripts for sensitive site detection across all websites",
-      "notifications": "Used to notify users about completed cleanup operations and privacy alerts",
-      "remote_code": "No remote code execution - all functionality runs locally in the browser",
-      "storage": "Stores user preferences, cleanup settings, and last cleanup timestamp locally"
-   },
    "version": "1.0.1"
 }

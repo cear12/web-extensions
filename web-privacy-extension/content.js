@@ -1,57 +1,16 @@
 // Web Privacy Extension - Content Script
-// Detects sensitive sites
+// Shows a short "sensitive site" badge on finance/crypto sites.
+// Detection is purely local: nothing is sent to the background page or stored.
 
-class SensitiveSiteDetector {
-  constructor() {
-    this.sensitivePatterns = [
-      /bank/i, /trading/i, /crypto/i, /wallet/i,
-      /paypal/i, /stripe/i, /finance/i, /investment/i,
-      /broker/i, /exchange/i, /coinbase/i, /binance/i,
-      /ethereum/i, /bitcoin/i, /blockchain/i
-    ];
+(function () {
+  // Matched against the hostname only (not the path or query string), to
+  // avoid false positives such as /exchange-rates or "bankruptcy" articles.
+  const SENSITIVE_HOST = /(^|[.-])(bank|banking|trading|crypto|wallet|paypal|stripe|finance|investment|broker|coinbase|binance|ethereum|bitcoin|blockchain)([.-]|$)/i;
 
-    this.init();
-  }
+  if (!SENSITIVE_HOST.test(window.location.hostname)) return;
 
-  init() {
-    this.detectSensitiveSite();
-  }
-
-  detectSensitiveSite() {
-    const url = window.location.href;
-    const domain = window.location.hostname;
-
-    const isSensitive = this.sensitivePatterns.some(pattern =>
-      pattern.test(url) || pattern.test(domain)
-    );
-
-    if (isSensitive) {
-      this.notifyBackground('sensitive-site-detected', {
-        url: url,
-        domain: domain,
-        timestamp: new Date().toISOString()
-      });
-
-      // Add visual indicator for sensitive site
-      this.addSensitiveIndicatorWhenReady();
-    }
-  }
-
-  addSensitiveIndicatorWhenReady() {
-    // manifest.json runs this script at document_start so detection (and
-    // the background notification above) happens as early as possible --
-    // but that also means document.body doesn't exist yet. Wait for it
-    // before touching the DOM, otherwise appendChild throws on every
-    // single sensitive-site page load.
-    if (document.body) {
-      this.addSensitiveIndicator();
-    } else {
-      document.addEventListener('DOMContentLoaded', () => this.addSensitiveIndicator(), { once: true });
-    }
-  }
-
-  addSensitiveIndicator() {
-    // Create a subtle indicator that this is a sensitive site
+  function addIndicator() {
+    if (document.getElementById('web-privacy-sensitive-indicator')) return;
     const indicator = document.createElement('div');
     indicator.id = 'web-privacy-sensitive-indicator';
     indicator.style.cssText = `
@@ -64,28 +23,17 @@ class SensitiveSiteDetector {
       border-radius: 4px;
       font-size: 11px;
       font-weight: bold;
-      z-index: 10000;
+      z-index: 2147483647;
       box-shadow: 0 2px 4px rgba(0,0,0,0.2);
     `;
-    indicator.textContent = '🔒 Sensitive Site';
-
+    indicator.textContent = '\u{1F512} Sensitive Site';
     document.body.appendChild(indicator);
-
-    // Auto-hide after 5 seconds
-    setTimeout(() => {
-      if (indicator.parentNode) {
-        indicator.parentNode.removeChild(indicator);
-      }
-    }, 5000);
+    setTimeout(() => indicator.remove(), 5000);
   }
 
-  notifyBackground(action, data) {
-    chrome.runtime.sendMessage({
-      action: action,
-      data: data
-    });
+  if (document.body) {
+    addIndicator();
+  } else {
+    document.addEventListener('DOMContentLoaded', addIndicator, { once: true });
   }
-}
-
-// Initialize sensitive site detector
-new SensitiveSiteDetector();
+})();

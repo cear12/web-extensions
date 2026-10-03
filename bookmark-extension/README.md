@@ -30,7 +30,7 @@ scroll like any other page.
 
 ## Permissions (why so few)
 - `storage` — saves your bookmarks locally.
-- `contextMenus` — the right-click "Add bookmark here" item.
+- host permissions for `file://`, `http://`, `https://` (the `tabs` permission is not needed) — used to detect whether
 - `tabs` + host permissions for `file://`, `http://`, `https://` — needed to detect whether
   a matching file is already open in another tab (so "Go" can focus it instead of opening
   a duplicate) and to open/focus tabs when jumping to a bookmark. The content script itself

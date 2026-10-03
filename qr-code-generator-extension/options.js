@@ -11,7 +11,8 @@
   const reset = document.getElementById('reset');
 
   function load() {
-    const d = JSON.parse(localStorage.getItem('qr_defaults') || '{}');
+    let d = {};
+    try { d = JSON.parse(localStorage.getItem('qr_defaults') || '{}') || {}; } catch (e) { /* ignore corrupted value */ }
     size.value = d.size || 256;
     dark.value = d.colorDark || '#000000';
     light.value = d.colorLight || '#ffffff';

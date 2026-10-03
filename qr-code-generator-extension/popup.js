@@ -3,8 +3,6 @@
   const isSafari = /^((?!chrome|android).)*safari/i.test(ua);
   const isChromium = /Chrome|Chromium|CriOS/.test(ua) && !/Edg/.test(ua);
   document.documentElement.setAttribute('data-browser', isSafari ? 'safari' : (isChromium ? 'chrome' : 'chrome'));
-  const $ = (sel) => document.querySelector(sel);
-  const $$ = (sel) => document.querySelectorAll(sel);
 
   // Translation system
   const translations = {
@@ -274,7 +272,12 @@
     return;
   }
 
-  const defaults = JSON.parse(localStorage.getItem('qr_defaults') || '{}');
+  let defaults = {};
+  try {
+    defaults = JSON.parse(localStorage.getItem('qr_defaults') || '{}') || {};
+  } catch (e) {
+    localStorage.removeItem('qr_defaults'); // corrupted value
+  }
 
   const sizeElement = document.getElementById('size');
   const colorDarkElement = document.getElementById('color-dark');
@@ -397,15 +400,18 @@
       const email = sanitizeText(emailInput ? emailInput.value : '');
       const org = sanitizeText(orgInput ? orgInput.value : '');
       const title = sanitizeText(titleInput ? titleInput.value : '');
+      // vCard 3.0 text escaping: backslash, ; , and newlines must not leak
+      // into the structure of the card.
+      const v = QRPayload.escapeVCard;
       const lines = [
         'BEGIN:VCARD',
         'VERSION:3.0',
-        `N:${last};${first};;;`,
-        `FN:${first} ${last}`.trim(),
-        phone ? `TEL;TYPE=CELL:${phone}` : '',
-        email ? `EMAIL:${email}` : '',
-        org ? `ORG:${org}` : '',
-        title ? `TITLE:${title}` : '',
+        `N:${v(last)};${v(first)};;;`,
+        `FN:${v(`${first} ${last}`.trim())}`,
+        phone ? `TEL;TYPE=CELL:${v(phone)}` : '',
+        email ? `EMAIL:${v(email)}` : '',
+        org ? `ORG:${v(org)}` : '',
+        title ? `TITLE:${v(title)}` : '',
         'END:VCARD'
       ].filter(Boolean);
       return lines.join('\n');
@@ -413,9 +419,7 @@
     return '';
   }
 
-  function escapeWiFi(text) {
-    return text.replace(/([\\,;\"])/g, '\\$1');
-  }
+  const escapeWiFi = QRPayload.escapeWiFi;
 
   function getOptions() {
     // Get values with fallbacks in case elements are hidden
@@ -447,6 +451,8 @@
     }
   }
 
+  let renderTimer = null;
+
   function renderQR() {
     const text = buildPayload();
     const { size, colorDark, colorLight, correctLevel, ecVal } = getOptions();
@@ -473,14 +479,11 @@
       downloadButton.disabled = !canvas;
     }, 0);
     } catch (error) {
-      // Try with higher error correction level
-      const higherECLevels = ['M', 'Q', 'H'];
-      const currentECIndex = higherECLevels.indexOf(ecVal);
-      
-      if (currentECIndex < higherECLevels.length - 1) {
-        const nextECLevel = higherECLevels[currentECIndex + 1];
-        const nextCorrectLevel = QRCode.CorrectLevel[nextECLevel];
-        
+      // Data too long for this error-correction level: a *lower* level holds
+      // more data, so step down (H -> Q -> M -> L) until it fits.
+      const order = ['H', 'Q', 'M', 'L'];
+      for (const level of order.slice(order.indexOf(ecVal) + 1)) {
+        clearQR();
         try {
           new QRCode(qrContainer, {
             text,
@@ -488,25 +491,19 @@
             height: size,
             colorDark,
             colorLight,
-            correctLevel: nextCorrectLevel
+            correctLevel: QRCode.CorrectLevel[level]
           });
-          
-          // Update the select to show the new level
           const ecLevelElement = document.getElementById('ec-level');
-          if (ecLevelElement) {
-            ecLevelElement.value = nextECLevel;
-          }
-          
+          if (ecLevelElement) ecLevelElement.value = level;
           setTimeout(() => {
-            const canvas = qrContainer.querySelector('canvas');
-            downloadButton.disabled = !canvas;
+            downloadButton.disabled = !qrContainer.querySelector('canvas');
           }, 0);
-        } catch (secondError) {
-          showQRError(translations[currentLanguage]['qr-data-too-long']);
+          return;
+        } catch (nextError) {
+          // try the next lower level
         }
-      } else {
-        showQRError(translations[currentLanguage]['qr-data-too-long']);
       }
+      showQRError(translations[currentLanguage]['qr-data-too-long']);
     }
   }
 
@@ -638,8 +635,9 @@
   if (mainFormInputs.length > 0) {
     mainFormInputs.forEach(input => {
       input.addEventListener('input', () => {
-        renderQR();
         updateClearButtonState();
+        clearTimeout(renderTimer);
+        renderTimer = setTimeout(renderQR, 150);
       });
     });
   }
@@ -678,7 +676,6 @@
   const settingsPanel = document.getElementById('settings-panel');
   const languagePanel = document.getElementById('language-panel');
   const aboutPanel = document.getElementById('about-panel');
-  const backBtn = document.querySelector('.back-btn');
 
   function openMenu() {
     menuWidget.classList.remove('hidden');

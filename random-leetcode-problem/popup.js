@@ -220,7 +220,7 @@
   function tFormat(key, vars) {
     let str = t(key);
     Object.keys(vars).forEach((name) => {
-      str = str.replace(`{${name}}`, vars[name]);
+      str = str.split(`{${name}}`).join(vars[name]);
     });
     return str;
   }
@@ -256,7 +256,8 @@
   }
 
   async function loadCache() {
-    const data = await chrome.storage.local.get(['problemsCache']);
+    const data = await chrome.storage.local.get(['problemsCache', 'lastSlug']);
+    if (typeof data.lastSlug === 'string') lastSlug = data.lastSlug;
     if (data.problemsCache && Array.isArray(data.problemsCache.problems)) {
       allProblems = data.problemsCache.problems;
       cacheMeta.fetchedAt = data.problemsCache.fetchedAt || 0;
@@ -281,14 +282,21 @@
     // LeetCode Premium. Normalized down to the handful of fields we
     // actually use -- the raw payload carries a lot we'd otherwise cache
     // for nothing.
+    // The endpoint is undocumented, so validate each entry instead of
+    // trusting its shape; malformed rows are skipped.
     const normalized = pairs
-      .filter((p) => p.paid_only === false)
+      .filter((p) => p && p.paid_only === false && p.stat && p.difficulty)
       .map((p) => ({
         id: p.stat.frontend_question_id,
         title: p.stat.question__title,
         slug: p.stat.question__title_slug,
         difficulty: p.difficulty.level // 1 = Easy, 2 = Medium, 3 = Hard
-      }));
+      }))
+      .filter((p) => p.title && /^[a-z0-9-]+$/.test(p.slug || '') && [1, 2, 3].includes(p.difficulty));
+
+    if (normalized.length === 0) {
+      throw new Error('LeetCode API returned no usable problems');
+    }
 
     allProblems = normalized;
     cacheMeta.fetchedAt = Date.now();
@@ -319,6 +327,7 @@
 
     const problem = pool[Math.floor(Math.random() * pool.length)];
     lastSlug = problem.slug;
+    chrome.storage.local.set({ lastSlug }); // survives popup close
     return problem;
   }
 
@@ -424,8 +433,15 @@
   async function loadAndShow(useCacheIfFresh = true) {
     try {
       if (!(useCacheIfFresh && isCacheFresh())) {
-        renderLoading();
-        await fetchProblems();
+        const hadCache = allProblems.length > 0;
+        if (!hadCache) renderLoading();
+        try {
+          await fetchProblems();
+        } catch (fetchError) {
+          // Offline or API change: a stale list is better than an error.
+          if (!hadCache) throw fetchError;
+          console.warn('Refresh failed, using cached problem list:', fetchError);
+        }
       }
       updateCacheInfo();
       await showNextProblem();
