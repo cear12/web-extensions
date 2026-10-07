@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -9,9 +9,9 @@
 <body>
   <div class="container">
     <header class="header">
-      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Меню"></button>
-      <div class="title"><img src="logo.png" alt="Логотип" class="logo" /><h1>QR Code Generator</h1></div>
-      <button type="button" id="close-btn" class="close-btn" aria-label="Закрыть"></button>
+      <button type="button" id="menu-btn" class="hamburger-btn" data-i18n-aria-label="menu" aria-label="Menu"></button>
+      <div class="title"><img src="logo.png" data-i18n-alt="logo" alt="Logo" class="logo" /><h1>QR Code Generator</h1></div>
+      <button type="button" id="close-btn" class="close-btn" data-i18n-aria-label="close" aria-label="Close"></button>
     </header>
 
     <!-- Menu Widget -->
@@ -19,7 +19,7 @@
       <div class="menu-content">
         <div class="menu-header">
           <h2 data-i18n="menu">Меню</h2>
-          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Закрыть меню">×</button>
+          <button type="button" id="menu-close" class="menu-close-btn" data-i18n-aria-label="close-menu" aria-label="Close menu">×</button>
         </div>
         <div class="menu-items">
           <button type="button" class="menu-item" data-section="settings">
@@ -55,7 +55,7 @@
         <!-- Language Panel -->
         <div id="language-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+            <button type="button" class="back-btn" data-back="menu" data-i18n-aria-label="back" aria-label="Back"></button>
             <h3 data-i18n="language">Язык</h3>
           </div>
           <div class="menu-panel-content">
@@ -77,7 +77,7 @@
         <!-- Other Products Panel -->
         <div id="other-products-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+            <button type="button" class="back-btn" data-back="menu" data-i18n-aria-label="back" aria-label="Back"></button>
             <h3 data-i18n="other-products">Другие продукты</h3>
           </div>
           <div class="menu-panel-content">
@@ -110,13 +110,13 @@
         <!-- About Panel -->
         <div id="about-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+            <button type="button" class="back-btn" data-back="menu" data-i18n-aria-label="back" aria-label="Back"></button>
             <h3 data-i18n="about">О программе</h3>
           </div>
           <div class="menu-panel-content">
             <div class="about-content">
               <div class="about-title">
-                <img src="logo.png" alt="Логотип" class="logo" />
+                <img src="logo.png" data-i18n-alt="logo" alt="Logo" class="logo" />
                 <h4 data-i18n="app-name">Генератор QR-кодов</h4>
               </div>
               <p><span data-i18n="app-version">Версия</span> 1.1.5</p>
@@ -128,7 +128,7 @@
         <!-- Settings Panel -->
         <div id="settings-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+            <button type="button" class="back-btn" data-back="menu" data-i18n-aria-label="back" aria-label="Back"></button>
             <h3 data-i18n="qr-settings">Настройки QR</h3>
           </div>
           <div class="menu-panel-content">
@@ -247,7 +247,7 @@
     </form>
     <footer class="footer">
       <span data-i18n="developed-by">Разработано</span>
-      <img src="logo.png" alt="Логотип" class="logo" />
+      <img src="logo.png" data-i18n-alt="logo" alt="Logo" class="logo" />
     </footer>
   </div>
 

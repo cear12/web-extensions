@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "二维码生成器",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "为文本、网址、WiFi 和联系人生成二维码，支持自定义样式并可下载 PNG。",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "二维码生成器",
+    "description": "Toolbar button tooltip"
+  }
+}

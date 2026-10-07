@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "QR कोड जनरेटर",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "टेक्स्ट, URL, WiFi और संपर्कों के लिए QR कोड बनाएँ, अपने हिसाब से बदलें और PNG में डाउनलोड करें।",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "QR कोड जनरेटर",
+    "description": "Toolbar button tooltip"
+  }
+}
