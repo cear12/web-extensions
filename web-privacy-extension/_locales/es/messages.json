@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Web Privacy - limpieza en 1 clic",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Protección profesional de privacidad. Limpieza de datos de navegación con un clic.",
+    "description": "Extension description in the Web Store"
+  },
+  "actionTitle": {
+    "message": "Web Privacy",
+    "description": "Toolbar button tooltip"
+  },
+  "commandCleanupNow": {
+    "message": "Ejecutar la limpieza con tu configuración guardada",
+    "description": "Keyboard shortcut description"
+  }
+}

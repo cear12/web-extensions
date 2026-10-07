@@ -8,7 +8,7 @@ Features:
 - Local history of recently-copied links (shown in the popup and on the Options page), with a configurable max size (5-1000 links) and automatic tags based on the link's domain (GitHub, StackOverflow, YouTube, etc.) and title keywords (tutorial, docs, api, blog)
 - Export History, Export All Data (full JSON backup), and Import Data, all on the Options page
 - Optional OS notifications confirming a copy, toggle in Settings
-- UI in English, Spanish, Russian, and Chinese; light/dark theme auto-detected
+- UI in English, Spanish, Russian, Chinese (Simplified), and Hindi; light/dark theme auto-detected. The language picked in the popup also applies to the Options page, the right-click menu items, OS notifications, and the in-page toasts/hover button; the extension name, description and toolbar tooltip are localized via Chrome's `_locales` (browser UI language)
 - "Other Products" cross-promo panel (popup menu) linking to this developer's other published extensions: QR Code Generator and Web Privacy - 1-Click Cleanup
 
 ## Install in Chrome

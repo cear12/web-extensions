@@ -1,0 +1,14 @@
+{
+  "appName": {
+    "message": "QuickLink Copier",
+    "description": "Extension name"
+  },
+  "appDescription": {
+    "message": "इतिहास के साथ एक क्लिक में लिंक कॉपी करें।",
+    "description": "Extension description shown in the Chrome Web Store and extensions page"
+  },
+  "actionTitle": {
+    "message": "मौजूदा पेज का URL कॉपी करें",
+    "description": "Tooltip of the toolbar button"
+  }
+}

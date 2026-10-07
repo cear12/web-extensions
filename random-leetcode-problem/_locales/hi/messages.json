@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Random LeetCode Problem",
+    "description": "Extension name (brand, not translated)"
+  },
+  "extDescription": {
+    "message": "अभ्यास के लिए LeetCode की एक रैंडम मुफ़्त समस्या पाएँ, कठिनाई फ़िल्टर और लोकल कैशिंग के साथ।",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "Random LeetCode Problem",
+    "description": "Toolbar button tooltip"
+  }
+}

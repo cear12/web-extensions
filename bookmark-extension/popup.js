@@ -57,7 +57,11 @@
       'quick-link-copier-desc': 'One-click link copying with history.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.',
-      'view-in-store': 'View in Store'
+      'view-in-store': 'View in Store',
+      'close': 'Close',
+      'close-menu': 'Close menu',
+      'back': 'Back',
+      'logo-alt': 'Logo'
     },
     es: {
       'menu': 'Menú',
@@ -96,7 +100,11 @@
       'quick-link-copier-desc': 'Copia de enlaces con un clic, con historial.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.',
-      'view-in-store': 'Ver en la tienda'
+      'view-in-store': 'Ver en la tienda',
+      'close': 'Cerrar',
+      'close-menu': 'Cerrar menú',
+      'back': 'Atrás',
+      'logo-alt': 'Logotipo'
     },
     ru: {
       'menu': 'Меню',
@@ -135,7 +143,11 @@
       'quick-link-copier-desc': 'Копирование ссылок в один клик, с историей.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': 'Профессиональная защита приватности. Очистка данных браузера в один клик.',
-      'view-in-store': 'Смотреть в магазине'
+      'view-in-store': 'Смотреть в магазине',
+      'close': 'Закрыть',
+      'close-menu': 'Закрыть меню',
+      'back': 'Назад',
+      'logo-alt': 'Логотип'
     },
     zh: {
       'menu': '菜单',
@@ -174,7 +186,54 @@
       'quick-link-copier-desc': '一键复制链接，并保留历史记录。',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
       'web-privacy-desc': '专业的隐私保护，一键清理浏览数据。',
-      'view-in-store': '在商店中查看'
+      'view-in-store': '在商店中查看',
+      'close': '关闭',
+      'close-menu': '关闭菜单',
+      'back': '返回',
+      'logo-alt': '标志'
+    },
+    hi: {
+      'menu': 'मेनू',
+      'language': 'भाषा',
+      'other-products': 'अन्य प्रोडक्ट',
+      'about': 'परिचय',
+      'select-language': 'भाषा चुनें',
+      'add-bookmark': '+ इस टैब को बुकमार्क करें',
+      'your-bookmarks': 'आपके बुकमार्क',
+      'no-bookmarks': 'अभी कोई बुकमार्क नहीं। TXT या MD फ़ाइल खोलें और एक जोड़ें।',
+      'app-name': 'File Bookmarks',
+      'app-version': 'संस्करण',
+      'app-developer': 'Olé द्वारा विकसित',
+      'app-description': 'TXT या Markdown फ़ाइल में अपनी जगह बुकमार्क करें और सीधे वहीं लौटें।',
+      'developed-by': 'विकसित करने वाले',
+      'go': 'जाएँ',
+      'rename': 'नाम बदलें',
+      'delete': 'हटाएँ',
+      'tab-supported': 'फ़ाइल: {name} ({ext})',
+      'tab-unsupported': 'यह टैब समर्थित नहीं है (TXT या MD फ़ाइल चाहिए)।',
+      'rename-prompt': 'बुकमार्क का नया नाम:',
+      'confirm-delete': 'यह बुकमार्क हटाएँ?',
+      'error-no-active-tab': 'कोई सक्रिय टैब नहीं है।',
+      'error-unsupported-file-type': 'यह फ़ाइल प्रकार समर्थित नहीं है (केवल TXT या MD)।',
+      'error-not-found': 'बुकमार्क नहीं मिला।',
+      'error-generic': 'कुछ गड़बड़ हो गई।',
+      'bookmark-added': 'बुकमार्क जोड़ा गया',
+      'bookmark-added-no-position': 'बुकमार्क जोड़ा गया, लेकिन फ़ाइल की सामग्री नहीं पढ़ी जा सकी -- अगर यह लोकल फ़ाइल है, तो chrome://extensions में इस एक्सटेंशन के लिए "फ़ाइल URL तक पहुँच की अनुमति दें" चालू करें।',
+      'bookmark-deleted': 'बुकमार्क हटाया गया',
+      'bookmark-renamed': 'बुकमार्क का नाम बदला गया',
+      'jumped-approximate': 'फ़ाइल बदल गई है -- सबसे नज़दीकी मिलान पर पहुँचा गया।',
+      'tab-unreachable': 'उस टैब तक नहीं पहुँचा जा सका। अगर यह लोकल फ़ाइल है, तो chrome://extensions में इस एक्सटेंशन के लिए "फ़ाइल URL तक पहुँच की अनुमति दें" चालू करें।',
+      'qr-code-generator-name': 'QR Code Generator',
+      'qr-code-generator-desc': 'टेक्स्ट, URL, WiFi और संपर्कों के लिए QR कोड बनाएँ, कस्टमाइज़ करें और PNG में डाउनलोड करें।',
+      'quick-link-copier-name': 'QuickLink Copier',
+      'quick-link-copier-desc': 'एक क्लिक में लिंक कॉपी करें, इतिहास के साथ।',
+      'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
+      'web-privacy-desc': 'पेशेवर प्राइवेसी सुरक्षा। एक क्लिक में ब्राउज़िंग डेटा साफ़ करें।',
+      'view-in-store': 'स्टोर में देखें',
+      'close': 'बंद करें',
+      'close-menu': 'मेनू बंद करें',
+      'back': 'वापस',
+      'logo-alt': 'लोगो'
     }
   };
 
@@ -190,6 +249,13 @@
       str = str.replace(`{${name}}`, vars[name]);
     });
     return str;
+  }
+
+  // Background/content scripts cannot read localStorage, so mirror the choice.
+  function syncSharedLanguage(lang) {
+    try {
+      chrome.storage.local.set({ ui_language: lang });
+    } catch (e) {}
   }
 
   function translatePage(lang) {
@@ -208,6 +274,20 @@
         el.title = translations[lang][key];
       }
     });
+    $$('[data-i18n-aria-label]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-aria-label');
+      if (translations[lang] && translations[lang][key]) {
+        el.setAttribute('aria-label', translations[lang][key]);
+      }
+    });
+    $$('[data-i18n-alt]').forEach((el) => {
+      const key = el.getAttribute('data-i18n-alt');
+      if (translations[lang] && translations[lang][key]) {
+        el.alt = translations[lang][key];
+      }
+    });
+    document.documentElement.lang = lang;
+    syncSharedLanguage(lang);
 
     refreshTabInfo();
     loadBookmarks();

@@ -48,7 +48,15 @@
       'qr-code-generator-name': 'QR Code Generator',
       'qr-code-generator-desc': 'Generate QR codes for text, URL, WiFi, and contacts with customization and PNG download.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.'
+      'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.',
+      'close': 'Close',
+      'close-menu': 'Close menu',
+      'back': 'Back',
+      'logo': 'Logo',
+      'version': 'Version',
+      'about-desc': 'One-click link copying with history and export features.',
+      'qr-code-generator-title': 'QR Code Generator - Generate QR codes for text, URL, WiFi, and contacts',
+      'web-privacy-title': 'Web Privacy - 1-Click Cleanup - Professional privacy protection'
     },
     es: {
       'menu': 'Menú',
@@ -82,7 +90,15 @@
       'qr-code-generator-name': 'Generador de Códigos QR',
       'qr-code-generator-desc': 'Genera códigos QR para texto, URL, WiFi y contactos con personalización y descarga en PNG.',
       'web-privacy-name': 'Web Privacy - Limpieza en 1 Clic',
-      'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.'
+      'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.',
+      'close': 'Cerrar',
+      'close-menu': 'Cerrar menú',
+      'back': 'Atrás',
+      'logo': 'Logotipo',
+      'version': 'Versión',
+      'about-desc': 'Copia de enlaces con un clic, con historial y funciones de exportación.',
+      'qr-code-generator-title': 'Generador de Códigos QR - Genera códigos QR para texto, URL, WiFi y contactos',
+      'web-privacy-title': 'Web Privacy - Limpieza en 1 Clic - Protección de privacidad profesional'
     },
     ru: {
       'menu': 'Меню',
@@ -116,7 +132,15 @@
       'qr-code-generator-name': 'Генератор QR Кодов',
       'qr-code-generator-desc': 'Генерируйте QR-коды для текста, URL, WiFi и контактов с настройкой и загрузкой в PNG.',
       'web-privacy-name': 'Web Privacy - Очистка в 1 клик',
-      'web-privacy-desc': 'Профессиональная защита конфиденциальности. Очистка данных браузера в один клик.'
+      'web-privacy-desc': 'Профессиональная защита конфиденциальности. Очистка данных браузера в один клик.',
+      'close': 'Закрыть',
+      'close-menu': 'Закрыть меню',
+      'back': 'Назад',
+      'logo': 'Логотип',
+      'version': 'Версия',
+      'about-desc': 'Копирование ссылок в один клик с историей и экспортом.',
+      'qr-code-generator-title': 'Генератор QR Кодов - QR-коды для текста, URL, WiFi и контактов',
+      'web-privacy-title': 'Web Privacy - Очистка в 1 клик - Профессиональная защита конфиденциальности'
     },
     zh: {
       'menu': '菜单',
@@ -150,24 +174,93 @@
       'qr-code-generator-name': '二维码生成器',
       'qr-code-generator-desc': '为文本、URL、WiFi和联系人生成二维码，支持自定义并下载为PNG。',
       'web-privacy-name': 'Web Privacy - 一键清理',
-      'web-privacy-desc': '专业隐私保护。一键清理浏览数据。'
+      'web-privacy-desc': '专业隐私保护。一键清理浏览数据。',
+      'close': '关闭',
+      'close-menu': '关闭菜单',
+      'back': '返回',
+      'logo': '标志',
+      'version': '版本',
+      'about-desc': '一键复制链接，支持历史记录和导出功能。',
+      'qr-code-generator-title': '二维码生成器 - 为文本、URL、WiFi和联系人生成二维码',
+      'web-privacy-title': 'Web Privacy - 一键清理 - 专业隐私保护'
+    },
+    hi: {
+      'menu': 'मेनू',
+      'settings': 'सेटिंग',
+      'language': 'भाषा',
+      'about': 'परिचय',
+      'preferences': 'प्राथमिकताएँ',
+      'history': 'इतिहास',
+      'select-language': 'भाषा चुनें',
+      'current-page': 'मौजूदा पेज',
+      'copy-current-url': 'मौजूदा URL कॉपी करें',
+      'total-copied': 'कुल कॉपी किए गए',
+      'today': 'आज',
+      'recent-links': 'हाल के लिंक',
+      'clear-history': 'इतिहास साफ़ करें',
+      'show-notifications': 'सूचनाएँ दिखाएँ',
+      'auto-tags': 'टैग अपने-आप बनाएँ',
+      'max-history-size': 'इतिहास का अधिकतम आकार',
+      'developed-by': 'विकसित करने वाले',
+      'copied': 'कॉपी हो गया',
+      'failed': 'विफल',
+      'no-links': 'अभी कोई लिंक कॉपी नहीं हुआ',
+      'just-now': 'अभी-अभी',
+      'minutes-ago': 'मि. पहले',
+      'hours-ago': 'घं. पहले',
+      'days-ago': 'दिन पहले',
+      'no-active-tab': 'कोई सक्रिय टैब नहीं मिला',
+      'failed-to-clear-history': 'इतिहास साफ़ नहीं हो सका',
+      'other-products': 'अन्य प्रोडक्ट',
+      'view-in-store': 'स्टोर में देखें',
+      'qr-code-generator-name': 'QR कोड जेनरेटर',
+      'qr-code-generator-desc': 'टेक्स्ट, URL, WiFi और संपर्कों के लिए QR कोड बनाएँ, कस्टमाइज़ करें और PNG में डाउनलोड करें।',
+      'web-privacy-name': 'Web Privacy - 1-क्लिक क्लीनअप',
+      'web-privacy-desc': 'पेशेवर प्राइवेसी सुरक्षा। एक क्लिक में ब्राउज़िंग डेटा साफ़ करें।',
+      'close': 'बंद करें',
+      'close-menu': 'मेनू बंद करें',
+      'back': 'वापस',
+      'logo': 'लोगो',
+      'version': 'संस्करण',
+      'about-desc': 'इतिहास और एक्सपोर्ट सुविधाओं के साथ एक क्लिक में लिंक कॉपी करें।',
+      'qr-code-generator-title': 'QR कोड जेनरेटर - टेक्स्ट, URL, WiFi और संपर्कों के लिए QR कोड बनाएँ',
+      'web-privacy-title': 'Web Privacy - 1-क्लिक क्लीनअप - पेशेवर प्राइवेसी सुरक्षा'
     }
   };
   
-  let currentLanguage = localStorage.getItem('quicklink_language') || 'en';
-  
+  const DATE_LOCALES = { en: 'en-US', ru: 'ru-RU', es: 'es-ES', zh: 'zh-CN', hi: 'hi-IN' };
+
+  let currentLanguage = 'en';
+  try {
+    const saved = localStorage.getItem('quicklink_language');
+    if (saved && translations[saved]) currentLanguage = saved;
+  } catch (_) { /* storage unavailable */ }
+
   // Translation functions
   function translatePage(lang) {
+    if (!translations[lang]) lang = 'en';
     currentLanguage = lang;
-    localStorage.setItem('quicklink_language', lang);
-    
-    const elements = document.querySelectorAll('[data-i18n]');
-    elements.forEach(el => {
+    try { localStorage.setItem('quicklink_language', lang); } catch (_) { /* storage unavailable */ }
+    try {
+      chrome.storage.local.set({ ui_language: lang });
+    } catch (error) {
+      console.error('Error saving ui_language:', error);
+    }
+    document.documentElement.lang = lang;
+
+    const dict = translations[lang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
-      if (translations[lang] && translations[lang][key]) {
-        el.textContent = translations[lang][key];
-      }
+      if (dict[key]) el.textContent = dict[key];
     });
+    const attrs = { 'data-i18n-title': 'title', 'data-i18n-aria-label': 'aria-label', 'data-i18n-alt': 'alt' };
+    Object.entries(attrs).forEach(([dataAttr, attr]) => {
+      document.querySelectorAll(`[${dataAttr}]`).forEach(el => {
+        const key = el.getAttribute(dataAttr);
+        if (dict[key]) el.setAttribute(attr, dict[key]);
+      });
+    });
+    updateRecentLinks();
   }
   
   function t(key) {
@@ -666,8 +759,8 @@
     if (minutes < 60) return `${minutes}${t('minutes-ago')}`;
     if (hours < 24) return `${hours}${t('hours-ago')}`;
     if (days < 7) return `${days}${t('days-ago')}`;
-    
-    return new Date(timestamp).toLocaleDateString();
+
+    return new Date(timestamp).toLocaleDateString(DATE_LOCALES[currentLanguage] || 'en-US');
   }
   
   function showToast(message, type = 'info') {

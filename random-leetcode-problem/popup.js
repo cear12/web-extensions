@@ -72,7 +72,14 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': 'One-click link copying with history.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.'
+      'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.',
+      'close': 'Close',
+      'close-menu': 'Close menu',
+      'back': 'Back',
+      'logo-alt': 'Logo',
+      'time-minutes': '{n}m',
+      'time-hours': '{n}h',
+      'time-days': '{n}d'
     },
     es: {
       'menu': 'Menú',
@@ -117,7 +124,14 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': 'Copia de enlaces con un clic, con historial.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.'
+      'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.',
+      'close': 'Cerrar',
+      'close-menu': 'Cerrar menú',
+      'back': 'Atrás',
+      'logo-alt': 'Logotipo',
+      'time-minutes': '{n} min',
+      'time-hours': '{n} h',
+      'time-days': '{n} d'
     },
     ru: {
       'menu': 'Меню',
@@ -162,7 +176,14 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': 'Копирование ссылок в один клик, с историей.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'Профессиональная защита приватности. Очистка данных браузера в один клик.'
+      'web-privacy-desc': 'Профессиональная защита приватности. Очистка данных браузера в один клик.',
+      'close': 'Закрыть',
+      'close-menu': 'Закрыть меню',
+      'back': 'Назад',
+      'logo-alt': 'Логотип',
+      'time-minutes': '{n} мин',
+      'time-hours': '{n} ч',
+      'time-days': '{n} дн.'
     },
     zh: {
       'menu': '菜单',
@@ -207,11 +228,76 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': '一键复制链接，并保留历史记录。',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': '专业的隐私保护，一键清理浏览数据。'
+      'web-privacy-desc': '专业的隐私保护，一键清理浏览数据。',
+      'close': '关闭',
+      'close-menu': '关闭菜单',
+      'back': '返回',
+      'logo-alt': '标志',
+      'time-minutes': '{n} 分钟',
+      'time-hours': '{n} 小时',
+      'time-days': '{n} 天'
+    },
+    hi: {
+      'menu': 'मेनू',
+      'settings': 'सेटिंग',
+      'language': 'भाषा',
+      'about': 'परिचय',
+      'difficulty-filter': 'कठिनाई',
+      'show-problems': 'समस्याएँ दिखाएँ',
+      'difficulty-all': 'सभी स्तर',
+      'difficulty-easy': 'आसान',
+      'difficulty-medium': 'मध्यम',
+      'difficulty-hard': 'कठिन',
+      'problem-database': 'समस्या डेटाबेस',
+      'refresh-list': 'सूची रीफ़्रेश करें',
+      'refreshing': 'रीफ़्रेश हो रहा है…',
+      'reset-to-defaults': 'सेटिंग रीसेट करें',
+      'select-language': 'भाषा चुनें',
+      'app-name': 'Random LeetCode Problem',
+      'app-version': 'संस्करण',
+      'app-developer': 'Olé द्वारा विकसित',
+      'app-description': 'LeetCode की एक रैंडम मुफ़्त समस्या चुनता है, ताकि आप बिना अंतहीन स्क्रॉल किए अभ्यास कर सकें।',
+      'loading': 'समस्याएँ लोड हो रही हैं…',
+      'next-problem': 'अगली समस्या',
+      'copy': 'कॉपी करें',
+      'copied': 'कॉपी हो गया!',
+      'copy-failed': 'कॉपी नहीं हो सका',
+      'developed-by': 'विकसित करने वाले',
+      'error-loading': 'समस्याएँ लोड नहीं हो सकीं।',
+      'retry': 'फिर कोशिश करें',
+      'no-problems-filter': 'इस फ़िल्टर से कोई समस्या नहीं मिली।',
+      'settings-reset': 'सेटिंग रीसेट हो गई',
+      'cache-refreshed': 'समस्या सूची रीफ़्रेश हो गई',
+      'refresh-failed': 'रीफ़्रेश विफल रहा',
+      'problems-cached': '{count} मुफ़्त समस्याएँ कैश में हैं',
+      'not-loaded-yet': 'अभी लोड नहीं हुआ',
+      'updated-ago': '{time} पहले अपडेट हुआ',
+      'updated-just-now': 'अभी-अभी अपडेट हुआ',
+      'other-products': 'अन्य प्रोडक्ट',
+      'view-in-store': 'स्टोर में देखें',
+      'qr-code-generator-name': 'QR Code Generator',
+      'qr-code-generator-desc': 'टेक्स्ट, URL, WiFi और संपर्कों के लिए QR कोड बनाएँ, कस्टमाइज़ करें और PNG में डाउनलोड करें।',
+      'quick-link-copier-name': 'QuickLink Copier',
+      'quick-link-copier-desc': 'एक क्लिक में लिंक कॉपी करें, इतिहास के साथ।',
+      'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
+      'web-privacy-desc': 'पेशेवर प्राइवेसी सुरक्षा। एक क्लिक में ब्राउज़िंग डेटा साफ़ करें।',
+      'close': 'बंद करें',
+      'close-menu': 'मेनू बंद करें',
+      'back': 'वापस',
+      'logo-alt': 'लोगो',
+      'time-minutes': '{n} मिनट',
+      'time-hours': '{n} घंटे',
+      'time-days': '{n} दिन'
     }
   };
 
-  let currentLanguage = localStorage.getItem('leetcode_language') || 'en';
+  let currentLanguage = 'en';
+  try {
+    const saved = localStorage.getItem('leetcode_language');
+    if (saved && translations[saved]) currentLanguage = saved;
+  } catch (e) {
+    console.warn('localStorage unavailable:', e);
+  }
 
   function t(key) {
     return (translations[currentLanguage] && translations[currentLanguage][key]) || key;
@@ -227,13 +313,28 @@
 
   function translatePage(lang) {
     currentLanguage = lang;
-    localStorage.setItem('leetcode_language', lang);
+    try {
+      localStorage.setItem('leetcode_language', lang);
+    } catch (e) {
+      console.warn('localStorage unavailable:', e);
+    }
+
+    document.documentElement.lang = lang;
 
     $$('[data-i18n]').forEach((el) => {
       const key = el.getAttribute('data-i18n');
       if (translations[lang] && translations[lang][key]) {
         el.textContent = translations[lang][key];
       }
+    });
+
+    [['data-i18n-aria-label', 'aria-label'], ['data-i18n-title', 'title'], ['data-i18n-alt', 'alt']].forEach(([dataAttr, attr]) => {
+      $$(`[${dataAttr}]`).forEach((el) => {
+        const key = el.getAttribute(dataAttr);
+        if (translations[lang] && translations[lang][key]) {
+          el.setAttribute(attr, translations[lang][key]);
+        }
+      });
     });
 
     // Dynamic content isn't tagged with data-i18n (it's rendered from JS), so
@@ -399,9 +500,9 @@
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
     if (minutes < 1) return null;
-    if (minutes < 60) return `${minutes}m`;
-    if (hours < 24) return `${hours}h`;
-    return `${days}d`;
+    if (minutes < 60) return tFormat('time-minutes', { n: minutes });
+    if (hours < 24) return tFormat('time-hours', { n: hours });
+    return tFormat('time-days', { n: days });
   }
 
   function updateCacheInfo() {

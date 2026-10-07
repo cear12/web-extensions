@@ -1,11 +1,12 @@
 {
   "manifest_version": 3,
-  "name": "File Bookmarks (TXT / MD)",
+  "name": "__MSG_extName__",
   "version": "1.1.5",
-  "description": "Bookmark your place in a TXT or Markdown file opened in Chrome and jump straight back to it next time you open the same file.",
+  "default_locale": "en",
+  "description": "__MSG_extDescription__",
   "action": {
     "default_popup": "popup.html",
-    "default_title": "File Bookmarks"
+    "default_title": "__MSG_actionTitle__"
   },
   "icons": {
     "16": "icons/icon16.png",

@@ -8,7 +8,7 @@ Features:
 - Jump back with one click — reuses an already-open tab for that file if there is one, otherwise opens a new one
 - Position is stored as a scroll ratio *and* a short text anchor, so if the file changes slightly the bookmark still finds the right spot by searching for that text rather than trusting a raw scroll percentage
 - Rename or delete bookmarks from the popup
-- Dark/light theme (auto-detect), UI in English/Spanish/Russian/Chinese
+- Dark/light theme (auto-detect), UI in English/Spanish/Russian/Chinese/Hindi — the popup, the extension name/description in Chrome (`_locales/`), and the right-click menu item all follow the language chosen in the popup
 
 ## Install in Chrome
 1. Open `chrome://extensions`

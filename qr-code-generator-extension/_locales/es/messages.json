@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Generador de códigos QR",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Genera códigos QR para texto, URL, WiFi y contactos con personalización y descarga en PNG.",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "Generador de códigos QR",
+    "description": "Toolbar button tooltip"
+  }
+}

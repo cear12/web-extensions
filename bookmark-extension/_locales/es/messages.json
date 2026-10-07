@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "File Bookmarks (TXT / MD)",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Marca tu posición en un archivo TXT o Markdown abierto en Chrome y vuelve directo a ella al abrir el mismo archivo.",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "File Bookmarks",
+    "description": "Toolbar button tooltip"
+  }
+}

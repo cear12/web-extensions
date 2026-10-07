@@ -5,6 +5,44 @@
 (function() {
   'use strict';
 
+  // UI language mirrored by the popup into chrome.storage.local.ui_language
+  // (content scripts cannot read the extension's localStorage).
+  const SUPPORTED_LANGUAGES = ['en', 'ru', 'es', 'zh', 'hi'];
+  const MESSAGES = {
+    en: { pageCopied: 'Page URL copied!', copyUrlFailed: 'Failed to copy URL', copyLinkFailed: 'Failed to copy link', copyLink: 'Copy link' },
+    ru: { pageCopied: 'URL страницы скопирован!', copyUrlFailed: 'Не удалось скопировать URL', copyLinkFailed: 'Не удалось скопировать ссылку', copyLink: 'Копировать ссылку' },
+    es: { pageCopied: '¡URL de la página copiada!', copyUrlFailed: 'Error al copiar la URL', copyLinkFailed: 'Error al copiar el enlace', copyLink: 'Copiar enlace' },
+    zh: { pageCopied: '页面 URL 已复制！', copyUrlFailed: '复制 URL 失败', copyLinkFailed: '复制链接失败', copyLink: '复制链接' },
+    hi: { pageCopied: 'पेज का URL कॉपी हो गया!', copyUrlFailed: 'URL कॉपी नहीं हो सका', copyLinkFailed: 'लिंक कॉपी नहीं हो सका', copyLink: 'लिंक कॉपी करें' }
+  };
+
+  function normalizeLanguage(lang) {
+    const base = String(lang || '').toLowerCase().split(/[-_]/)[0];
+    return SUPPORTED_LANGUAGES.includes(base) ? base : 'en';
+  }
+
+  let language = 'en';
+  try { language = normalizeLanguage(chrome.i18n.getUILanguage()); } catch (_) { /* keep 'en' */ }
+
+  function t(key) {
+    return (MESSAGES[language] && MESSAGES[language][key]) || MESSAGES.en[key] || key;
+  }
+
+  function setLanguage(lang) {
+    if (lang && SUPPORTED_LANGUAGES.includes(lang)) language = lang;
+    if (copyBtn) {
+      copyBtn.title = t('copyLink');
+      copyBtn.setAttribute('aria-label', t('copyLink'));
+    }
+  }
+
+  try {
+    chrome.storage.local.get('ui_language').then((data) => setLanguage(data && data.ui_language), () => {});
+    chrome.storage.onChanged.addListener((changes, area) => {
+      if (area === 'local' && changes.ui_language) setLanguage(changes.ui_language.newValue);
+    });
+  } catch (_) { /* extension context invalidated */ }
+
   // Handle keyboard shortcuts
   document.addEventListener('keydown', (e) => {
     // Alt + Shift + C to copy current page URL (Ctrl+Shift+C opens DevTools'
@@ -36,11 +74,11 @@
       });
       
       // Show visual feedback
-      showToast('Page URL copied!', 'success');
+      showToast(t('pageCopied'), 'success');
       
     } catch (error) {
       console.error('Error copying page URL:', error);
-      showToast('Failed to copy URL', 'error');
+      showToast(t('copyUrlFailed'), 'error');
     }
   }
   
@@ -123,7 +161,8 @@
     copyBtn = document.createElement('button');
     copyBtn.className = 'quicklink-copy-btn';
     copyBtn.textContent = '\u{1F4CB}';
-    copyBtn.title = 'Copy link';
+    copyBtn.title = t('copyLink');
+    copyBtn.setAttribute('aria-label', t('copyLink'));
     copyBtn.style.cssText = `
       position: fixed;
       background: #4285F4;
@@ -166,7 +205,7 @@
         setTimeout(() => { if (copyBtn === btn) removeButton(); }, 1000);
       } catch (error) {
         console.error('Error copying link:', error);
-        showToast('Failed to copy link', 'error');
+        showToast(t('copyLinkFailed'), 'error');
       }
     });
 

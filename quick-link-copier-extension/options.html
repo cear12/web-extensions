@@ -3,72 +3,72 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Settings — QuickLink Copier</title>
+  <title data-i18n="page-title">Settings — QuickLink Copier</title>
   <link rel="stylesheet" href="options.css" />
 </head>
 <body>
   <main class="wrap">
     <header class="header">
       <div class="header-content">
-        <img src="logo.png" alt="Logo" class="logo" />
-        <h1>QuickLink Copier Settings</h1>
+        <img src="logo.png" alt="Logo" data-i18n-alt="logo" class="logo" />
+        <h1 data-i18n="heading">QuickLink Copier Settings</h1>
       </div>
     </header>
 
     <div class="content">
       <!-- General Settings -->
       <section class="settings-section">
-        <h2>General Settings</h2>
+        <h2 data-i18n="general-settings">General Settings</h2>
         <form id="general-settings">
           <div class="form-group">
             <label class="checkbox">
               <input id="show-notifications" type="checkbox" />
-              <span>Show notifications when copying links</span>
+              <span data-i18n="show-notifications">Show notifications when copying links</span>
             </label>
           </div>
           
           <div class="form-group">
             <label class="checkbox">
               <input id="auto-tags" type="checkbox" />
-              <span>Automatically generate tags for links</span>
+              <span data-i18n="auto-tags">Automatically generate tags for links</span>
             </label>
           </div>
           
           <div class="form-group">
             <label>
-              <span>Max history size</span>
+              <span data-i18n="max-history-size">Max history size</span>
               <input id="max-history" type="number" min="5" max="1000" value="10" />
-              <small>Between 5 and 1000 links</small>
+              <small data-i18n="max-history-hint">Between 5 and 1000 links</small>
             </label>
           </div>
 
           <div class="form-actions">
-            <button type="submit" class="btn btn-primary">Save Settings</button>
+            <button type="submit" class="btn btn-primary" data-i18n="save-settings">Save Settings</button>
           </div>
         </form>
       </section>
 
       <!-- History Management -->
       <section class="settings-section">
-        <h2>Link History</h2>
+        <h2 data-i18n="link-history">Link History</h2>
         <div class="history-stats">
           <div class="stat-item">
             <span class="stat-number" id="total-links">0</span>
-            <span class="stat-label">Total Links</span>
+            <span class="stat-label" data-i18n="total-links">Total Links</span>
           </div>
           <div class="stat-item">
             <span class="stat-number" id="total-copied">0</span>
-            <span class="stat-label">Times Copied</span>
+            <span class="stat-label" data-i18n="times-copied">Times Copied</span>
           </div>
         </div>
         
         <div class="history-actions">
-          <button id="clear-history" class="btn btn-danger">Clear All History</button>
-          <button id="export-history" class="btn btn-success">Export History</button>
+          <button id="clear-history" class="btn btn-danger" data-i18n="clear-all-history">Clear All History</button>
+          <button id="export-history" class="btn btn-success" data-i18n="export-history">Export History</button>
         </div>
         
         <div class="history-preview">
-          <h3>Recent Links</h3>
+          <h3 data-i18n="recent-links">Recent Links</h3>
           <div id="recent-links-preview" class="links-preview">
             <!-- Recent links will be populated by JavaScript -->
           </div>
@@ -77,13 +77,13 @@
 
       <!-- Data Management -->
       <section class="settings-section">
-        <h2>Data Management</h2>
+        <h2 data-i18n="data-management">Data Management</h2>
         <div class="data-actions">
-          <button id="export-data" class="btn btn-secondary">Export All Data</button>
-          <button id="import-data" class="btn btn-secondary">Import Data</button>
-          <button id="reset-data" class="btn btn-danger">Reset All Data</button>
+          <button id="export-data" class="btn btn-secondary" data-i18n="export-all-data">Export All Data</button>
+          <button id="import-data" class="btn btn-secondary" data-i18n="import-data">Import Data</button>
+          <button id="reset-data" class="btn btn-danger" data-i18n="reset-all-data">Reset All Data</button>
         </div>
-        <p class="help-text">
+        <p class="help-text" data-i18n="data-help">
           Export a full backup of your link history and settings as a JSON file,
           or import a previously-exported backup to restore it.
         </p>
@@ -91,26 +91,26 @@
 
       <!-- About Section -->
       <section class="settings-section">
-        <h2>About</h2>
+        <h2 data-i18n="about">About</h2>
         <div class="about-content">
           <div class="app-info">
-            <img src="logo.png" alt="Logo" class="app-logo" />
+            <img src="logo.png" alt="Logo" data-i18n-alt="logo" class="app-logo" />
             <div class="app-details">
               <h3>QuickLink Copier</h3>
-              <p>Version 1.1.5</p>
-              <p>One-click link copying with history and export features.</p>
+              <p><span data-i18n="version">Version</span> 1.1.5</p>
+              <p data-i18n="about-desc">One-click link copying with history and export features.</p>
             </div>
           </div>
           
           <div class="developer-info">
-            <p><strong>Developed by:</strong> Olé</p>
-            <p><strong>Support:</strong> <a href="mailto:support@quicklinkcopier.com">support@quicklinkcopier.com</a></p>
+            <p><strong data-i18n="developed-by">Developed by:</strong> Olé</p>
+            <p><strong data-i18n="support">Support:</strong> <a href="mailto:support@quicklinkcopier.com">support@quicklinkcopier.com</a></p>
           </div>
           
           <div class="links">
-            <a href="#" class="link">Privacy Policy</a>
-            <a href="#" class="link">Terms of Service</a>
-            <a href="#" class="link">Report Issue</a>
+            <a href="#" class="link" data-i18n="privacy-policy">Privacy Policy</a>
+            <a href="#" class="link" data-i18n="terms-of-service">Terms of Service</a>
+            <a href="#" class="link" data-i18n="report-issue">Report Issue</a>
           </div>
         </div>
       </section>

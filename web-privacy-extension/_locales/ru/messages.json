@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Web Privacy - очистка в 1 клик",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Профессиональная защита приватности. Очистка данных браузера в один клик.",
+    "description": "Extension description in the Web Store"
+  },
+  "actionTitle": {
+    "message": "Web Privacy",
+    "description": "Toolbar button tooltip"
+  },
+  "commandCleanupNow": {
+    "message": "Запустить очистку с сохранёнными настройками",
+    "description": "Keyboard shortcut description"
+  }
+}

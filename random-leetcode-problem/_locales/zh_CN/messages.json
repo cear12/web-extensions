@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Random LeetCode Problem",
+    "description": "Extension name (brand, not translated)"
+  },
+  "extDescription": {
+    "message": "随机获取一道免费的 LeetCode 题目进行练习，支持难度筛选和本地缓存。",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "Random LeetCode Problem",
+    "description": "Toolbar button tooltip"
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "File Bookmarks (TXT / MD)",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Chrome में खुली TXT या Markdown फ़ाइल में अपनी जगह बुकमार्क करें और अगली बार वही फ़ाइल खोलने पर सीधे वहीं लौटें।",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "File Bookmarks",
+    "description": "Toolbar button tooltip"
+  }
+}

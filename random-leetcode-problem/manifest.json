@@ -1,10 +1,11 @@
 {
   "manifest_version": 3,
-  "name": "Random LeetCode Problem",
+  "name": "__MSG_extName__",
   "version": "1.1.5",
-  "description": "Get a random free LeetCode problem to practice, with difficulty filtering and local caching.",
+  "description": "__MSG_extDescription__",
+  "default_locale": "en",
   "action": {
-    "default_title": "Random LeetCode Problem",
+    "default_title": "__MSG_actionTitle__",
     "default_popup": "popup.html"
   },
   "icons": {

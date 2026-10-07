@@ -4,6 +4,96 @@
 
 const DEFAULT_SETTINGS = { maxHistorySize: 10, autoTags: true, showNotifications: true };
 
+// ---- Localization ----
+
+// The UI language is picked in the popup (localStorage there) and mirrored to
+// chrome.storage.local.ui_language, because a service worker has no localStorage.
+const SUPPORTED_LANGUAGES = ['en', 'ru', 'es', 'zh', 'hi'];
+const MESSAGES = {
+  en: {
+    menuCopyPage: 'Copy page URL',
+    menuCopyLink: 'Copy this link',
+    copyFailedTitle: 'Copy Failed',
+    copyFailedMessage: 'Unable to copy this link to the clipboard.',
+    copiedTitle: 'Link copied!',
+    copiedMessage: 'Copied: {title}'
+  },
+  ru: {
+    menuCopyPage: 'Копировать URL страницы',
+    menuCopyLink: 'Копировать эту ссылку',
+    copyFailedTitle: 'Ошибка копирования',
+    copyFailedMessage: 'Не удалось скопировать ссылку в буфер обмена.',
+    copiedTitle: 'Ссылка скопирована!',
+    copiedMessage: 'Скопировано: {title}'
+  },
+  es: {
+    menuCopyPage: 'Copiar URL de la página',
+    menuCopyLink: 'Copiar este enlace',
+    copyFailedTitle: 'Error al copiar',
+    copyFailedMessage: 'No se pudo copiar este enlace al portapapeles.',
+    copiedTitle: '¡Enlace copiado!',
+    copiedMessage: 'Copiado: {title}'
+  },
+  zh: {
+    menuCopyPage: '复制页面 URL',
+    menuCopyLink: '复制此链接',
+    copyFailedTitle: '复制失败',
+    copyFailedMessage: '无法将此链接复制到剪贴板。',
+    copiedTitle: '链接已复制！',
+    copiedMessage: '已复制：{title}'
+  },
+  hi: {
+    menuCopyPage: 'पेज का URL कॉपी करें',
+    menuCopyLink: 'यह लिंक कॉपी करें',
+    copyFailedTitle: 'कॉपी नहीं हो सका',
+    copyFailedMessage: 'यह लिंक क्लिपबोर्ड पर कॉपी नहीं हो सका।',
+    copiedTitle: 'लिंक कॉपी हो गया!',
+    copiedMessage: 'कॉपी किया गया: {title}'
+  }
+};
+
+function normalizeLanguage(lang) {
+  const base = String(lang || '').toLowerCase().split(/[-_]/)[0];
+  return SUPPORTED_LANGUAGES.includes(base) ? base : 'en';
+}
+
+async function getLanguage() {
+  try {
+    const { ui_language: saved } = await chrome.storage.local.get('ui_language');
+    if (saved && SUPPORTED_LANGUAGES.includes(saved)) return saved;
+  } catch (_) { /* fall back to the browser language */ }
+  try {
+    return normalizeLanguage(chrome.i18n.getUILanguage());
+  } catch (_) {
+    return 'en';
+  }
+}
+
+async function msg(key, vars = {}) {
+  const lang = await getLanguage();
+  const text = (MESSAGES[lang] && MESSAGES[lang][key]) || MESSAGES.en[key] || key;
+  return text.replace(/\{(\w+)\}/g, (m, name) => (name in vars ? String(vars[name]) : m));
+}
+
+async function buildContextMenus() {
+  // removeAll first avoids "duplicate id" errors on update/reload/language change.
+  await chrome.contextMenus.removeAll();
+  chrome.contextMenus.create({ id: 'copy-current-url', title: await msg('menuCopyPage'), contexts: ['page'] });
+  chrome.contextMenus.create({ id: 'copy-link-url', title: await msg('menuCopyLink'), contexts: ['link'] });
+}
+
+let menuBuild = Promise.resolve();
+function rebuildContextMenus() {
+  menuBuild = menuBuild.then(buildContextMenus, buildContextMenus).catch((error) => {
+    console.error('Error building context menus:', error);
+  });
+  return menuBuild;
+}
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === 'local' && changes.ui_language) rebuildContextMenus();
+});
+
 // ---- Storage helpers ----
 
 // All read-modify-write operations on history/stats/settings go through this
@@ -55,10 +145,7 @@ function updateSettings(settings) {
 // ---- Install ----
 
 chrome.runtime.onInstalled.addListener(async () => {
-  // Avoid "duplicate id" errors when the extension is updated/reloaded.
-  await chrome.contextMenus.removeAll();
-  chrome.contextMenus.create({ id: 'copy-current-url', title: 'Copy page URL', contexts: ['page'] });
-  chrome.contextMenus.create({ id: 'copy-link-url', title: 'Copy this link', contexts: ['link'] });
+  await rebuildContextMenus();
 
   const existing = await chrome.storage.local.get(['linkHistory', 'settings', 'stats']);
   const defaults = {};
@@ -144,7 +231,7 @@ async function copyUrl({ url, title, tab }) {
 
   const ok = await copyToClipboard(tab, url);
   if (!ok) {
-    await showNotification('Copy Failed', 'Unable to copy this link to the clipboard.');
+    await showNotification(await msg('copyFailedTitle'), await msg('copyFailedMessage'));
     return false;
   }
 
@@ -156,7 +243,7 @@ async function copyUrl({ url, title, tab }) {
     timestamp: Date.now(),
     tags: []
   });
-  await showNotification('Link copied!', `Copied: ${title || url}`);
+  await showNotification(await msg('copiedTitle'), await msg('copiedMessage', { title: title || url }));
   return true;
 }
 

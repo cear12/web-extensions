@@ -3,95 +3,105 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Web Privacy - Settings</title>
+  <title data-i18n="page-title">Web Privacy - Settings</title>
   <link rel="stylesheet" href="options.css" />
 </head>
 <body>
   <div class="container">
     <header class="header">
       <div class="title">
-        <img src="logo.png" alt="Logo" class="logo" />
-        <h1>Web Privacy Settings</h1>
+        <img src="logo.png" alt="Logo" data-i18n-alt="logo" class="logo" />
+        <h1 data-i18n="header-title">Web Privacy Settings</h1>
       </div>
     </header>
 
     <main class="main-content">
       <!-- General Settings -->
       <section class="settings-section">
-        <h2>General Settings</h2>
+        <h2 data-i18n="general-settings">General Settings</h2>
         <div class="settings-grid">
           <label class="setting-item">
             <input type="checkbox" id="notifications" checked>
-            <span class="setting-label">Show Notifications</span>
-            <span class="setting-description">Get notified when cleanup is completed</span>
+            <span class="setting-label" data-i18n="show-notifications">Show Notifications</span>
+            <span class="setting-description" data-i18n="show-notifications-desc">Get notified when cleanup is completed</span>
           </label>
+          <div class="setting-item language-item">
+            <label for="options-language-select" class="setting-label" data-i18n="language">Language</label>
+            <select id="options-language-select">
+              <option value="en">🇺🇸 English</option>
+              <option value="es">🇪🇸 Español</option>
+              <option value="ru">🇷🇺 Русский</option>
+              <option value="zh">🇨🇳 中文</option>
+              <option value="hi">🇮🇳 हिन्दी</option>
+            </select>
+          </div>
         </div>
       </section>
 
       <!-- Cleanup Options -->
       <section class="settings-section">
-        <h2>Cleanup Options</h2>
+        <h2 data-i18n="cleanup-options">Cleanup Options</h2>
         <div class="settings-grid">
           <label class="setting-item">
             <input type="checkbox" id="cookies" checked>
-            <span class="setting-label">Cookies</span>
-            <span class="setting-description">Remove all cookies and site data</span>
+            <span class="setting-label" data-i18n="cookies">Cookies</span>
+            <span class="setting-description" data-i18n="cookies-desc">Remove all cookies and site data</span>
           </label>
           
           <label class="setting-item">
             <input type="checkbox" id="cache" checked>
-            <span class="setting-label">Cache</span>
-            <span class="setting-description">Clear browser cache and temporary files</span>
+            <span class="setting-label" data-i18n="cache">Cache</span>
+            <span class="setting-description" data-i18n="cache-desc">Clear browser cache and temporary files</span>
           </label>
           
           <label class="setting-item">
             <input type="checkbox" id="history">
-            <span class="setting-label">History</span>
-            <span class="setting-description">Remove browsing history</span>
+            <span class="setting-label" data-i18n="history">History</span>
+            <span class="setting-description" data-i18n="history-desc">Remove browsing history</span>
           </label>
           
           <label class="setting-item">
             <input type="checkbox" id="downloads">
-            <span class="setting-label">Downloads</span>
-            <span class="setting-description">Clear download history</span>
+            <span class="setting-label" data-i18n="downloads">Downloads</span>
+            <span class="setting-description" data-i18n="downloads-desc">Clear download history</span>
           </label>
           
           <label class="setting-item">
             <input type="checkbox" id="passwords">
-            <span class="setting-label">Saved Passwords</span>
-            <span class="setting-description">Remove saved passwords (use with caution)</span>
+            <span class="setting-label" data-i18n="passwords">Saved Passwords</span>
+            <span class="setting-description" data-i18n="passwords-desc">Remove saved passwords (use with caution)</span>
           </label>
           
           <label class="setting-item">
             <input type="checkbox" id="form-data">
-            <span class="setting-label">Form Data</span>
-            <span class="setting-description">Clear saved form data and autofill</span>
+            <span class="setting-label" data-i18n="form-data">Form Data</span>
+            <span class="setting-description" data-i18n="form-data-desc">Clear saved form data and autofill</span>
           </label>
         </div>
       </section>
 
       <!-- Schedule Settings -->
       <section class="settings-section">
-        <h2>Auto Schedule</h2>
+        <h2 data-i18n="auto-schedule">Auto Schedule</h2>
         <div class="schedule-options">
           <label class="setting-item">
             <input type="radio" name="schedule" value="none" checked>
-            <span class="setting-label">No Auto Schedule</span>
+            <span class="setting-label" data-i18n="schedule-none">No Auto Schedule</span>
           </label>
           
           <label class="setting-item">
             <input type="radio" name="schedule" value="hourly">
-            <span class="setting-label">Every Hour</span>
+            <span class="setting-label" data-i18n="schedule-hourly">Every Hour</span>
           </label>
           
           <label class="setting-item">
             <input type="radio" name="schedule" value="daily">
-            <span class="setting-label">Daily</span>
+            <span class="setting-label" data-i18n="schedule-daily">Daily</span>
           </label>
           
           <label class="setting-item">
             <input type="radio" name="schedule" value="weekly">
-            <span class="setting-label">Weekly</span>
+            <span class="setting-label" data-i18n="schedule-weekly">Weekly</span>
           </label>
         </div>
       </section>
@@ -99,25 +109,25 @@
 
       <!-- Whitelist/Blacklist -->
       <section class="settings-section">
-        <h2>Site Management</h2>
-        <p class="setting-description">Whitelisted sites are skipped when clearing cookies and cache (the browser cannot exclude individual sites from history or download cleanup). The blacklist is saved for your own reference and is not enforced.</p>
+        <h2 data-i18n="site-management">Site Management</h2>
+        <p class="setting-description" data-i18n="site-management-desc">Whitelisted sites are skipped when clearing cookies and cache (the browser cannot exclude individual sites from history or download cleanup). The blacklist is saved for your own reference and is not enforced.</p>
         <div class="site-management">
           <div class="whitelist-section">
-            <h3>Whitelist</h3>
+            <h3 data-i18n="whitelist">Whitelist</h3>
             <div class="site-list" id="whitelist">
               <div class="site-item">
-                <input type="text" placeholder="Enter domain (e.g., example.com)" id="whitelist-input">
-                <button type="button" id="add-whitelist">Add</button>
+                <input type="text" placeholder="Enter domain (e.g., example.com)" data-i18n-placeholder="whitelist-placeholder" id="whitelist-input">
+                <button type="button" id="add-whitelist" data-i18n="add">Add</button>
               </div>
             </div>
           </div>
 
           <div class="blacklist-section">
-            <h3>Blacklist</h3>
+            <h3 data-i18n="blacklist">Blacklist</h3>
             <div class="site-list" id="blacklist">
               <div class="site-item">
-                <input type="text" placeholder="Enter domain (e.g., tracking.com)" id="blacklist-input">
-                <button type="button" id="add-blacklist">Add</button>
+                <input type="text" placeholder="Enter domain (e.g., tracking.com)" data-i18n-placeholder="blacklist-placeholder" id="blacklist-input">
+                <button type="button" id="add-blacklist" data-i18n="add">Add</button>
               </div>
             </div>
           </div>
@@ -126,36 +136,36 @@
 
       <!-- Statistics -->
       <section class="settings-section">
-        <h2>Statistics</h2>
+        <h2 data-i18n="statistics">Statistics</h2>
         <div class="stats-grid">
           <div class="stat-item">
             <span class="stat-number" id="total-cleanups">0</span>
-            <span class="stat-label">Total Cleanups</span>
+            <span class="stat-label" data-i18n="total-cleanups">Total Cleanups</span>
           </div>
           
           <div class="stat-item">
             <span class="stat-number" id="last-cleanup">Never</span>
-            <span class="stat-label">Last Cleanup</span>
+            <span class="stat-label" data-i18n="last-cleanup">Last Cleanup</span>
           </div>
           
           <div class="stat-item">
             <span class="stat-number" id="financial-sites">0</span>
-            <span class="stat-label">Sensitive Sites Visited</span>
+            <span class="stat-label" data-i18n="sensitive-sites">Sensitive Sites Visited</span>
           </div>
         </div>
       </section>
 
       <!-- Actions -->
       <section class="actions-section">
-        <button type="button" id="save-settings" class="save-btn">Save Settings</button>
-        <button type="button" id="reset-settings" class="reset-btn">Reset to Defaults</button>
-        <button type="button" id="export-settings" class="export-btn">Export Settings</button>
-        <button type="button" id="import-settings" class="import-btn">Import Settings</button>
+        <button type="button" id="save-settings" class="save-btn" data-i18n="save-settings">Save Settings</button>
+        <button type="button" id="reset-settings" class="reset-btn" data-i18n="reset-settings">Reset to Defaults</button>
+        <button type="button" id="export-settings" class="export-btn" data-i18n="export-settings">Export Settings</button>
+        <button type="button" id="import-settings" class="import-btn" data-i18n="import-settings">Import Settings</button>
       </section>
     </main>
 
     <footer class="footer">
-      <p>Web Privacy Extension v1.1.5 - Professional privacy protection</p>
+      <p>Web Privacy Extension v1.1.5 - <span data-i18n="footer-tagline">Professional privacy protection</span></p>
     </footer>
   </div>
 

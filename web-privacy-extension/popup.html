@@ -9,20 +9,20 @@
 <body>
   <div class="container">
     <header class="header">
-      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Меню"></button>
+      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Меню" data-i18n-aria-label="menu"></button>
       <div class="title">
-        <img src="logo.png" alt="Логотип" class="logo" />
+        <img src="logo.png" alt="Логотип" data-i18n-alt="logo" class="logo" />
         <h1 data-i18n="app-name">Web Privacy</h1>
       </div>
-      <button type="button" id="close-btn" class="close-btn" aria-label="Закрыть"></button>
+      <button type="button" id="close-btn" class="close-btn" aria-label="Закрыть" data-i18n-aria-label="close"></button>
     </header>
 
     <!-- Menu Widget -->
     <div id="menu-widget" class="menu-widget hidden">
       <div class="menu-content">
         <div class="menu-header">
-          <h2>Menu</h2>
-          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Close menu">×</button>
+          <h2 data-i18n="menu">Menu</h2>
+          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Close menu" data-i18n-aria-label="close-menu">×</button>
         </div>
         <div class="menu-items">
           <button type="button" class="menu-item" data-section="language">
@@ -42,10 +42,10 @@
         <!-- Menu Footer with Product Icons -->
         <div class="menu-footer">
           <div class="menu-footer-products">
-            <a href="https://chromewebstore.google.com/detail/qr-code-generator/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="menu-product-link" title="QR Code Generator - Generate QR codes for text, URL, WiFi, and contacts" data-product="qr-code-generator">
+            <a href="https://chromewebstore.google.com/detail/qr-code-generator/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="menu-product-link" title="QR Code Generator - Generate QR codes for text, URL, WiFi, and contacts" data-i18n-title="qr-code-generator-title" data-product="qr-code-generator">
               <img src="qr-code-generator.png" alt="QR Code Generator" class="menu-product-icon">
             </a>
-            <a href="https://chromewebstore.google.com/detail/quicklink-copier/jmgppejkncfplhcfoppmicanldholpdh" target="_blank" class="menu-product-link" title="QuickLink Copier - One-click link copying with history" data-product="quick-link-copier">
+            <a href="https://chromewebstore.google.com/detail/quicklink-copier/jmgppejkncfplhcfoppmicanldholpdh" target="_blank" class="menu-product-link" title="QuickLink Copier - One-click link copying with history" data-i18n-title="quick-link-copier-title" data-product="quick-link-copier">
               <img src="quick-link-copier.png" alt="Quick Link Copier" class="menu-product-icon">
             </a>
           </div>
@@ -90,7 +90,7 @@
       <div class="action-section">
         <button type="button" id="cleanup-btn" class="cleanup-btn" disabled>
           <span class="btn-row">
-            <img src="icon.png" alt="Иконка" class="btn-logo" />
+            <img src="icon.png" alt="Иконка" data-i18n-alt="icon" class="btn-logo" />
             <span class="btn-text" data-i18n="clean-now">Очистить</span>
           </span>
           <span class="btn-meta" id="last-cleanup" data-i18n="last-cleanup">Последняя очистка: Никогда</span>
@@ -102,7 +102,7 @@
     <!-- Language Panel -->
     <div id="language-panel" class="menu-panel hidden">
       <div class="menu-panel-header">
-        <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+        <button type="button" class="back-btn" data-back="menu" aria-label="Назад" data-i18n-aria-label="back"></button>
         <h3 data-i18n="language">Язык</h3>
       </div>
       <div class="menu-panel-content">
@@ -114,6 +114,7 @@
               <option value="es">🇪🇸 Español</option>
               <option value="ru" selected>🇷🇺 Русский</option>
               <option value="zh">🇨🇳 中文</option>
+              <option value="hi">🇮🇳 हिन्दी</option>
             </select>
           </label>
         </fieldset>
@@ -123,7 +124,7 @@
     <!-- Other Products Panel -->
     <div id="other-products-panel" class="menu-panel hidden">
       <div class="menu-panel-header">
-        <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+        <button type="button" class="back-btn" data-back="menu" aria-label="Назад" data-i18n-aria-label="back"></button>
         <h3 data-i18n="other-products">Другие продукты</h3>
       </div>
       <div class="menu-panel-content">
@@ -156,13 +157,13 @@
     <!-- About Panel -->
     <div id="about-panel" class="menu-panel hidden">
       <div class="menu-panel-header">
-        <button type="button" class="back-btn" data-back="menu" aria-label="Назад"></button>
+        <button type="button" class="back-btn" data-back="menu" aria-label="Назад" data-i18n-aria-label="back"></button>
         <h3 data-i18n="about">О программе</h3>
       </div>
       <div class="menu-panel-content">
         <div class="about-content">
           <div class="about-title">
-            <img src="logo.png" alt="Логотип" class="logo" />
+            <img src="logo.png" alt="Логотип" data-i18n-alt="logo" class="logo" />
             <h4 data-i18n="app-name">Web Privacy</h4>
           </div>
           <p><span data-i18n="version">Версия</span> 1.1.5</p>

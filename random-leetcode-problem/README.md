@@ -7,7 +7,7 @@ Features:
 - Difficulty filter: All / Easy / Medium / Hard
 - Problem list is cached locally for 24h so opening the popup doesn't re-fetch LeetCode's full problem list every time — "Refresh list" in Settings forces an update
 - Copy button puts the problem title + link on the clipboard
-- Dark/light theme (auto-detect), UI in English/Spanish/Russian
+- Dark/light theme (auto-detect), UI in English/Spanish/Russian/Chinese (Simplified)/Hindi — the popup (including relative times and accessibility labels) and the extension's store/toolbar description (via Chrome `_locales`) are localized
 
 ## Install in Chrome
 1. Open `chrome://extensions`

@@ -44,7 +44,20 @@
       'qr-code-generator-desc': 'Generate QR codes for text, URL, WiFi, and contacts with customization and PNG download.',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': 'One-click link copying with history',
-      'view-in-store': 'View in Store'
+      'view-in-store': 'View in Store',
+      'menu': 'Menu',
+      'close': 'Close',
+      'close-menu': 'Close menu',
+      'back': 'Back',
+      'logo': 'Logo',
+      'icon': 'Icon',
+      'just-now': 'Just now',
+      'minutes-ago': '{n}m ago',
+      'hours-ago': '{n}h ago',
+      'days-ago': '{n}d ago',
+      'qr-code-generator-title': 'QR Code Generator - Generate QR codes for text, URL, WiFi, and contacts',
+      'quick-link-copier-title': 'QuickLink Copier - One-click link copying with history',
+      'page-title': 'Web Privacy - 1-Click Cleanup'
     },
     es: {
       'clearing': 'LIMPIANDO...',
@@ -70,7 +83,7 @@
       'items_plural': 'elementos',
       'sites': 'sitios',
       'none': 'Ninguno',
-      'clean-now': 'Clear',
+      'clean-now': 'Limpiar',
       'cleanup-options': 'Opciones de Limpieza',
       'version': 'Versión',
       'app-description': 'Protección profesional de privacidad',
@@ -82,7 +95,20 @@
       'qr-code-generator-desc': 'Genera códigos QR para texto, URL, WiFi y contactos con personalización y descarga en PNG.',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': 'Copia de enlaces con un clic con historial',
-      'view-in-store': 'Ver en la Tienda'
+      'view-in-store': 'Ver en la Tienda',
+      'menu': 'Menú',
+      'close': 'Cerrar',
+      'close-menu': 'Cerrar menú',
+      'back': 'Atrás',
+      'logo': 'Logotipo',
+      'icon': 'Icono',
+      'just-now': 'Ahora mismo',
+      'minutes-ago': 'hace {n} min',
+      'hours-ago': 'hace {n} h',
+      'days-ago': 'hace {n} d',
+      'qr-code-generator-title': 'QR Code Generator - Genera códigos QR para texto, URL, WiFi y contactos',
+      'quick-link-copier-title': 'QuickLink Copier - Copia de enlaces con un clic con historial',
+      'page-title': 'Web Privacy - limpieza en 1 clic'
     },
     ru: {
       'clearing': 'ОЧИСТКА...',
@@ -120,7 +146,20 @@
       'qr-code-generator-desc': 'Генерация QR-кодов для текста, URL, WiFi и контактов с настройкой и загрузкой в PNG.',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': 'Копирование ссылок одним кликом с историей',
-      'view-in-store': 'Посмотреть в магазине'
+      'view-in-store': 'Посмотреть в магазине',
+      'menu': 'Меню',
+      'close': 'Закрыть',
+      'close-menu': 'Закрыть меню',
+      'back': 'Назад',
+      'logo': 'Логотип',
+      'icon': 'Иконка',
+      'just-now': 'Только что',
+      'minutes-ago': '{n} мин назад',
+      'hours-ago': '{n} ч назад',
+      'days-ago': '{n} дн назад',
+      'qr-code-generator-title': 'QR Code Generator - QR-коды для текста, URL, WiFi и контактов',
+      'quick-link-copier-title': 'QuickLink Copier - копирование ссылок одним кликом с историей',
+      'page-title': 'Web Privacy - очистка в 1 клик'
     },
     zh: {
       'clearing': '清理中...',
@@ -158,7 +197,71 @@
       'qr-code-generator-desc': '为文本、URL、WiFi 和联系人生成二维码，支持自定义样式和 PNG 下载。',
       'quick-link-copier-name': 'Quick Link Copier',
       'quick-link-copier-desc': '一键复制链接并保存历史',
-      'view-in-store': '在商店中查看'
+      'view-in-store': '在商店中查看',
+      'menu': '菜单',
+      'close': '关闭',
+      'close-menu': '关闭菜单',
+      'back': '返回',
+      'logo': '标志',
+      'icon': '图标',
+      'just-now': '刚刚',
+      'minutes-ago': '{n} 分钟前',
+      'hours-ago': '{n} 小时前',
+      'days-ago': '{n} 天前',
+      'qr-code-generator-title': 'QR Code Generator - 为文本、URL、WiFi 和联系人生成二维码',
+      'quick-link-copier-title': 'QuickLink Copier - 一键复制链接并保存历史',
+      'page-title': 'Web Privacy - 一键清理'
+    },
+    hi: {
+      'clearing': 'साफ़ हो रहा है...',
+      'cleanup-failed': 'सफ़ाई विफल रही',
+      'app-name': 'Web Privacy',
+      'about': 'परिचय',
+      'privacy-status': 'प्राइवेसी स्थिति',
+      'last-cleanup': 'पिछली सफ़ाई: कभी नहीं',
+      'quick-settings': 'त्वरित सेटिंग',
+      'cookies': 'कुकीज़',
+      'cache': 'कैश',
+      'history': 'इतिहास',
+      'downloads': 'डाउनलोड',
+      'browsing-history': 'ब्राउज़िंग इतिहास',
+      'download-history': 'डाउनलोड इतिहास',
+      'cookies-and-site-data': 'कुकीज़ और अन्य साइट डेटा',
+      'cached-images-files': 'कैश की गई इमेज और फ़ाइलें',
+      'browsing-history-help': 'इतिहास हटाता है, सर्च बॉक्स वाला भी',
+      'download-history-help': 'डाउनलोड सूची साफ़ करता है, असली फ़ाइलें नहीं',
+      'cookies-and-site-data-help': 'ज़्यादातर साइटों से साइन आउट कर देगा। आपका Google खाता साइन इन रहेगा।',
+      'cached-images-files-help': 'स्टोरेज खाली करता है। अगली बार कुछ साइटें धीमी लोड हो सकती हैं।',
+      'items': 'आइटम',
+      'items_plural': 'आइटम',
+      'sites': 'साइट',
+      'none': 'कोई नहीं',
+      'clean-now': 'साफ़ करें',
+      'cleanup-options': 'सफ़ाई विकल्प',
+      'version': 'संस्करण',
+      'app-description': 'पेशेवर प्राइवेसी सुरक्षा',
+      'developed-by': 'विकसित करने वाले',
+      'language': 'भाषा',
+      'select-language': 'भाषा चुनें',
+      'other-products': 'अन्य प्रोडक्ट',
+      'qr-code-generator-name': 'QR Code Generator',
+      'qr-code-generator-desc': 'टेक्स्ट, URL, WiFi और संपर्कों के लिए QR कोड बनाएँ, कस्टमाइज़ करें और PNG में डाउनलोड करें।',
+      'quick-link-copier-name': 'Quick Link Copier',
+      'quick-link-copier-desc': 'एक क्लिक में लिंक कॉपी करें, इतिहास के साथ',
+      'view-in-store': 'स्टोर में देखें',
+      'menu': 'मेन्यू',
+      'close': 'बंद करें',
+      'close-menu': 'मेन्यू बंद करें',
+      'back': 'वापस',
+      'logo': 'लोगो',
+      'icon': 'आइकन',
+      'just-now': 'अभी-अभी',
+      'minutes-ago': '{n} मिनट पहले',
+      'hours-ago': '{n} घंटे पहले',
+      'days-ago': '{n} दिन पहले',
+      'qr-code-generator-title': 'QR Code Generator - टेक्स्ट, URL, WiFi और संपर्कों के लिए QR कोड बनाएँ',
+      'quick-link-copier-title': 'QuickLink Copier - एक क्लिक में लिंक कॉपी करें, इतिहास के साथ',
+      'page-title': 'Web Privacy - 1-क्लिक सफ़ाई'
     }
   };
 
@@ -179,7 +282,7 @@
 
   function detectLanguage() {
     const browserLang = navigator.language.split('-')[0];
-    const supportedLangs = ['en', 'es', 'ru', 'zh'];
+    const supportedLangs = ['en', 'es', 'ru', 'zh', 'hi'];
     return supportedLangs.includes(browserLang) ? browserLang : 'ru';
   }
 
@@ -188,6 +291,11 @@
   }
 
   function applyTranslations() {
+    document.documentElement.lang = currentLanguage;
+    document.title = translate('page-title');
+    $$('[data-i18n-aria-label]').forEach(el => el.setAttribute('aria-label', translate(el.getAttribute('data-i18n-aria-label'))));
+    $$('[data-i18n-alt]').forEach(el => el.setAttribute('alt', translate(el.getAttribute('data-i18n-alt'))));
+    $$('[data-i18n-title]').forEach(el => el.setAttribute('title', translate(el.getAttribute('data-i18n-title'))));
     $$('[data-i18n]').forEach(el => {
       const key = el.getAttribute('data-i18n');
       const translation = translate(key);
@@ -202,7 +310,7 @@
   async function loadLanguage() {
     try {
       const result = await chrome.storage.sync.get(['webPrivacyLanguage']);
-      if (result.webPrivacyLanguage) {
+      if (translations[result.webPrivacyLanguage]) {
         currentLanguage = result.webPrivacyLanguage;
       } else {
         currentLanguage = detectLanguage();
@@ -216,10 +324,19 @@
       console.error('Failed to load language:', error);
       currentLanguage = detectLanguage();
     }
+    syncUiLanguage();
+  }
+
+  // Background/content scripts read the effective language from here.
+  function syncUiLanguage() {
+    try {
+      chrome.storage.local.set({ ui_language: currentLanguage }).catch(() => {});
+    } catch (error) {}
   }
 
   async function saveLanguage() {
     try {
+      syncUiLanguage();
       await chrome.storage.sync.set({ webPrivacyLanguage: currentLanguage });
     } catch (error) {
       console.error('Failed to save language:', error);
@@ -390,8 +507,9 @@ function updateStatusDisplay() {
     const date = new Date(lastCleanup);
     const timeAgo = getTimeAgo(date);
     const base = translate('last-cleanup');
-    const prefix = base.includes(':') ? base.split(':')[0] : base;
-    lastCleanupEl.textContent = `${prefix}: ${timeAgo}`;
+    const sep = base.includes('：') ? '：' : ':';
+    const prefix = base.split(sep)[0];
+    lastCleanupEl.textContent = `${prefix}${sep === '：' ? sep : ': '}${timeAgo}`;
   } else {
     lastCleanupEl.textContent = translate('last-cleanup');
   }
@@ -418,10 +536,10 @@ function getTimeAgo(date) {
   const hours = Math.floor(diff / 3600000);
   const days = Math.floor(diff / 86400000);
 
-  if (minutes < 1) return 'Just now';
-  if (minutes < 60) return `${minutes}m ago`;
-  if (hours < 24) return `${hours}h ago`;
-  return `${days}d ago`;
+  if (minutes < 1) return translate('just-now');
+  if (minutes < 60) return translate('minutes-ago').replace('{n}', minutes);
+  if (hours < 24) return translate('hours-ago').replace('{n}', hours);
+  return translate('days-ago').replace('{n}', days);
 }
 
 async function performCleanup() {

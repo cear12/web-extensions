@@ -3,6 +3,70 @@
 
 importScripts('cleanup.js');
 
+const BG_I18N = {
+  en: {
+    title: 'Web Privacy',
+    installedTitle: 'Web Privacy Installed',
+    done: 'Privacy cleanup completed successfully!',
+    failed: 'Privacy cleanup failed: ',
+    welcome: 'Your privacy protection is now active. Click the extension icon to get started!'
+  },
+  es: {
+    title: 'Web Privacy',
+    installedTitle: 'Web Privacy instalado',
+    done: '¡Limpieza de privacidad completada con éxito!',
+    failed: 'Error en la limpieza de privacidad: ',
+    welcome: 'Tu protección de privacidad ya está activa. ¡Haz clic en el icono de la extensión para empezar!'
+  },
+  ru: {
+    title: 'Web Privacy',
+    installedTitle: 'Web Privacy установлен',
+    done: 'Очистка приватности успешно завершена!',
+    failed: 'Не удалось выполнить очистку: ',
+    welcome: 'Защита приватности активна. Нажмите на значок расширения, чтобы начать!'
+  },
+  zh: {
+    title: 'Web Privacy',
+    installedTitle: 'Web Privacy 已安装',
+    done: '隐私清理已成功完成！',
+    failed: '隐私清理失败：',
+    welcome: '隐私保护现已启用。点击扩展图标即可开始！'
+  },
+  hi: {
+    title: 'Web Privacy',
+    installedTitle: 'Web Privacy इंस्टॉल हो गया',
+    done: 'प्राइवेसी सफ़ाई सफलतापूर्वक पूरी हुई!',
+    failed: 'प्राइवेसी सफ़ाई विफल रही: ',
+    welcome: 'आपकी प्राइवेसी सुरक्षा अब चालू है। शुरू करने के लिए एक्सटेंशन आइकन पर क्लिक करें!'
+  }
+};
+
+// Mirrors popup.js: saved choice, else browser language, else 'ru'.
+function detectBrowserLanguage() {
+  let raw = '';
+  try { raw = (self.navigator && navigator.language) || chrome.i18n.getUILanguage() || ''; } catch (e) {}
+  const lang = String(raw).toLowerCase().split(/[-_]/)[0];
+  return BG_I18N[lang] ? lang : 'ru';
+}
+
+async function getUiLanguage() {
+  try {
+    const { ui_language } = await chrome.storage.local.get('ui_language');
+    if (BG_I18N[ui_language]) return ui_language;
+    const { webPrivacyLanguage } = await chrome.storage.sync.get('webPrivacyLanguage');
+    const lang = BG_I18N[webPrivacyLanguage] ? webPrivacyLanguage : detectBrowserLanguage();
+    await chrome.storage.local.set({ ui_language: lang });
+    return lang;
+  } catch (e) {
+    return detectBrowserLanguage();
+  }
+}
+
+async function bgT(key) {
+  const lang = await getUiLanguage();
+  return (BG_I18N[lang] && BG_I18N[lang][key]) || BG_I18N.en[key];
+}
+
 class WebPrivacyBackground {
   constructor() {
     this.init();
@@ -48,6 +112,7 @@ class WebPrivacyBackground {
 
   setupInstallListener() {
     chrome.runtime.onInstalled.addListener((details) => {
+      getUiLanguage();
       if (details.reason === 'install') {
         this.handleFirstInstall();
       }
@@ -122,8 +187,8 @@ class WebPrivacyBackground {
         chrome.notifications.create({
           type: 'basic',
           iconUrl: 'icon48.png',
-          title: 'Web Privacy',
-          message: 'Privacy cleanup completed successfully!'
+          title: await bgT('title'),
+          message: await bgT('done')
         });
       }
 
@@ -132,8 +197,8 @@ class WebPrivacyBackground {
       chrome.notifications.create({
         type: 'basic',
         iconUrl: 'icon48.png',
-        title: 'Web Privacy',
-        message: 'Privacy cleanup failed: ' + error.message
+        title: await bgT('title'),
+        message: (await bgT('failed')) + error.message
       });
     }
   }
@@ -155,8 +220,8 @@ class WebPrivacyBackground {
       chrome.notifications.create({
         type: 'basic',
         iconUrl: 'icon48.png',
-        title: 'Web Privacy Installed',
-        message: 'Your privacy protection is now active. Click the extension icon to get started!'
+        title: await bgT('installedTitle'),
+        message: await bgT('welcome')
       });
 
     } catch (error) {

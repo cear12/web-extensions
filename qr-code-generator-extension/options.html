@@ -1,29 +1,29 @@
 <!doctype html>
-<html lang="ru">
+<html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Настройки — QR Code Generator</title>
+  <title data-i18n="page-title">Settings — QR Code Generator</title>
   <link rel="stylesheet" href="options.css" />
 </head>
 <body>
   <main class="wrap">
-    <h1>Настройки по умолчанию</h1>
+    <h1 data-i18n="heading">Default Settings</h1>
     <form id="defaults-form">
       <label>
-        Размер (px)
+        <span data-i18n="size">Size (px)</span>
         <input id="d-size" type="number" min="120" max="1024" step="4" />
       </label>
       <label>
-        Цвет модулей
+        <span data-i18n="module-color">Module Color</span>
         <input id="d-dark" type="color" />
       </label>
       <label>
-        Цвет фона
+        <span data-i18n="background-color">Background Color</span>
         <input id="d-light" type="color" />
       </label>
       <label>
-        Ошибка
+        <span data-i18n="error">Error Correction</span>
         <select id="d-ec">
           <option value="L">L (7%)</option>
           <option value="M">M (15%)</option>
@@ -32,11 +32,11 @@
         </select>
       </label>
       <div class="actions">
-        <button type="submit">Сохранить</button>
-        <button type="button" id="reset">Сбросить</button>
+        <button type="submit" data-i18n="save">Save</button>
+        <button type="button" id="reset" data-i18n="reset">Reset</button>
       </div>
     </form>
-    <p class="muted">Настройки сохраняются локально и применяются в всплывающем окне.</p>
+    <p class="muted" data-i18n="note">Settings are stored locally and applied in the popup.</p>
   </main>
   <script src="options.js"></script>
 </body>
