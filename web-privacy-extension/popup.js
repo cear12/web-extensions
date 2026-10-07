@@ -179,7 +179,7 @@
 
   function detectLanguage() {
     const browserLang = navigator.language.split('-')[0];
-    const supportedLangs = ['en', 'es', 'ru', 'zh'];
+    const supportedLangs = ['en', 'es', 'ru', 'zh', 'hi'];
     return supportedLangs.includes(browserLang) ? browserLang : 'ru';
   }
 
