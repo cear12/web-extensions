@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "File Bookmarks (TXT / MD)",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "为在 Chrome 中打开的 TXT 或 Markdown 文件中的位置添加书签，下次打开同一文件时直接跳回该位置。",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "File Bookmarks",
+    "description": "Toolbar button tooltip"
+  }
+}

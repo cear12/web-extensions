@@ -243,18 +243,72 @@ function flashBadge(text, color, tabId) {
   setTimeout(() => chrome.action.setBadgeText({ text: "", ...opts }), 2000);
 }
 
+// ---- UI language (popup mirrors its choice into chrome.storage.local) ----
+const LANGUAGE_KEY = "ui_language";
+const SUPPORTED_LANGUAGES = ["en", "ru", "es", "zh", "hi"];
+const MENU_TRANSLATIONS = {
+  en: { "add-bookmark-here": "Add bookmark here" },
+  ru: { "add-bookmark-here": "Добавить закладку здесь" },
+  es: { "add-bookmark-here": "Añadir marcador aquí" },
+  zh: { "add-bookmark-here": "在此处添加书签" },
+  hi: { "add-bookmark-here": "यहाँ बुकमार्क जोड़ें" },
+};
+
+function normalizeLanguage(lang) {
+  const base = String(lang || "").toLowerCase().split(/[-_]/)[0];
+  return SUPPORTED_LANGUAGES.includes(base) ? base : null;
+}
+
+async function getUiLanguage() {
+  try {
+    const data = await chrome.storage.local.get(LANGUAGE_KEY);
+    const saved = normalizeLanguage(data[LANGUAGE_KEY]);
+    if (saved) return saved;
+  } catch (e) {}
+  try {
+    return normalizeLanguage(chrome.i18n.getUILanguage()) || "en";
+  } catch (e) {
+    return "en";
+  }
+}
+
+function tr(lang, key) {
+  return (MENU_TRANSLATIONS[lang] && MENU_TRANSLATIONS[lang][key]) || MENU_TRANSLATIONS.en[key];
+}
+
 // ---- Context menu ----
-chrome.runtime.onInstalled.addListener(async () => {
+const MENU_ID = "add-file-bookmark";
+
+async function buildContextMenu() {
+  const lang = await getUiLanguage();
   await chrome.contextMenus.removeAll(); // avoid duplicate-id errors on update
   chrome.contextMenus.create({
-    id: "add-file-bookmark",
-    title: "Add bookmark here",
+    id: MENU_ID,
+    title: tr(lang, "add-bookmark-here"),
     contexts: ["page", "selection"],
   });
+}
+
+chrome.runtime.onInstalled.addListener(() => {
+  buildContextMenu();
+});
+
+chrome.runtime.onStartup.addListener(() => {
+  buildContextMenu();
+});
+
+chrome.storage.onChanged.addListener((changes, area) => {
+  if (area === "local" && changes[LANGUAGE_KEY]) {
+    getUiLanguage().then((lang) => {
+      chrome.contextMenus.update(MENU_ID, { title: tr(lang, "add-bookmark-here") }, () => {
+        if (chrome.runtime.lastError) buildContextMenu();
+      });
+    });
+  }
 });
 
 chrome.contextMenus.onClicked.addListener(async (info, tab) => {
-  if (info.menuItemId === "add-file-bookmark" && tab) {
+  if (info.menuItemId === MENU_ID && tab) {
     const result = await addBookmarkForTab(tab);
     flashBadge(result && result.ok ? "\u2713" : "!", result && result.ok ? "#34A853" : "#EA4335", tab.id);
   }
