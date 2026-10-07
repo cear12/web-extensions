@@ -72,7 +72,14 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': 'One-click link copying with history.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.'
+      'web-privacy-desc': 'Professional privacy protection. One-click cleanup of browsing data.',
+      'close': 'Close',
+      'close-menu': 'Close menu',
+      'back': 'Back',
+      'logo-alt': 'Logo',
+      'time-minutes': '{n}m',
+      'time-hours': '{n}h',
+      'time-days': '{n}d'
     },
     es: {
       'menu': 'Menú',
@@ -117,7 +124,14 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': 'Copia de enlaces con un clic, con historial.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.'
+      'web-privacy-desc': 'Protección de privacidad profesional. Limpieza de datos de navegación con un clic.',
+      'close': 'Cerrar',
+      'close-menu': 'Cerrar menú',
+      'back': 'Atrás',
+      'logo-alt': 'Logotipo',
+      'time-minutes': '{n} min',
+      'time-hours': '{n} h',
+      'time-days': '{n} d'
     },
     ru: {
       'menu': 'Меню',
@@ -162,7 +176,14 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': 'Копирование ссылок в один клик, с историей.',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'Профессиональная защита приватности. Очистка данных браузера в один клик.'
+      'web-privacy-desc': 'Профессиональная защита приватности. Очистка данных браузера в один клик.',
+      'close': 'Закрыть',
+      'close-menu': 'Закрыть меню',
+      'back': 'Назад',
+      'logo-alt': 'Логотип',
+      'time-minutes': '{n} мин',
+      'time-hours': '{n} ч',
+      'time-days': '{n} дн.'
     },
     zh: {
       'menu': '菜单',
@@ -207,7 +228,14 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': '一键复制链接，并保留历史记录。',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': '专业的隐私保护，一键清理浏览数据。'
+      'web-privacy-desc': '专业的隐私保护，一键清理浏览数据。',
+      'close': '关闭',
+      'close-menu': '关闭菜单',
+      'back': '返回',
+      'logo-alt': '标志',
+      'time-minutes': '{n} 分钟',
+      'time-hours': '{n} 小时',
+      'time-days': '{n} 天'
     },
     hi: {
       'menu': 'मेनू',
@@ -252,11 +280,24 @@
       'quick-link-copier-name': 'QuickLink Copier',
       'quick-link-copier-desc': 'एक क्लिक में लिंक कॉपी करें, इतिहास के साथ।',
       'web-privacy-name': 'Web Privacy - 1-Click Cleanup',
-      'web-privacy-desc': 'पेशेवर प्राइवेसी सुरक्षा। एक क्लिक में ब्राउज़िंग डेटा साफ़ करें।'
+      'web-privacy-desc': 'पेशेवर प्राइवेसी सुरक्षा। एक क्लिक में ब्राउज़िंग डेटा साफ़ करें।',
+      'close': 'बंद करें',
+      'close-menu': 'मेनू बंद करें',
+      'back': 'वापस',
+      'logo-alt': 'लोगो',
+      'time-minutes': '{n} मिनट',
+      'time-hours': '{n} घंटे',
+      'time-days': '{n} दिन'
     }
   };
 
-  let currentLanguage = localStorage.getItem('leetcode_language') || 'en';
+  let currentLanguage = 'en';
+  try {
+    const saved = localStorage.getItem('leetcode_language');
+    if (saved && translations[saved]) currentLanguage = saved;
+  } catch (e) {
+    console.warn('localStorage unavailable:', e);
+  }
 
   function t(key) {
     return (translations[currentLanguage] && translations[currentLanguage][key]) || key;
@@ -272,13 +313,28 @@
 
   function translatePage(lang) {
     currentLanguage = lang;
-    localStorage.setItem('leetcode_language', lang);
+    try {
+      localStorage.setItem('leetcode_language', lang);
+    } catch (e) {
+      console.warn('localStorage unavailable:', e);
+    }
+
+    document.documentElement.lang = lang;
 
     $$('[data-i18n]').forEach((el) => {
       const key = el.getAttribute('data-i18n');
       if (translations[lang] && translations[lang][key]) {
         el.textContent = translations[lang][key];
       }
+    });
+
+    [['data-i18n-aria-label', 'aria-label'], ['data-i18n-title', 'title'], ['data-i18n-alt', 'alt']].forEach(([dataAttr, attr]) => {
+      $$(`[${dataAttr}]`).forEach((el) => {
+        const key = el.getAttribute(dataAttr);
+        if (translations[lang] && translations[lang][key]) {
+          el.setAttribute(attr, translations[lang][key]);
+        }
+      });
     });
 
     // Dynamic content isn't tagged with data-i18n (it's rendered from JS), so
@@ -444,9 +500,9 @@
     const hours = Math.floor(diff / 3600000);
     const days = Math.floor(diff / 86400000);
     if (minutes < 1) return null;
-    if (minutes < 60) return `${minutes}m`;
-    if (hours < 24) return `${hours}h`;
-    return `${days}d`;
+    if (minutes < 60) return tFormat('time-minutes', { n: minutes });
+    if (hours < 24) return tFormat('time-hours', { n: hours });
+    return tFormat('time-days', { n: days });
   }
 
   function updateCacheInfo() {

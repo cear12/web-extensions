@@ -1,0 +1,14 @@
+{
+  "extName": {
+    "message": "Random LeetCode Problem",
+    "description": "Extension name (brand, not translated)"
+  },
+  "extDescription": {
+    "message": "Obtén un problema gratuito de LeetCode al azar para practicar, con filtro por dificultad y caché local.",
+    "description": "Extension description"
+  },
+  "actionTitle": {
+    "message": "Random LeetCode Problem",
+    "description": "Toolbar button tooltip"
+  }
+}
