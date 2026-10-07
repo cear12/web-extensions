@@ -9,9 +9,9 @@
 <body>
   <div class="container">
     <header class="header">
-      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Menu"></button>
-      <div class="title"><img src="logo.png" alt="Logo" class="logo" /><h1>QuickLink Copier</h1></div>
-      <button type="button" id="close-btn" class="close-btn" aria-label="Close"></button>
+      <button type="button" id="menu-btn" class="hamburger-btn" aria-label="Menu" data-i18n-aria-label="menu"></button>
+      <div class="title"><img src="logo.png" alt="Logo" data-i18n-alt="logo" class="logo" /><h1>QuickLink Copier</h1></div>
+      <button type="button" id="close-btn" class="close-btn" aria-label="Close" data-i18n-aria-label="close"></button>
     </header>
 
     <!-- Menu Widget -->
@@ -19,7 +19,7 @@
       <div class="menu-content">
         <div class="menu-header">
           <h2 data-i18n="menu">Menu</h2>
-          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Close menu">×</button>
+          <button type="button" id="menu-close" class="menu-close-btn" aria-label="Close menu" data-i18n-aria-label="close-menu">×</button>
         </div>
         <div class="menu-items">
           <button type="button" class="menu-item" data-section="settings">
@@ -43,11 +43,11 @@
         <!-- Menu Footer with Product Icons -->
         <div class="menu-footer">
           <div class="menu-footer-products">
-            <a href="https://chromewebstore.google.com/detail/qr-code-generator/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="menu-product-link" data-product="qr-code-generator" title="QR Code Generator - Generate QR codes for text, URL, WiFi, and contacts">
-              <img src="qr-code-generator.png" alt="QR Code Generator" class="menu-product-icon">
+            <a href="https://chromewebstore.google.com/detail/qr-code-generator/ldejflmnjheicodklaeephkpnompifej" target="_blank" class="menu-product-link" data-product="qr-code-generator" title="QR Code Generator - Generate QR codes for text, URL, WiFi, and contacts" data-i18n-title="qr-code-generator-title">
+              <img src="qr-code-generator.png" alt="QR Code Generator" data-i18n-alt="qr-code-generator-name" class="menu-product-icon">
             </a>
-            <a href="https://chromewebstore.google.com/detail/web-privacy-1-click-clean/ojhebbalcoingiphhokfgnpfjahgbjpc" target="_blank" class="menu-product-link" data-product="web-privacy" title="Web Privacy - 1-Click Cleanup - Professional privacy protection">
-              <img src="web-privacy.png" alt="Web Privacy - 1-Click Cleanup" class="menu-product-icon">
+            <a href="https://chromewebstore.google.com/detail/web-privacy-1-click-clean/ojhebbalcoingiphhokfgnpfjahgbjpc" target="_blank" class="menu-product-link" data-product="web-privacy" title="Web Privacy - 1-Click Cleanup - Professional privacy protection" data-i18n-title="web-privacy-title">
+              <img src="web-privacy.png" alt="Web Privacy - 1-Click Cleanup" data-i18n-alt="web-privacy-name" class="menu-product-icon">
             </a>
           </div>
         </div>
@@ -55,7 +55,7 @@
         <!-- Settings Panel -->
         <div id="settings-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back" data-i18n-aria-label="back"></button>
             <h3 data-i18n="settings">Settings</h3>
           </div>
           <div class="menu-panel-content">
@@ -84,7 +84,7 @@
         <!-- Language Panel -->
         <div id="language-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back" data-i18n-aria-label="back"></button>
             <h3 data-i18n="language">Language</h3>
           </div>
           <div class="menu-panel-content">
@@ -106,14 +106,14 @@
         <!-- Other Products Panel -->
         <div id="other-products-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back" data-i18n-aria-label="back"></button>
             <h3 data-i18n="other-products">Other Products</h3>
           </div>
           <div class="menu-panel-content">
             <div class="products-list">
               <div class="product-item" data-product="qr-code-generator">
                 <div class="product-icon">
-                  <img src="qr-code-generator.png" alt="QR Code Generator" class="product-icon-img">
+                  <img src="qr-code-generator.png" alt="QR Code Generator" data-i18n-alt="qr-code-generator-name" class="product-icon-img">
                 </div>
                 <div class="product-info">
                   <h4 data-i18n="qr-code-generator-name">QR Code Generator</h4>
@@ -124,7 +124,7 @@
 
               <div class="product-item" data-product="web-privacy">
                 <div class="product-icon">
-                  <img src="web-privacy.png" alt="Web Privacy - 1-Click Cleanup" class="product-icon-img">
+                  <img src="web-privacy.png" alt="Web Privacy - 1-Click Cleanup" data-i18n-alt="web-privacy-name" class="product-icon-img">
                 </div>
                 <div class="product-info">
                   <h4 data-i18n="web-privacy-name">Web Privacy - 1-Click Cleanup</h4>
@@ -139,18 +139,18 @@
         <!-- About Panel -->
         <div id="about-panel" class="menu-panel hidden">
           <div class="menu-panel-header">
-            <button type="button" class="back-btn" data-back="menu" aria-label="Back"></button>
+            <button type="button" class="back-btn" data-back="menu" aria-label="Back" data-i18n-aria-label="back"></button>
             <h3 data-i18n="about">About</h3>
           </div>
           <div class="menu-panel-content">
             <div class="about-content">
               <div class="about-title">
-                <img src="logo.png" alt="Logo" class="logo" />
+                <img src="logo.png" alt="Logo" data-i18n-alt="logo" class="logo" />
                 <h4>QuickLink Copier</h4>
               </div>
-              <p>Version 1.1.5</p>
-              <p>Developed by Olé</p>
-              <p>One-click link copying with history and export features.</p>
+              <p><span data-i18n="version">Version</span> 1.1.5</p>
+              <p><span data-i18n="developed-by">Developed by</span> Olé</p>
+              <p data-i18n="about-desc">One-click link copying with history and export features.</p>
               
             </div>
           </div>
@@ -207,7 +207,7 @@
 
     <footer class="footer">
       <span data-i18n="developed-by">Developed by</span>
-      <img src="logo.png" alt="Logo" class="logo" />
+      <img src="logo.png" alt="Logo" data-i18n-alt="logo" class="logo" />
     </footer>
   </div>
 

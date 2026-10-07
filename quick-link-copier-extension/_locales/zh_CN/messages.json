@@ -1,0 +1,14 @@
+{
+  "appName": {
+    "message": "QuickLink Copier",
+    "description": "Extension name"
+  },
+  "appDescription": {
+    "message": "一键复制链接，并保留复制历史。",
+    "description": "Extension description shown in the Chrome Web Store and extensions page"
+  },
+  "actionTitle": {
+    "message": "复制当前页面的 URL",
+    "description": "Tooltip of the toolbar button"
+  }
+}

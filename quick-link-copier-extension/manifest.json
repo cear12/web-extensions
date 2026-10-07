@@ -1,7 +1,7 @@
 {
   "action": {
     "default_popup": "popup.html",
-    "default_title": "Copy current page URL"
+    "default_title": "__MSG_actionTitle__"
   },
   "background": {
     "service_worker": "background.js"
@@ -16,7 +16,7 @@
       ]
     }
   ],
-  "description": "One-click link copying with history.",
+  "description": "__MSG_appDescription__",
   "host_permissions": [
     "<all_urls>"
   ],
@@ -27,7 +27,7 @@
     "48": "icon48.png"
   },
   "manifest_version": 3,
-  "name": "QuickLink Copier",
+  "name": "__MSG_appName__",
   "options_page": "options.html",
   "permissions": [
     "contextMenus",
@@ -38,5 +38,6 @@
     "offscreen"
   ],
   "version": "1.1.5",
-  "minimum_chrome_version": "109"
+  "minimum_chrome_version": "109",
+  "default_locale": "en"
 }
