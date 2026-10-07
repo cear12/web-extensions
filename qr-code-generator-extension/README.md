@@ -7,7 +7,7 @@ Features:
 - Customization: size (120-1024px), error-correction level (L/M/Q/H), module color, background color — adjustable from the in-popup Settings panel or the standalone Options page (`chrome://extensions` → Details → Extension options), both backed by the same saved defaults in `localStorage`
 - If the chosen error-correction level can't fit the data, the generator automatically retries at progressively higher levels before showing an error message
 - Live preview and PNG download
-- UI in English, Spanish, Russian, and Chinese
+- UI in English, Spanish, Russian, Chinese, and Hindi
 - "Other Products" cross-promo panel linking to this developer's other published extensions: QuickLink Copier and Web Privacy - 1-Click Cleanup
 
 ## Install in Chrome
