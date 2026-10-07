@@ -7,14 +7,14 @@
          "128": "icon128.png"
       },
       "default_popup": "popup.html",
-      "default_title": "Web Privacy"
+      "default_title": "__MSG_actionTitle__"
    },
    "background": {
       "service_worker": "background.js"
    },
    "commands": {
       "cleanup-now": {
-         "description": "Run privacy cleanup with your saved settings",
+         "description": "__MSG_commandCleanupNow__",
          "suggested_key": {
             "default": "Alt+Shift+K"
          }
@@ -31,7 +31,7 @@
          "run_at": "document_idle"
       }
    ],
-   "description": "Professional privacy protection. One-click cleanup of browsing data.",
+   "description": "__MSG_extDescription__",
    "host_permissions": [
       "<all_urls>"
    ],
@@ -42,7 +42,7 @@
       "128": "icon128.png"
    },
    "manifest_version": 3,
-   "name": "Web Privacy - 1-Click Cleanup",
+   "name": "__MSG_extName__",
    "options_page": "options.html",
    "permissions": [
       "browsingData",
@@ -50,5 +50,6 @@
       "alarms",
       "notifications"
    ],
-   "version": "1.1.5"
+   "version": "1.1.5",
+   "default_locale": "en"
 }

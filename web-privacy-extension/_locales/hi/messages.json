@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Web Privacy - 1-क्लिक सफ़ाई",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "पेशेवर प्राइवेसी सुरक्षा। एक क्लिक में ब्राउज़िंग डेटा साफ़ करें।",
+    "description": "Extension description in the Web Store"
+  },
+  "actionTitle": {
+    "message": "Web Privacy",
+    "description": "Toolbar button tooltip"
+  },
+  "commandCleanupNow": {
+    "message": "अपनी सेव की गई सेटिंग से प्राइवेसी सफ़ाई चलाएँ",
+    "description": "Keyboard shortcut description"
+  }
+}

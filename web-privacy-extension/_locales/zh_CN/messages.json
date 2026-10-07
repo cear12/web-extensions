@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Web Privacy - 一键清理",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "专业隐私保护。一键清理浏览数据。",
+    "description": "Extension description in the Web Store"
+  },
+  "actionTitle": {
+    "message": "Web Privacy",
+    "description": "Toolbar button tooltip"
+  },
+  "commandCleanupNow": {
+    "message": "使用已保存的设置运行隐私清理",
+    "description": "Keyboard shortcut description"
+  }
+}

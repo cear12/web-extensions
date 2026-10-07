@@ -1,0 +1,18 @@
+{
+  "extName": {
+    "message": "Web Privacy - 1-Click Cleanup",
+    "description": "Extension name"
+  },
+  "extDescription": {
+    "message": "Professional privacy protection. One-click cleanup of browsing data.",
+    "description": "Extension description in the Web Store"
+  },
+  "actionTitle": {
+    "message": "Web Privacy",
+    "description": "Toolbar button tooltip"
+  },
+  "commandCleanupNow": {
+    "message": "Run privacy cleanup with your saved settings",
+    "description": "Keyboard shortcut description"
+  }
+}

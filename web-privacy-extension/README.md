@@ -23,7 +23,13 @@ Features:
   domains locally for your own reference. Note: this list is not yet
   consulted by the cleanup or sensitive-site detection logic — it's a
   saved list only, not an enforced rule, today
-- UI in English, Spanish, Russian, and Chinese
+- UI in English, Spanish, Russian, Chinese (Simplified), and Hindi. The
+  popup, Options page, notifications, the on-page sensitive-site badge and
+  the manifest (name, description, toolbar title, shortcut description via
+  `_locales/`) are all localized. The language chosen in the popup or the
+  Options page is stored in `chrome.storage.sync` (`webPrivacyLanguage`) and
+  mirrored to `chrome.storage.local` (`ui_language`) for the background
+  worker and content script
 - "Other Products" cross-promo panel linking to this developer's other
   published extensions: QR Code Generator and QuickLink Copier
 
